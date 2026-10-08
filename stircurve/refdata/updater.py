@@ -209,9 +209,9 @@ def update_holidays(name: str, commit: bool = False, years: range = range(2005, 
     diff = Diff()
     merged = dict(cal.holidays)
     for d, n in official.items():
-        if d not in merged:
+        if d not in merged:          # rule names are kept for dates both have (stable, English)
             diff.added.append(f"{name} {d} {n} (official, not in rules)")
-        merged[d] = n
+            merged[d] = n
     # years the official source covers (several dates, not just next year's 1 January):
     # rule-only dates inside them that the source lacks are suspicious
     per_year: dict[int, int] = {}
