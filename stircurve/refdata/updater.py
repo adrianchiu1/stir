@@ -130,6 +130,10 @@ def update_meetings(bank: str, commit: bool = False, historical_years: range | N
             if d.year in covered_years and d not in incoming and d > today:
                 diff.removed.append(f"{bank} {d} no longer on source page")
         merged_by_kind[unsched] = merged
+    # a decision filed (with its source) as unscheduled leaves the scheduled file
+    for d in sorted(set(merged_by_kind[False]) & set(merged_by_kind[True])):
+        diff.added.append(f"{bank} {d}: moved to {bank}_unscheduled.csv ({merged_by_kind[True][d].source_url})")
+        del merged_by_kind[False][d]
     diff.problems += _near_duplicates(bank, [m for ms in merged_by_kind.values() for m in ms.values()])
     if commit and not diff.blocking:
         for unsched, merged in merged_by_kind.items():
