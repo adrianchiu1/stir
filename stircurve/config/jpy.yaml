@@ -1,0 +1,26 @@
+currency: JPY
+bank: boj
+calendar: jp
+fixing_calendars:
+  TONA: jp
+meetings:
+  expected_per_year: 8
+  effective_rule: next_business_day
+  cadence_template: latest_full_year
+  synthetic_horizon_years: 3
+policy_anchors:
+  - {from: "2010-01-01", anchor: policy_rate_target, note: "0-0.1% target: use 0.05 midpoint"}
+  - {from: "2016-02-16", anchor: policy_rate_balance_rate}
+  - {from: "2024-03-21", anchor: ioer}
+families:
+  tona:       {index: TONA, instruments: [ois_tona], discount: self}
+  tona_fut:   {index: TONA, instruments: [tona3m_fut], discount: tona, from: "2023-05-29"}
+  libor:      {index: JPYLIBOR6M, instruments: [euroyen_fut, swap_libor6m], discount: tona, to: "2021-12-31"}
+discount_schedule:
+  - {from: "2010-01-01", curve: tona}
+default_family_schedule:
+  - {from: "2010-01-01", family: libor}
+  - {from: "2022-04-01", family: tona, note: "placeholder floor; data-chosen"}
+turns: [quarter_end, year_end]
+daycount: ACT/365F
+spot_lag: 2

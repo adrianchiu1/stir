@@ -1,0 +1,5 @@
+Date (with effect from) | Deposit facility | Main refinancing operations | Marginal lending facility
+| 17 June 2026 | 2.25 | 2.40 | 2.65 |
+| 11 June 2025 | 2.00 | 2.15 | 2.40 |
+| 18 September 2024 | 3.50 | 3.65 | 3.90 |
+| 18 September 2019 | -0.50 | 0.00 | 0.25 |

@@ -1,0 +1,27 @@
+currency: EUR
+bank: ecb
+calendar: target
+fixing_calendars:
+  ESTR: target
+  EONIA: target
+meetings:
+  expected_per_year: 8
+  effective_rule: maintenance_period_start
+  cadence_template: latest_full_year
+  synthetic_horizon_years: 3
+policy_anchors:
+  - {from: "1999-01-01", anchor: dfr}
+families:
+  estr:       {index: ESTR,  instruments: [ois_estr],                    discount: self, from: "2019-10-02"}
+  eonia:      {index: EONIA, instruments: [ois_eonia],                   discount: self, to: "2021-12-31"}
+  estr_fut:   {index: ESTR,  instruments: [estr3m_fut, ecb_dated_fut],   discount: estr}
+  euribor3m:  {index: EURIBOR3M, instruments: [euribor3m_fut, swap_euribor6m, basis_euribor_3s6s], discount: discount_schedule}
+discount_schedule:
+  - {from: "2010-01-01", curve: eonia}
+  - {from: "2020-07-27", curve: estr, note: "CCP switch; to confirm"}
+default_family_schedule:
+  - {from: "2010-01-01", family: euribor3m}
+  - {from: "2022-04-01", family: estr, note: "EUR set by hand; Euribor futures still dominate"}
+turns: [quarter_end, year_end]
+daycount: ACT/360
+spot_lag: 2

@@ -1,0 +1,24 @@
+currency: GBP
+bank: boe
+calendar: uk
+fixing_calendars:
+  SONIA: uk
+meetings:
+  expected_per_year: 8
+  effective_rule: same_day
+  cadence_template: latest_full_year
+  synthetic_horizon_years: 3
+policy_anchors:
+  - {from: "1997-05-06", anchor: bank_rate}
+families:
+  sonia:      {index: SONIA, instruments: [ois_sonia], discount: self}
+  sonia_fut:  {index: SONIA, instruments: [sonia3m_fut, mpc_dated_fut], discount: sonia}
+  libor:      {index: GBPLIBOR6M, instruments: [short_sterling_fut, swap_libor6m], discount: sonia, to: "2021-12-31"}
+discount_schedule:
+  - {from: "2010-01-01", curve: sonia}
+default_family_schedule:
+  - {from: "2010-01-01", family: libor}
+  - {from: "2022-04-01", family: sonia, note: "placeholder floor; data-chosen"}
+turns: [quarter_end, year_end]
+daycount: ACT/365F
+spot_lag: 0

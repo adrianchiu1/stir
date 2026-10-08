@@ -1,0 +1,8 @@
+effective_date,anchor,rate,confidence,source_url,retrieved_at
+2024-03-21,ioer,0.1,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2024/k240319a.pdf,2026-10-08
+2024-08-01,ioer,0.25,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2024/k240731a.pdf,2026-10-08
+2025-01-27,ioer,0.5,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2025/k250124a.pdf,2026-10-08
+2025-12-22,ioer,0.75,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2025/k251219a.pdf,2026-10-08
+2026-06-17,ioer,1.0,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2026/k260616a.pdf,2026-10-08
+2016-02-16,policy_rate_balance_rate,-0.1,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2016/k160129a.pdf,2026-10-08
+2010-10-06,policy_rate_target,0.05,memory,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2010/k101005.pdf,2026-10-08

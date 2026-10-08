@@ -1,0 +1,26 @@
+currency: USD
+bank: fed
+calendar: us_fed                    # policy-rate / EFFR days
+fixing_calendars:
+  EFFR: us_fed
+  SOFR: us_sifma
+meetings:
+  expected_per_year: 8
+  effective_rule: next_business_day
+  cadence_template: latest_full_year
+  synthetic_horizon_years: 3
+policy_anchors:                     # dated schedule; the spread estimator uses the anchor in effect
+  - {from: "2008-12-16", anchor: target_midpoint, components: [target_lower, target_upper]}
+families:
+  effr:      {index: EFFR, instruments: [ff_fut, ois_effr],            discount: self}
+  sofr:      {index: SOFR, instruments: [sofr1m_fut, sofr3m_fut, ois_sofr], discount: self}
+  libor3m:   {index: USDLIBOR3M, instruments: [ed_fut, swap_libor3m],  discount: discount_schedule}
+discount_schedule:                  # placeholders; set from data (never earlier than 2022-04-01 for the RFR default)
+  - {from: "2010-01-01", curve: effr}
+  - {from: "2020-10-16", curve: sofr, note: "CCP big bang; to confirm"}
+default_family_schedule:            # rolling 3m avg OI rule decides the switch; once switched never back
+  - {from: "2010-01-01", family: libor3m}
+  - {from: "2022-04-01", family: sofr, note: "placeholder floor; data-chosen"}
+turns: [month_end, quarter_end, year_end]
+daycount: ACT/360
+spot_lag: 2

@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+# local curve store: only analytics (exports/) are shared with the team
+data/curves/
+*.parquet
+.env
