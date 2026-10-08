@@ -13,8 +13,11 @@ authoritative source (see parsers/ecb.py). Three regimes exist:
 
 Policy rates: ``data/refdata/policy_rates/<bank>.csv`` with columns
 ``effective_date, anchor, rate, source_url, retrieved_at``. ``anchor`` names the
-instrument (fed: target_upper, target_lower, iorb; ecb: dfr, mro, mlf;
-boe: bank_rate; boj: policy_rate, ioer). ``rate_in_effect`` returns the
+instrument (fed: target_upper, target_lower, target_midpoint, iorb, ioer;
+ecb: dfr, mro, mlf; boe: bank_rate; boj: call_target_lower/upper/midpoint,
+ioer (complementary deposit facility), policy_rate_balance_rate,
+basic_loan_rate). A NaN rate means the instrument was not a target then
+(BoJ call rate under quantitative easing). ``rate_in_effect`` returns the
 level applying on a given day, which drives the spread estimator.
 """
 from __future__ import annotations
