@@ -62,6 +62,25 @@ def html_to_text(html: str) -> str:
     return text.strip()
 
 
+def join_table_rows(text: str) -> list[str]:
+    """Re-join table rows whose cells ``html_to_text`` spread over several
+    lines (cells holding <p>/<br>). A cell ends with '|' and the last cell of
+    a row does not; a line followed by one starting with '|' or '(' is a cell
+    broken across lines. Lines that are not table rows come back unchanged."""
+    lines = [l.strip() for l in text.splitlines() if l.strip()]
+    rows, cur = [], ""
+    for i, line in enumerate(lines):
+        cur = f"{cur} {line}" if cur else line
+        nxt = lines[i + 1] if i + 1 < len(lines) else ""
+        if line.endswith("|") or nxt.startswith(("(", "|")):
+            continue
+        rows.append(cur)
+        cur = ""
+    if cur:
+        rows.append(cur)
+    return rows
+
+
 # ---------------------------------------------------------------------------
 # fixture capture (``update_refdata.py --save-fixtures DIR``)
 # ---------------------------------------------------------------------------

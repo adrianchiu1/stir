@@ -32,7 +32,7 @@ from __future__ import annotations
 import datetime as dt
 import re
 
-from .common import MONTH_RE, fetch, fetch_text, month_number, save_fixture
+from .common import MONTH_RE, fetch, fetch_text, join_table_rows, month_number, save_fixture
 
 FED_CALENDAR_URL = "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
 FED_HISTORICAL_URL = "https://www.federalreserve.gov/monetarypolicy/fomchistorical{year}.htm"
@@ -126,7 +126,8 @@ def fetch_fed(years_historical: range | None = None) -> list[tuple[dt.date, str,
 # ---------------------------------------------------------------------------
 # ECB
 # ---------------------------------------------------------------------------
-_ECB_DATE_RE = re.compile(rf"(?:(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)[a-z]*,?\s*)?(\d{{1,2}})[-\s.]{MONTH_RE}[-\s.](\d{{2,4}})", re.I)
+_ECB_DATE_RE = re.compile(rf"(?:(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)[a-z]*,?\s*)?(\d{{1,2}})[-\s.]{MONTH_RE}[-\s.]?(\d{{2,4}})", re.I)  # "4 February2025" occurs
+_ECB_TBD_RE = re.compile(r"^(?:tbd|tbc|to be (?:determined|confirmed|announced))\b", re.I)
 _ECB_MP_LABEL_RE = re.compile(r"^\s*(\d{1,2}(?:\s*/\s*\d{4})?)\s*(\||$)")
 
 
@@ -142,32 +143,51 @@ def _ecb_date(s: str) -> dt.date | None:
 
 
 def parse_ecb_mp_table(text: str, year_hint: int | None = None) -> list[dict]:
-    """Rows of the ECB maintenance-period table.
+    """Rows of the ECB maintenance-period table(s).
 
     Returns dicts with keys ``label, meeting, start, end`` (dates or None).
-    Accepts the text form produced by ``html_to_text`` (cells joined by ' | ')
-    and the markdown table form (cells separated by '|').
+    Accepts the markdown table form (one row per line) and the live
+    ``html_to_text`` form, whose cells are spread over several lines (rows
+    are re-joined with ``join_table_rows``). An unqualified label ("1", "8")
+    takes the year of the MP's start date: releases covering two years hold
+    one table per year, and since 2022 each opens with MP 8 of the previous
+    year labelled "8". ``year_hint`` is only used if a row has no start date.
     """
+    rows = _ecb_mp_rows(text.splitlines(), year_hint)
+    return rows or _ecb_mp_rows(join_table_rows(text), year_hint)
+
+
+def _ecb_mp_rows(lines: list[str], year_hint: int | None) -> list[dict]:
     rows = []
-    for raw in text.splitlines():
+    for raw in lines:
         line = raw.strip().strip("|").strip()
         if "|" not in line:
             continue
         cells = [c.strip() for c in line.split("|")]
         if len(cells) < 3 or not _ECB_MP_LABEL_RE.match(cells[0]):
             continue
-        dates = [_ecb_date(c) for c in cells[1:]]
-        dates = [d for d in dates if d]
+        first3 = [_ecb_date(c) for c in cells[1:4]]
+        if len(cells) >= 4 and first3[0] and first3[1] and _ECB_TBD_RE.match(cells[3]):
+            # last MP of a release: end "tbd" until the next year's release
+            label = cells[0].replace(" ", "")
+            if "/" not in label:
+                label = f"{label}/{first3[1].year}"
+            rows.append({"label": label, "meeting": first3[0], "start": first3[1], "end": None})
+            continue
+        dates = [d for d in (_ecb_date(c) for c in cells[1:]) if d]
         if len(dates) < 2:
             continue
         label = cells[0].replace(" ", "")
         # with a meeting column: meeting, start, end; without: start, end
-        if len(dates) >= 3:
+        if all(first3):
+            meeting, start, end = first3
+        elif len(dates) >= 3:
             meeting, start, end = dates[0], dates[1], dates[2]
         else:
             meeting, start, end = None, dates[0], dates[1]
-        if "/" not in label and year_hint:
-            label = f"{label}/{year_hint}"
+        year = start.year if start else year_hint
+        if "/" not in label and year:
+            label = f"{label}/{year}"
         rows.append({"label": label, "meeting": meeting, "start": start, "end": end})
     return rows
 
@@ -183,26 +203,77 @@ def ecb_index_links(text_or_html: str) -> dict[int, str]:
     return out
 
 
+_ORDINALS = {w: i for i, w in enumerate(["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth",
+                                         "ninth", "tenth", "eleventh", "twelfth"], start=1)}
+_ECB_EXTEND_RE = re.compile(
+    r"\b(\d{1,2})(?:st|nd|rd|th)?\s+(?:reserve\s+)?maintenance period of (\d{4}) will be extended\b[^.]*?\bend on "
+    rf"(\d{{1,2}}\s+{MONTH_RE}\w*\s+\d{{4}})", re.I)
+
+
+def parse_ecb_mp_amendments(text: str) -> dict[str, dt.date]:
+    """Changes announced in the prose of a release rather than its table:
+    'The 12th reserve maintenance period of 2014 will be extended by 14 days
+    and end on 27 January 2015' -> {'12/2014': 2015-01-27}."""
+    out = {}
+    for m in _ECB_EXTEND_RE.finditer(" ".join(text.split())):
+        n, y, d = m.groups()[:3]
+        out[f"{int(n)}/{y}"] = _ecb_date(d)
+    return out
+
+
 def fetch_ecb_maintenance(years: range | None = None) -> list[tuple[dict, str]]:
     """Maintenance-period rows (with source URL) for the requested years,
-    discovered from the index page; 2027 added from the known release."""
+    discovered from the index page; 2027 added from the known release.
+
+    Releases overlap, so they are read oldest first and merged per label:
+    * a newer release wins (2024 brought the end of MP 8/2023 forward; the
+      2027 release completes MP 8/2026, whose end the 2026 one gives as "tbd");
+    * a year's own release defines which MPs that year has (the 2014 release
+      holds a monthly 2015 calendar, 12 MPs, superseded by the 2015 release's 8);
+    * prose amendments apply last (MP 12/2014 extended to 27 Jan 2015 in the
+      2015 release).
+    Rows still lacking an end are dropped. Kept: label year or end year requested.
+    """
     index_html = fetch(ECB_RESERVE_INDEX_URL)
     save_fixture("ecb_reserve_index", index_html)
     links = ecb_index_links(index_html)
     links.setdefault(2027, ECB_MP_2027_URL)
-    out = []
-    for y in sorted(years or links):
+    wanted = set(years or links)
+    fetch_years = sorted(wanted | {y + 1 for y in wanted if y + 1 in links})
+    merged: dict[str, tuple[dict, str]] = {}
+    own_labels: dict[int, set[str]] = {}
+    amendments: list[tuple[str, dt.date, str]] = []
+    seen_urls: set[str] = set()
+    for y in fetch_years:
         url = links.get(y)
-        if not url:
+        if not url or url in seen_urls:
             continue
+        seen_urls.add(url)
         try:
             t = fetch_text(url, f"ecb_mp_{y}")
         except Exception as exc:  # pragma: no cover
             print(f"  ecb {y}: fetch failed ({exc})")
             continue
         for row in parse_ecb_mp_table(t, year_hint=y):
-            out.append((row, url))
-    return out
+            label_year = int(row["label"].split("/")[1])
+            if links.get(label_year) == url:
+                own_labels.setdefault(label_year, set()).add(row["label"])
+            if row["end"] is None and row["label"] in merged:
+                continue
+            merged[row["label"]] = (row, url)
+        amendments += [(label, end, url) for label, end in parse_ecb_mp_amendments(t).items()]
+    for label, end, url in amendments:
+        if label in merged:
+            merged[label] = (dict(merged[label][0], end=end), url)
+    out = []
+    for label, (row, url) in merged.items():
+        label_year = int(label.split("/")[1])
+        if label_year in own_labels and label not in own_labels[label_year]:
+            continue
+        if row["end"] is None or not (label_year in wanted or row["end"].year in wanted):
+            continue
+        out.append((row, url))
+    return sorted(out, key=lambda ru: ru[0]["start"])
 
 
 # ---------------------------------------------------------------------------
@@ -255,29 +326,12 @@ _BOJ_MEETING_RE = re.compile(
     rf"^{MONTH_RE}\.?\s+(\d{{1,2}}){_WKD}(?:\s*[,\-–]\s*(?:{MONTH_RE}\.?\s+)?(\d{{1,2}}){_WKD})?(?:,\s*(20\d\d))?", re.I)
 
 
-def _boj_rows(text: str) -> list[str]:
-    """Re-join table rows: a cell ends with '|', the last cell of a row does
-    not; a line followed by '(' or '|' is a cell broken across lines."""
-    lines = [l.strip() for l in text.splitlines() if l.strip()]
-    rows, cur = [], ""
-    for i, line in enumerate(lines):
-        cur = f"{cur} {line}" if cur else line
-        nxt = lines[i + 1] if i + 1 < len(lines) else ""
-        if line.endswith("|") or nxt.startswith(("(", "|")):
-            continue
-        rows.append(cur)
-        cur = ""
-    if cur:
-        rows.append(cur)
-    return rows
-
-
 def parse_boj_text(text: str) -> list[tuple[dt.date, str]]:
     """Decision date = last day of the meeting cell. Rows mentioning
     'unscheduled' or 'extraordinary' are tagged unscheduled."""
     out = []
     year = None
-    for row in _boj_rows(text):
+    for row in join_table_rows(text):
         ym = _BOJ_YEAR_RE.match(row)
         if ym:
             year = int(ym.group(1))

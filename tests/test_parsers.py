@@ -1,6 +1,7 @@
 import datetime as dt
 from pathlib import Path
-from stircurve.refdata.parsers.banks import parse_fed_text, parse_ecb_mp_table, parse_boe_text, parse_boj_text, ecb_index_links
+from stircurve.refdata.parsers.banks import (parse_fed_text, parse_ecb_mp_table, parse_ecb_mp_amendments, parse_boe_text,
+                                            parse_boj_text, ecb_index_links)
 from stircurve.refdata.parsers.holidays import parse_uk_json, parse_jp_csv
 from stircurve.refdata.parsers.common import html_to_text
 
@@ -108,3 +109,43 @@ def test_fed_live_historical_pages():
             assert (dt.date(2020, 3, 18), "skip") in got                 # "March 17-18 (cancelled)"
             assert [d for d, k in got if k == "unscheduled"] == [dt.date(2020, 3, 2), dt.date(2020, 3, 15)]
     assert set(counts.values()) == {8}
+
+
+def test_ecb_live_two_year_release_and_tbd_rows():
+    rows = parse_ecb_mp_table((LIVE / "ecb_mp_2010_20261008.txt").read_text(), year_hint=2010)
+    assert [r["label"] for r in rows] == [f"{i}/2010" for i in range(1, 13)] + [f"{i}/2011" for i in range(1, 13)]
+    assert rows[0] == {"label": "1/2010", "meeting": dt.date(2010, 1, 14), "start": dt.date(2010, 1, 20), "end": dt.date(2010, 2, 9)}
+    rows = parse_ecb_mp_table((LIVE / "ecb_mp_2022_20261008.txt").read_text(), year_hint=2022)
+    assert rows[0]["label"] == "8/2021" and rows[-1] == {"label": "8/2022", "meeting": dt.date(2022, 12, 15),
+                                                        "start": dt.date(2022, 12, 21), "end": None}   # end "tbd"
+    rows = parse_ecb_mp_table((LIVE / "ecb_mp_2025_20261008.txt").read_text(), year_hint=2025)
+    assert rows[0]["label"] == "8/2024" and rows[0]["end"] == dt.date(2025, 2, 4)          # "4 February2025"
+    assert parse_ecb_mp_amendments((LIVE / "ecb_mp_2015_20261008.txt").read_text()) == {"12/2014": dt.date(2015, 1, 27)}
+
+
+def test_ecb_live_replay_merges_releases_without_gaps():
+    """fetch_ecb_maintenance replayed offline from the captured fixtures."""
+    from stircurve.refdata.parsers import banks
+    from stircurve.refdata.maintenance import MaintenancePeriod, validate_maintenance_periods
+    index = (LIVE / "ecb_reserve_index_20261008.txt").read_text()
+    links = ecb_index_links(index)
+    links.setdefault(2027, banks.ECB_MP_2027_URL)
+    by_url = {}
+    for y, url in links.items():
+        if 2010 <= y <= 2027:
+            by_url.setdefault(url, (LIVE / f"ecb_mp_{y}_20261008.txt").read_text())
+    orig = banks.fetch, banks.fetch_text
+    banks.fetch = lambda url, timeout=30: index
+    banks.fetch_text = lambda url, source: by_url[url]
+    try:
+        got = banks.fetch_ecb_maintenance(range(2010, 2028))
+    finally:
+        banks.fetch, banks.fetch_text = orig
+    labels = [r["label"] for r, _ in got]
+    assert len(got) == 5 * 12 + 13 * 8
+    assert labels[0] == "1/2010" and labels[-1] == "8/2027"
+    assert not any(l.endswith("/2015") and int(l.split("/")[0]) > 8 for l in labels)   # superseded monthly 2015
+    mps = [MaintenancePeriod(r["label"], r["meeting"], r["start"], r["end"]) for r, _ in got]
+    assert validate_maintenance_periods(mps) == []
+    ends = {r["label"]: r["end"] for r, _ in got}
+    assert ends["12/2014"] == dt.date(2015, 1, 27) and ends["8/2023"] == dt.date(2024, 1, 30)
