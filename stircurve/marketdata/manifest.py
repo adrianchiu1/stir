@@ -258,6 +258,6 @@ def quotes(m: Manifest) -> list[tuple[str, str, str]]:
     """(rule path, source id, quote) for every rule that cites a passage."""
     out = []
     for path, node in _walk_rules(m.raw):
-        if node.get("quote"):
+        if isinstance(node.get("quote"), str):     # (an instrument's ``quote`` mapping is its quote convention)
             out.append((path, node["source"], node["quote"]))
     return out
