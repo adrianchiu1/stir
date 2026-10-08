@@ -6,14 +6,19 @@ Unscheduled decisions live in ``<bank>_unscheduled.csv`` with the same columns.
 
 Effective-date rules (see the design spec, "Reference data"):
 
-* fed: decision date + 1 business day on the ``us_fed`` calendar.
+* fed: decision date + 1 business day on the ``us_fed`` calendar (decisions
+  before 2009: the decision day, ``SAME_DAY_UNTIL``).
 * ecb: start of the reserve maintenance period attached to the meeting in
   ``data/refdata/maintenance_periods/ecb.csv``; rule-based fallback for
   synthetic meetings (Wednesday after a Thursday decision, rolled forward
   over TARGET closing days).
 * boe: the decision date itself.
-* boj: next business day on the ``jp`` calendar (to be confirmed against
-  BoJ statements before M0 sign-off; see spec open items).
+* boj: next business day on the ``jp`` calendar (D15); decisions before
+  19 Mar 2024: the decision day (D18).
+
+For every bank a published implementation date wins over the rule: the ECB
+maintenance-period table, and ``meetings/published_effective.csv`` for
+individual decisions (e.g. BoJ 29 Jan 2016 -> 16 Feb 2016).
 
 Cadence extrapolation reproduces each bank's rhythm beyond the published
 horizon by replicating the (month, ordinal weekday-of-month, weekday) slots
@@ -107,7 +112,7 @@ def save_meetings(bank: str, meetings: list[Meeting], unscheduled: bool = False,
     p = meetings_path(bank, unscheduled, refdata_dir)
     p.parent.mkdir(parents=True, exist_ok=True)
     with p.open("w", newline="", encoding="utf-8") as fh:
-        w = csv.DictWriter(fh, fieldnames=COLUMNS)
+        w = csv.DictWriter(fh, fieldnames=COLUMNS, lineterminator="\n")
         w.writeheader()
         for m in sorted(meetings, key=lambda m: m.decision_date):
             w.writerow(m.as_row())
@@ -117,9 +122,26 @@ def save_meetings(bank: str, meetings: list[Meeting], unscheduled: bool = False,
 # ---------------------------------------------------------------------------
 # effective-date rules
 # ---------------------------------------------------------------------------
+# Era rule (D18): decisions took effect the same day (rolled to a business day)
+# before these dates and the next business day from them. Fed: target changes
+# were effective on the decision day through Dec 2008; next business day since
+# the first post-2008 change (Dec 2015). BoJ: 'effective immediately' (2006-2010
+# statements); the 19 Mar 2024 statement is the first to date the change for the
+# next business day.
+SAME_DAY_UNTIL = {"fed": dt.date(2009, 1, 1), "boj": dt.date(2024, 3, 19)}
+
+
 def effective_date(bank: str, decision: dt.date, calendar: Calendar,
-                   mp_lookup: dict[dt.date, dt.date] | None = None) -> dt.date:
-    """Date on which a decision taken on ``decision`` applies to the overnight rate."""
+                   published: dict[dt.date, dt.date] | None = None) -> dt.date:
+    """Date on which a decision taken on ``decision`` applies to the overnight rate.
+
+    A published implementation date (``published``: decision -> effective, see
+    ``published_lookup``) always wins; the bank's rule is the fallback.
+    """
+    if published and decision in published:
+        return published[decision]
+    if bank in SAME_DAY_UNTIL and decision < SAME_DAY_UNTIL[bank]:
+        return calendar.next_business_day(decision, include=True)
     if bank == "fed":
         return calendar.next_business_day(decision)
     if bank == "boe":
@@ -127,10 +149,82 @@ def effective_date(bank: str, decision: dt.date, calendar: Calendar,
     if bank == "boj":
         return calendar.next_business_day(decision)
     if bank == "ecb":
-        if mp_lookup and decision in mp_lookup:
-            return mp_lookup[decision]
         return ecb_rule_effective(decision, calendar)
     raise ValueError(f"unknown bank {bank!r}")
+
+
+PUBLISHED_COLUMNS = ["bank", "decision_date", "effective_date", "source_url", "note"]
+
+
+def published_path(refdata_dir: Path = REFDATA_DIR) -> Path:
+    return refdata_dir / "meetings" / "published_effective.csv"
+
+
+def load_published_effective(bank: str, refdata_dir: Path = REFDATA_DIR) -> dict[dt.date, tuple[dt.date, str]]:
+    """Implementation dates published for individual decisions where they are
+    not the rule's (BoJ 29 Jan 2016) or where AC asked for the published date to
+    be recorded (Fed 3 Mar 2020): decision -> (effective, source_url)."""
+    p = published_path(refdata_dir)
+    if not p.exists():
+        return {}
+    out = {}
+    with p.open(newline="", encoding="utf-8") as fh:
+        for row in csv.DictReader(fh):
+            if row.get("bank") == bank and row.get("decision_date"):
+                if not row.get("source_url"):
+                    raise ValueError(f"{p}: {row['decision_date']} has no source_url")
+                out[dt.date.fromisoformat(row["decision_date"])] = (dt.date.fromisoformat(row["effective_date"]),
+                                                                    row["source_url"])
+    return out
+
+
+# A rate change is the published implementation date of the latest decision up to
+# this many calendar days before it (Japan: holiday clusters, 18 -> 24 Sep 2026).
+RATE_CHANGE_WINDOW_DAYS = {"fed": 3, "boj": 7}
+RATE_CHANGE_ANCHORS = {"fed": ("target_upper",),
+                       "boj": ("call_target_upper", "ioer", "policy_rate_balance_rate", "basic_loan_rate")}
+
+
+def published_from_rate_changes(decisions: list[dt.date], change_dates: list[dt.date],
+                                window_days: int = 3) -> dict[dt.date, dt.date]:
+    """Each policy-rate change dates when a decision took effect: the latest
+    decision on or up to ``window_days`` before it. Fed: the open-market table
+    (FRED DFEDTAR before 2003) — the decision day until 2008, the next business
+    day since 2015. BoJ: statements and the basic loan rate CSV — 'effective
+    immediately' 2006-2010, the next business day since 2024."""
+    ds = sorted(set(decisions))
+    out = {}
+    for c in sorted(set(change_dates)):
+        cands = [d for d in ds if 0 <= (c - d).days <= window_days]
+        if cands:
+            out[cands[-1]] = c
+    return out
+
+
+fed_published_from_rates = published_from_rate_changes   # name used in earlier tests
+
+
+def published_lookup(bank: str, refdata_dir: Path = REFDATA_DIR,
+                     decisions: list[dt.date] | None = None) -> dict[dt.date, dt.date]:
+    """decision -> published implementation date: the ECB maintenance-period
+    table; for the Fed and the BoJ the change dates of the policy-rate history
+    matched to ``decisions`` (default: committed meetings); then
+    ``published_effective.csv`` (which wins on a clash)."""
+    out: dict[dt.date, dt.date] = {}
+    if bank == "ecb":
+        from .maintenance import load_maintenance_periods, mp_lookup   # local import: maintenance imports meetings lazily
+        out.update(mp_lookup(load_maintenance_periods(refdata_dir)))
+    if bank in RATE_CHANGE_ANCHORS:
+        from .maintenance import load_policy_rates
+        if decisions is None:
+            decisions = [m.decision_date for m in load_meetings(bank, True, refdata_dir)]
+        rates = load_policy_rates(bank, refdata_dir)
+        changes = [r.effective_date for r in rates if r.anchor in RATE_CHANGE_ANCHORS[bank]
+                   and r.effective_date >= min(decisions, default=r.effective_date)
+                   and "effective date by rule" not in r.confidence]     # rule-dated rows publish nothing
+        out.update(published_from_rate_changes(decisions, changes, RATE_CHANGE_WINDOW_DAYS[bank]))
+    out.update({d: eff for d, (eff, _) in load_published_effective(bank, refdata_dir).items()})
+    return out
 
 
 def ecb_rule_effective(decision: dt.date, target: Calendar) -> dt.date:
@@ -173,7 +267,7 @@ def template_year(meetings: list[Meeting], expected_count: int) -> int | None:
 
 
 def extrapolate_cadence(bank: str, meetings: list[Meeting], through: dt.date,
-                        calendar: Calendar, mp_lookup: dict[dt.date, dt.date] | None = None,
+                        calendar: Calendar, published: dict[dt.date, dt.date] | None = None,
                         expected_count: int = 8) -> list[Meeting]:
     """Return published meetings plus synthetic ones through ``through``.
 
@@ -197,7 +291,7 @@ def extrapolate_cadence(bank: str, meetings: list[Meeting], through: dt.date,
             d = calendar.next_business_day(d, include=True)
             if d <= last_published:
                 continue
-            new.append(Meeting(bank, d, effective_date(bank, d, calendar, mp_lookup),
+            new.append(Meeting(bank, d, effective_date(bank, d, calendar, published),
                                scheduled=True, regime="synthetic", synthetic=True,
                                source_url=f"cadence-template:{ty}"))
         # also fill any gap in the current year after the last published meeting
@@ -206,7 +300,7 @@ def extrapolate_cadence(bank: str, meetings: list[Meeting], through: dt.date,
                 d = _date_from_slot(last_published.year, s)
                 d = calendar.next_business_day(d, include=True)
                 if d > last_published and all(abs((d - m.decision_date).days) > 3 for m in published):
-                    new.append(Meeting(bank, d, effective_date(bank, d, calendar, mp_lookup),
+                    new.append(Meeting(bank, d, effective_date(bank, d, calendar, published),
                                        scheduled=True, regime="synthetic", synthetic=True,
                                        source_url=f"cadence-template:{ty}"))
         out.extend(m for m in new if m.decision_date <= through)
@@ -245,7 +339,7 @@ class MeetingSchedule:
                  refdata_dir: Path = REFDATA_DIR):
         self.bank = bank
         self.calendar = calendar or Calendar.load(BANK_CALENDAR[bank], refdata_dir=refdata_dir)
-        self.mp_lookup = mp_lookup
+        self.mp_lookup = mp_lookup if mp_lookup is not None else published_lookup(bank, refdata_dir)
         self.published = load_meetings(bank, include_unscheduled=True, refdata_dir=refdata_dir)
 
     def with_synthetic(self, through: dt.date, expected_count: int = 8) -> list[Meeting]:

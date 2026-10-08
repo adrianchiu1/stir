@@ -1,6 +1,6 @@
 import datetime as dt
 from stircurve.refdata.calendars import Calendar
-from stircurve.refdata.meetings import (Meeting, effective_date, ecb_rule_effective, extrapolate_cadence,
+from stircurve.refdata.meetings import (BANKS, Meeting, effective_date, ecb_rule_effective, extrapolate_cadence,
                                        load_meetings, parcels, MeetingSchedule)
 from stircurve.refdata.maintenance import load_maintenance_periods, mp_lookup, validate_maintenance_periods
 
@@ -13,6 +13,11 @@ def test_effective_rules():
     assert effective_date("boj", dt.date(2025, 1, 24), jp) == dt.date(2025, 1, 27)   # Friday -> Monday
     assert effective_date("boj", dt.date(2025, 12, 19), jp) == dt.date(2025, 12, 22)
     assert effective_date("boj", dt.date(2024, 3, 19), jp) == dt.date(2024, 3, 21)   # 20 Mar 2024 holiday
+    # era rule (D18): same day before 2009 (Fed) / 19 Mar 2024 (BoJ), rolled to a business day
+    assert effective_date("fed", dt.date(2006, 8, 8), us) == dt.date(2006, 8, 8)
+    assert effective_date("fed", dt.date(2009, 1, 28), us) == dt.date(2009, 1, 29)
+    assert effective_date("boj", dt.date(2016, 9, 21), jp) == dt.date(2016, 9, 21)
+    assert effective_date("boj", dt.date(2024, 1, 23), jp) == dt.date(2024, 1, 23)
     # ECB rule fallback: Thursday -> following Wednesday
     assert ecb_rule_effective(dt.date(2027, 2, 4), tg) == dt.date(2027, 2, 10)
     # ECB published table overrides the rule (MP 3/2027 starts Thu 6 May)
@@ -23,17 +28,23 @@ def test_effective_rules():
 
 def test_maintenance_periods_contiguous():
     mps = load_maintenance_periods()
-    assert len(mps) == 9
+    assert len(mps) == 11 + 10 * 12 + 13 * 8 + 7   # 2004 (from 24 Jan), monthly 2005-14, eight a year 2015-27, 1-7/2028
     assert validate_maintenance_periods(mps) == []
-    assert mps[0].length_days == 49 and mps[1].length_days == 42
+    by = {m.label: m for m in mps}
+    assert by["8/2026"].length_days == 49 and by["1/2027"].length_days == 42 and by["1/2010"].length_days == 21
 
 
 def test_fed_file_and_parcels():
     ms = load_meetings("fed")
     sched = [m for m in ms if m.scheduled]
-    assert len(sched) == 56 and all(m.effective_date == Calendar.load("us_fed").next_business_day(m.decision_date) for m in sched)
-    uns = [m for m in ms if not m.scheduled]
-    assert {m.decision_date for m in uns} == {dt.date(2020, 3, 3), dt.date(2020, 3, 15)}
+    from stircurve.refdata.meetings import published_lookup
+    us, pub = Calendar.load("us_fed"), published_lookup("fed")
+    assert len(sched) == 33 * 8 + 9 - 1     # 1994-2027, 2003 lists 15 and 16 Sep, 2020 March cancelled
+    assert all(m.effective_date == effective_date("fed", m.decision_date, us, pub) for m in ms)
+    # target changes took effect on the decision day until 2008, the next business day since 2015
+    assert pub[dt.date(2008, 12, 16)] == dt.date(2008, 12, 16) and pub[dt.date(2015, 12, 16)] == dt.date(2015, 12, 17)
+    uns = {m.decision_date for m in ms if not m.scheduled}
+    assert {dt.date(2008, 1, 22), dt.date(2008, 10, 8), dt.date(2020, 3, 3), dt.date(2020, 3, 15)} <= uns
     ps = parcels(ms, dt.date(2026, 10, 8), dt.date(2027, 4, 1))
     assert ps[0].start == dt.date(2026, 10, 8) and ps[0].decision_date is None
     assert ps[1].start == dt.date(2026, 10, 29) and ps[1].decision_date == dt.date(2026, 10, 28)
@@ -72,3 +83,31 @@ def test_ecb_schedule_uses_published_mp_starts():
     ps = sched.parcels(dt.date(2026, 12, 1), 1)
     assert ps[1].start == dt.date(2026, 12, 23) and ps[1].decision_date == dt.date(2026, 12, 17)
     assert ps[2].start == dt.date(2027, 2, 10)
+
+
+def test_published_effective_dates_win_over_the_rule():
+    from stircurve.refdata.meetings import load_published_effective, published_lookup
+    jp = Calendar.load("jp")
+    boj = published_lookup("boj")
+    assert effective_date("boj", dt.date(2016, 1, 29), jp) == dt.date(2016, 1, 29)           # rule (same day pre-2024)
+    assert effective_date("boj", dt.date(2016, 1, 29), jp, boj) == dt.date(2016, 2, 16)      # published (k160129a)
+    assert effective_date("boj", dt.date(2024, 3, 19), jp, boj) == dt.date(2024, 3, 21)      # rule still applies
+    assert published_lookup("fed")[dt.date(2020, 3, 3)] == dt.date(2020, 3, 4)
+    ecb = published_lookup("ecb")
+    assert ecb[dt.date(2027, 4, 29)] == dt.date(2027, 5, 6)                                   # MP table
+    for bank in BANKS:                                                                       # committed rows agree
+        eff = {m.decision_date: m.effective_date for m in load_meetings(bank)}
+        for d, (e, url) in load_published_effective(bank).items():
+            assert url.startswith("https://") and eff.get(d, e) == e, (bank, d)
+
+
+def test_policy_rate_changes_fall_on_meeting_effective_dates():
+    """Fed target / ECB DFR, MRO / BoE Bank Rate / BoJ policy-rate changes since 2010 are implementation
+    dates of committed meetings (published or rule)."""
+    from stircurve.refdata.maintenance import load_policy_rates
+    for bank, anchors in (("fed", {"target_upper"}), ("ecb", {"dfr", "mro"}), ("boe", {"bank_rate"}),
+                          ("boj", {"policy_rate_balance_rate", "ioer"})):
+        eff = {m.effective_date for m in load_meetings(bank)}
+        miss = [(r.anchor, r.effective_date) for r in load_policy_rates(bank)
+                if r.anchor in anchors and r.effective_date >= dt.date(2010, 1, 1) and r.effective_date not in eff]
+        assert miss == [], bank

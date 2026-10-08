@@ -19,6 +19,9 @@ Full log with rejected alternatives: design spec, "Decision log". Confirmed by A
 | D13 | Store local and git-ignored; analytics exports shared |
 | D14 | Validation: ICVS points (curve IDs SOFR 490, Fed Funds 85, €STR 514, SONIA 141, JPY OIS 195) and WIRP samples |
 | D15 | Effective dates: Fed +1 business day; ECB maintenance-period start (published table wins); BoE same day; BoJ next business day (confirmed on 2024-03-19→21, 2025-12-19→22, 2026-06-16→17) |
+| D16 | Decision date = the day the decision is announced; implementation date is separate. A published implementation date wins over the bank's rule for every bank (ECB maintenance table; `meetings/published_effective.csv`: Fed 2020-03-03→04, BoJ 2016-01-29→02-16). Reference data includes every published date. AC, PR #1 |
+| D17 | Reference data holds every published monetary-policy decision date (Fed 1994+, ECB 2004+, BoE 1997+, BoJ 1998+); unscheduled meetings are those the bank itself calls so (BoJ minutes, Fed conference calls) or that AC designates (BoE 8 Oct 2008); `us_sifma` (SIFMA closes) and `us_sofr` (SOFR publication days) are separate calendars; BoJ policy rates are sourced from the statements and auto-updated. AC, PR #1 |
+| D18 | Era-dependent effective-date rule: Fed decisions before 2009 and BoJ decisions before 19 Mar 2024 take effect on the decision day (rolled to a business day); later ones the next business day. Published implementation dates still win. BoJ spread anchor under QQE (4 Apr 2013 – 15 Feb 2016) is `ioer` (0.1%). AC, PR #1 |
 
 ## Build plan and gates
 

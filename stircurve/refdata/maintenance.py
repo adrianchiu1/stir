@@ -13,8 +13,11 @@ authoritative source (see parsers/ecb.py). Three regimes exist:
 
 Policy rates: ``data/refdata/policy_rates/<bank>.csv`` with columns
 ``effective_date, anchor, rate, source_url, retrieved_at``. ``anchor`` names the
-instrument (fed: target_upper, target_lower, iorb; ecb: dfr, mro, mlf;
-boe: bank_rate; boj: policy_rate, ioer). ``rate_in_effect`` returns the
+instrument (fed: target_upper, target_lower, target_midpoint, iorb, ioer;
+ecb: dfr, mro, mlf; boe: bank_rate; boj: call_target_lower/upper/midpoint,
+ioer (complementary deposit facility), policy_rate_balance_rate,
+basic_loan_rate). A NaN rate means the instrument was not a target then
+(BoJ call rate under quantitative easing). ``rate_in_effect`` returns the
 level applying on a given day, which drives the spread estimator.
 """
 from __future__ import annotations
@@ -78,7 +81,7 @@ def save_maintenance_periods(mps: list[MaintenancePeriod], refdata_dir: Path = R
     p = mp_path(refdata_dir)
     p.parent.mkdir(parents=True, exist_ok=True)
     with p.open("w", newline="", encoding="utf-8") as fh:
-        w = csv.writer(fh)
+        w = csv.writer(fh, lineterminator="\n")
         w.writerow(MP_COLUMNS)
         for m in sorted(mps, key=lambda m: m.start):
             w.writerow([m.label, m.meeting_decision_date.isoformat() if m.meeting_decision_date else "",
@@ -152,7 +155,7 @@ def save_policy_rates(bank: str, rates: list[PolicyRate], refdata_dir: Path = RE
     p = refdata_dir / "policy_rates" / f"{bank}.csv"
     p.parent.mkdir(parents=True, exist_ok=True)
     with p.open("w", newline="", encoding="utf-8") as fh:
-        w = csv.writer(fh)
+        w = csv.writer(fh, lineterminator="\n")
         w.writerow(PR_COLUMNS)
         for r in sorted(rates, key=lambda r: (r.anchor, r.effective_date)):
             w.writerow([r.effective_date.isoformat(), r.anchor, r.rate, r.confidence, r.source_url, r.retrieved_at])

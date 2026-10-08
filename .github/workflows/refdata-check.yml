@@ -13,4 +13,4 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
       - run: pip install -e .
-      - run: python scripts/update_refdata.py --bank fed --bank ecb --bank boe --bank boj --ecb-maintenance --policy-rates fed --policy-rates ecb --policy-rates boe --holidays uk jp us_sifma --dry-run
+      - run: python scripts/update_refdata.py --bank fed --bank ecb --bank boe --bank boj --ecb-maintenance --policy-rates fed --policy-rates ecb --policy-rates boe --policy-rates boj --holidays uk jp us_sifma us_sofr --dry-run

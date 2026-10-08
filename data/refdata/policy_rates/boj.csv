@@ -1,8 +1,120 @@
 effective_date,anchor,rate,confidence,source_url,retrieved_at
+1972-10-02,basic_loan_rate,4.25,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1973-04-02,basic_loan_rate,5.0,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1973-05-30,basic_loan_rate,5.5,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1973-07-02,basic_loan_rate,6.0,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1973-08-29,basic_loan_rate,7.0,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1973-12-22,basic_loan_rate,9.0,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1975-04-16,basic_loan_rate,8.5,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1975-06-07,basic_loan_rate,8.0,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1975-08-13,basic_loan_rate,7.5,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1975-10-24,basic_loan_rate,6.5,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1977-03-12,basic_loan_rate,6.0,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1977-04-19,basic_loan_rate,5.0,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1977-09-05,basic_loan_rate,4.25,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1978-03-16,basic_loan_rate,3.5,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1979-04-17,basic_loan_rate,4.25,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1979-07-24,basic_loan_rate,5.25,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1979-11-02,basic_loan_rate,6.25,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1980-02-19,basic_loan_rate,7.25,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1980-03-19,basic_loan_rate,9.0,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1980-08-20,basic_loan_rate,8.25,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1980-11-06,basic_loan_rate,7.25,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1981-03-18,basic_loan_rate,6.25,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1981-12-11,basic_loan_rate,5.5,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1983-10-22,basic_loan_rate,5.0,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1986-01-30,basic_loan_rate,4.5,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1986-03-10,basic_loan_rate,4.0,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1986-04-21,basic_loan_rate,3.5,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1986-11-01,basic_loan_rate,3.0,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1987-02-23,basic_loan_rate,2.5,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1989-05-31,basic_loan_rate,3.25,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1989-10-11,basic_loan_rate,3.75,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1989-12-25,basic_loan_rate,4.25,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1990-03-20,basic_loan_rate,5.25,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1990-08-30,basic_loan_rate,6.0,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1991-07-01,basic_loan_rate,5.5,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1991-11-14,basic_loan_rate,5.0,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1991-12-30,basic_loan_rate,4.5,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1992-04-01,basic_loan_rate,3.75,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1992-07-27,basic_loan_rate,3.25,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1993-02-04,basic_loan_rate,2.5,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1993-09-21,basic_loan_rate,1.75,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1995-04-14,basic_loan_rate,1.0,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+1995-09-08,basic_loan_rate,0.5,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv,2026-10-08
+2001-01-04,basic_loan_rate,0.5,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0101.csv,2026-10-08
+2001-02-13,basic_loan_rate,0.35,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0101.csv,2026-10-08
+2001-03-01,basic_loan_rate,0.25,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0101.csv,2026-10-08
+2001-09-19,basic_loan_rate,0.1,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0101.csv,2026-10-08
+2006-07-14,basic_loan_rate,0.4,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0101.csv,2026-10-08
+2007-02-21,basic_loan_rate,0.75,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0101.csv,2026-10-08
+2008-10-31,basic_loan_rate,0.5,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0101.csv,2026-10-08
+2008-12-19,basic_loan_rate,0.3,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0101.csv,2026-10-08
+2024-08-01,basic_loan_rate,0.5,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0101.csv,2026-10-08
+2025-01-27,basic_loan_rate,0.75,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0101.csv,2026-10-08
+2025-12-22,basic_loan_rate,1.0,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0101.csv,2026-10-08
+2026-06-17,basic_loan_rate,1.25,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0101.csv,2026-10-08
+2026-09-24,basic_loan_rate,1.5,primary,https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0101.csv,2026-10-08
+1998-09-09,call_target_lower,0.25,primary;effective date by rule (statement silent),https://www.boj.or.jp/en/mopo/mpmdeci/mpr_1998/k980909c.htm,2026-10-08
+1999-02-12,call_target_lower,0.0,derived:'as low as possible' (initial aim around 0.15%); effective date by rule,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_1999/k990212c.htm,2026-10-08
+2000-08-11,call_target_lower,0.25,primary;effective date by rule (statement silent),https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2000/k000811.htm,2026-10-08
+2001-03-01,call_target_lower,0.15,primary;effective date by rule (statement silent),https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2001/k010228a.htm,2026-10-08
+2001-03-19,call_target_lower,nan,primary;no call-rate target (current account balance target); effective date by rule,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2001/k010319a.htm,2026-10-08
+2006-03-09,call_target_lower,0.0,derived:'effectively zero percent'; effective date by rule,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2006/k060309.htm,2026-10-08
+2006-07-14,call_target_lower,0.25,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2006/k060714.pdf,2026-10-08
+2007-02-21,call_target_lower,0.5,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2007/k070221.pdf,2026-10-08
+2008-10-31,call_target_lower,0.3,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2008/k081031.pdf,2026-10-08
+2008-12-19,call_target_lower,0.1,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2008/k081219.pdf,2026-10-08
+2010-10-05,call_target_lower,0.0,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2010/k101005.pdf,2026-10-08
+2013-04-04,call_target_lower,nan,primary;no call-rate target (monetary base target); effective date by rule,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2013/k130404a.pdf,2026-10-08
+2024-03-21,call_target_lower,0.0,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2024/k240319a.pdf,2026-10-08
+2024-08-01,call_target_lower,0.25,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2024/k240731a.pdf,2026-10-08
+2025-01-27,call_target_lower,0.5,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2025/k250124a.pdf,2026-10-08
+2025-12-22,call_target_lower,0.75,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2025/k251219a.pdf,2026-10-08
+2026-06-17,call_target_lower,1.0,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2026/k260616a.pdf,2026-10-08
+2026-09-24,call_target_lower,1.25,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2026/k260918a.pdf,2026-10-08
+1998-09-09,call_target_midpoint,0.25,primary;effective date by rule (statement silent),https://www.boj.or.jp/en/mopo/mpmdeci/mpr_1998/k980909c.htm,2026-10-08
+1999-02-12,call_target_midpoint,0.0,derived:'as low as possible' (initial aim around 0.15%); effective date by rule,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_1999/k990212c.htm,2026-10-08
+2000-08-11,call_target_midpoint,0.25,primary;effective date by rule (statement silent),https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2000/k000811.htm,2026-10-08
+2001-03-01,call_target_midpoint,0.15,primary;effective date by rule (statement silent),https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2001/k010228a.htm,2026-10-08
+2001-03-19,call_target_midpoint,nan,primary;no call-rate target (current account balance target); effective date by rule,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2001/k010319a.htm,2026-10-08
+2006-03-09,call_target_midpoint,0.0,derived:'effectively zero percent'; effective date by rule,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2006/k060309.htm,2026-10-08
+2006-07-14,call_target_midpoint,0.25,derived,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2006/k060714.pdf,2026-10-08
+2007-02-21,call_target_midpoint,0.5,derived,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2007/k070221.pdf,2026-10-08
+2008-10-31,call_target_midpoint,0.3,derived,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2008/k081031.pdf,2026-10-08
+2008-12-19,call_target_midpoint,0.1,derived,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2008/k081219.pdf,2026-10-08
+2010-10-05,call_target_midpoint,0.05,derived,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2010/k101005.pdf,2026-10-08
+2013-04-04,call_target_midpoint,nan,primary;no call-rate target (monetary base target); effective date by rule,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2013/k130404a.pdf,2026-10-08
+2024-03-21,call_target_midpoint,0.05,derived,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2024/k240319a.pdf,2026-10-08
+2024-08-01,call_target_midpoint,0.25,derived,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2024/k240731a.pdf,2026-10-08
+2025-01-27,call_target_midpoint,0.5,derived,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2025/k250124a.pdf,2026-10-08
+2025-12-22,call_target_midpoint,0.75,derived,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2025/k251219a.pdf,2026-10-08
+2026-06-17,call_target_midpoint,1.0,derived,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2026/k260616a.pdf,2026-10-08
+2026-09-24,call_target_midpoint,1.25,derived,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2026/k260918a.pdf,2026-10-08
+1998-09-09,call_target_upper,0.25,primary;effective date by rule (statement silent),https://www.boj.or.jp/en/mopo/mpmdeci/mpr_1998/k980909c.htm,2026-10-08
+1999-02-12,call_target_upper,0.0,derived:'as low as possible' (initial aim around 0.15%); effective date by rule,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_1999/k990212c.htm,2026-10-08
+2000-08-11,call_target_upper,0.25,primary;effective date by rule (statement silent),https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2000/k000811.htm,2026-10-08
+2001-03-01,call_target_upper,0.15,primary;effective date by rule (statement silent),https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2001/k010228a.htm,2026-10-08
+2001-03-19,call_target_upper,nan,primary;no call-rate target (current account balance target); effective date by rule,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2001/k010319a.htm,2026-10-08
+2006-03-09,call_target_upper,0.0,derived:'effectively zero percent'; effective date by rule,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2006/k060309.htm,2026-10-08
+2006-07-14,call_target_upper,0.25,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2006/k060714.pdf,2026-10-08
+2007-02-21,call_target_upper,0.5,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2007/k070221.pdf,2026-10-08
+2008-10-31,call_target_upper,0.3,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2008/k081031.pdf,2026-10-08
+2008-12-19,call_target_upper,0.1,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2008/k081219.pdf,2026-10-08
+2010-10-05,call_target_upper,0.1,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2010/k101005.pdf,2026-10-08
+2013-04-04,call_target_upper,nan,primary;no call-rate target (monetary base target); effective date by rule,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2013/k130404a.pdf,2026-10-08
+2024-03-21,call_target_upper,0.1,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2024/k240319a.pdf,2026-10-08
+2024-08-01,call_target_upper,0.25,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2024/k240731a.pdf,2026-10-08
+2025-01-27,call_target_upper,0.5,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2025/k250124a.pdf,2026-10-08
+2025-12-22,call_target_upper,0.75,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2025/k251219a.pdf,2026-10-08
+2026-06-17,call_target_upper,1.0,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2026/k260616a.pdf,2026-10-08
+2026-09-24,call_target_upper,1.25,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2026/k260918a.pdf,2026-10-08
+2008-11-16,ioer,0.1,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2008/k081031.pdf,2026-10-08
 2024-03-21,ioer,0.1,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2024/k240319a.pdf,2026-10-08
 2024-08-01,ioer,0.25,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2024/k240731a.pdf,2026-10-08
 2025-01-27,ioer,0.5,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2025/k250124a.pdf,2026-10-08
 2025-12-22,ioer,0.75,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2025/k251219a.pdf,2026-10-08
 2026-06-17,ioer,1.0,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2026/k260616a.pdf,2026-10-08
+2026-09-24,ioer,1.25,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2026/k260918a.pdf,2026-10-08
 2016-02-16,policy_rate_balance_rate,-0.1,primary,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2016/k160129a.pdf,2026-10-08
-2010-10-06,policy_rate_target,0.05,memory,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2010/k101005.pdf,2026-10-08
+2024-03-21,policy_rate_balance_rate,nan,primary;negative interest rate policy ended,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2024/k240319a.pdf,2026-10-08
