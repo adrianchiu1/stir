@@ -71,3 +71,16 @@ def test_adjust_and_tenor():
 def test_business_day_count():
     cal = Calendar.load("target")
     assert cal.business_days_between(dt.date(2026, 12, 21), dt.date(2026, 12, 28)) == 4  # 21-24; 25-26 closed, 27 Sunday
+
+
+def test_jp_rules_before_happy_monday_match_cabinet_office():
+    """1994-2006 eras: fixed-date holidays before the Happy Monday law, Greenery Day on
+    29 Apr and a citizens' holiday on 4 May before 2007, Monday-only substitutes."""
+    from pathlib import Path
+    from stircurve.refdata.calendars import Calendar
+    from stircurve.refdata.parsers.holidays import parse_jp_csv
+    live = Path(__file__).parent / "fixtures" / "live" / "jp_cao_holidays_20261008.txt"
+    official = {d for d in parse_jp_csv(live.read_text()) if 1994 <= d.year <= 2027 and d.weekday() < 5}
+    rules = {d for d, n in Calendar.from_rules("jp", range(1994, 2028)).holidays.items()
+             if d.weekday() < 5 and n != "Bank Holiday"}
+    assert rules == official

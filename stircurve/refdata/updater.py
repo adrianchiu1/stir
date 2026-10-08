@@ -14,7 +14,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from .. import REFDATA_DIR
-from .calendars import CALENDAR_NAMES, Calendar
+from .calendars import CALENDAR_NAMES, HOLIDAY_YEARS, Calendar
 from .maintenance import (MaintenancePeriod, PolicyRate, load_maintenance_periods, load_policy_rates,
                           save_maintenance_periods, save_policy_rates, validate_maintenance_periods)
 from .meetings import (BANK_CALENDAR, Meeting, effective_date, load_meetings, load_published_effective,
@@ -205,7 +205,7 @@ def update_ecb_maintenance(commit: bool = False, years: range | None = None,
 # holidays
 # ---------------------------------------------------------------------------
 @_fixture_capture
-def update_holidays(name: str, commit: bool = False, years: range = range(2005, 2036),
+def update_holidays(name: str, commit: bool = False, years: range = HOLIDAY_YEARS,
                     refdata_dir: Path = REFDATA_DIR) -> Diff:
     """Write the merged rule+official holiday file for one calendar."""
     if name not in CALENDAR_NAMES:
@@ -246,7 +246,7 @@ def update_holidays(name: str, commit: bool = False, years: range = range(2005, 
     return diff
 
 
-def write_rule_holidays(refdata_dir: Path = REFDATA_DIR, years: range = range(2005, 2036)) -> None:
+def write_rule_holidays(refdata_dir: Path = REFDATA_DIR, years: range = HOLIDAY_YEARS) -> None:
     """Seed all five holiday CSVs from rules (no network). Used at repo bootstrap."""
     (refdata_dir / "holidays").mkdir(parents=True, exist_ok=True)
     for name in CALENDAR_NAMES:
