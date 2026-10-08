@@ -113,89 +113,89 @@ date,name,calendar,source
 2018-08-27,Summer bank holiday,uk,rule
 2018-12-25,Christmas Day,uk,rule
 2018-12-26,Boxing Day,uk,rule
-2019-01-01,New Year's Day,uk,rule
-2019-04-19,Good Friday,uk,rule
-2019-04-22,Easter Monday,uk,rule
-2019-05-06,Early May bank holiday,uk,rule
-2019-05-27,Spring bank holiday,uk,rule
-2019-08-26,Summer bank holiday,uk,rule
-2019-12-25,Christmas Day,uk,rule
-2019-12-26,Boxing Day,uk,rule
-2020-01-01,New Year's Day,uk,rule
-2020-04-10,Good Friday,uk,rule
-2020-04-13,Easter Monday,uk,rule
-2020-05-08,Early May bank holiday (VE Day),uk,rule
-2020-05-25,Spring bank holiday,uk,rule
-2020-08-31,Summer bank holiday,uk,rule
-2020-12-25,Christmas Day,uk,rule
-2020-12-28,Boxing Day (substitute),uk,rule
-2021-01-01,New Year's Day,uk,rule
-2021-04-02,Good Friday,uk,rule
-2021-04-05,Easter Monday,uk,rule
-2021-05-03,Early May bank holiday,uk,rule
-2021-05-31,Spring bank holiday,uk,rule
-2021-08-30,Summer bank holiday,uk,rule
-2021-12-27,Christmas Day (substitute),uk,rule
-2021-12-28,Boxing Day (substitute),uk,rule
-2022-01-03,New Year's Day,uk,rule
-2022-04-15,Good Friday,uk,rule
-2022-04-18,Easter Monday,uk,rule
-2022-05-02,Early May bank holiday,uk,rule
-2022-06-02,Spring bank holiday,uk,rule
-2022-06-03,Platinum Jubilee bank holiday,uk,rule
-2022-08-29,Summer bank holiday,uk,rule
-2022-09-19,State Funeral of Queen Elizabeth II,uk,rule
-2022-12-26,Boxing Day,uk,rule
-2022-12-27,Christmas Day (substitute),uk,rule
-2023-01-02,New Year's Day,uk,rule
-2023-04-07,Good Friday,uk,rule
-2023-04-10,Easter Monday,uk,rule
-2023-05-01,Early May bank holiday,uk,rule
-2023-05-08,Coronation of King Charles III,uk,rule
-2023-05-29,Spring bank holiday,uk,rule
-2023-08-28,Summer bank holiday,uk,rule
-2023-12-25,Christmas Day,uk,rule
-2023-12-26,Boxing Day,uk,rule
-2024-01-01,New Year's Day,uk,rule
-2024-03-29,Good Friday,uk,rule
-2024-04-01,Easter Monday,uk,rule
-2024-05-06,Early May bank holiday,uk,rule
-2024-05-27,Spring bank holiday,uk,rule
-2024-08-26,Summer bank holiday,uk,rule
-2024-12-25,Christmas Day,uk,rule
-2024-12-26,Boxing Day,uk,rule
-2025-01-01,New Year's Day,uk,rule
-2025-04-18,Good Friday,uk,rule
-2025-04-21,Easter Monday,uk,rule
-2025-05-05,Early May bank holiday,uk,rule
-2025-05-26,Spring bank holiday,uk,rule
-2025-08-25,Summer bank holiday,uk,rule
-2025-12-25,Christmas Day,uk,rule
-2025-12-26,Boxing Day,uk,rule
-2026-01-01,New Year's Day,uk,rule
-2026-04-03,Good Friday,uk,rule
-2026-04-06,Easter Monday,uk,rule
-2026-05-04,Early May bank holiday,uk,rule
-2026-05-25,Spring bank holiday,uk,rule
-2026-08-31,Summer bank holiday,uk,rule
-2026-12-25,Christmas Day,uk,rule
-2026-12-28,Boxing Day (substitute),uk,rule
-2027-01-01,New Year's Day,uk,rule
-2027-03-26,Good Friday,uk,rule
-2027-03-29,Easter Monday,uk,rule
-2027-05-03,Early May bank holiday,uk,rule
-2027-05-31,Spring bank holiday,uk,rule
-2027-08-30,Summer bank holiday,uk,rule
-2027-12-27,Christmas Day (substitute),uk,rule
-2027-12-28,Boxing Day (substitute),uk,rule
-2028-01-03,New Year's Day,uk,rule
-2028-04-14,Good Friday,uk,rule
-2028-04-17,Easter Monday,uk,rule
-2028-05-01,Early May bank holiday,uk,rule
-2028-05-29,Spring bank holiday,uk,rule
-2028-08-28,Summer bank holiday,uk,rule
-2028-12-25,Christmas Day,uk,rule
-2028-12-26,Boxing Day,uk,rule
+2019-01-01,New Year's Day,uk,https://www.gov.uk/bank-holidays.json
+2019-04-19,Good Friday,uk,https://www.gov.uk/bank-holidays.json
+2019-04-22,Easter Monday,uk,https://www.gov.uk/bank-holidays.json
+2019-05-06,Early May bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2019-05-27,Spring bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2019-08-26,Summer bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2019-12-25,Christmas Day,uk,https://www.gov.uk/bank-holidays.json
+2019-12-26,Boxing Day,uk,https://www.gov.uk/bank-holidays.json
+2020-01-01,New Year's Day,uk,https://www.gov.uk/bank-holidays.json
+2020-04-10,Good Friday,uk,https://www.gov.uk/bank-holidays.json
+2020-04-13,Easter Monday,uk,https://www.gov.uk/bank-holidays.json
+2020-05-08,Early May bank holiday (VE Day),uk,https://www.gov.uk/bank-holidays.json
+2020-05-25,Spring bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2020-08-31,Summer bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2020-12-25,Christmas Day,uk,https://www.gov.uk/bank-holidays.json
+2020-12-28,Boxing Day (substitute),uk,https://www.gov.uk/bank-holidays.json
+2021-01-01,New Year's Day,uk,https://www.gov.uk/bank-holidays.json
+2021-04-02,Good Friday,uk,https://www.gov.uk/bank-holidays.json
+2021-04-05,Easter Monday,uk,https://www.gov.uk/bank-holidays.json
+2021-05-03,Early May bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2021-05-31,Spring bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2021-08-30,Summer bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2021-12-27,Christmas Day (substitute),uk,https://www.gov.uk/bank-holidays.json
+2021-12-28,Boxing Day (substitute),uk,https://www.gov.uk/bank-holidays.json
+2022-01-03,New Year's Day,uk,https://www.gov.uk/bank-holidays.json
+2022-04-15,Good Friday,uk,https://www.gov.uk/bank-holidays.json
+2022-04-18,Easter Monday,uk,https://www.gov.uk/bank-holidays.json
+2022-05-02,Early May bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2022-06-02,Spring bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2022-06-03,Platinum Jubilee bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2022-08-29,Summer bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2022-09-19,State Funeral of Queen Elizabeth II,uk,https://www.gov.uk/bank-holidays.json
+2022-12-26,Boxing Day,uk,https://www.gov.uk/bank-holidays.json
+2022-12-27,Christmas Day (substitute),uk,https://www.gov.uk/bank-holidays.json
+2023-01-02,New Year's Day,uk,https://www.gov.uk/bank-holidays.json
+2023-04-07,Good Friday,uk,https://www.gov.uk/bank-holidays.json
+2023-04-10,Easter Monday,uk,https://www.gov.uk/bank-holidays.json
+2023-05-01,Early May bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2023-05-08,Coronation of King Charles III,uk,https://www.gov.uk/bank-holidays.json
+2023-05-29,Spring bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2023-08-28,Summer bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2023-12-25,Christmas Day,uk,https://www.gov.uk/bank-holidays.json
+2023-12-26,Boxing Day,uk,https://www.gov.uk/bank-holidays.json
+2024-01-01,New Year's Day,uk,https://www.gov.uk/bank-holidays.json
+2024-03-29,Good Friday,uk,https://www.gov.uk/bank-holidays.json
+2024-04-01,Easter Monday,uk,https://www.gov.uk/bank-holidays.json
+2024-05-06,Early May bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2024-05-27,Spring bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2024-08-26,Summer bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2024-12-25,Christmas Day,uk,https://www.gov.uk/bank-holidays.json
+2024-12-26,Boxing Day,uk,https://www.gov.uk/bank-holidays.json
+2025-01-01,New Year's Day,uk,https://www.gov.uk/bank-holidays.json
+2025-04-18,Good Friday,uk,https://www.gov.uk/bank-holidays.json
+2025-04-21,Easter Monday,uk,https://www.gov.uk/bank-holidays.json
+2025-05-05,Early May bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2025-05-26,Spring bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2025-08-25,Summer bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2025-12-25,Christmas Day,uk,https://www.gov.uk/bank-holidays.json
+2025-12-26,Boxing Day,uk,https://www.gov.uk/bank-holidays.json
+2026-01-01,New Year's Day,uk,https://www.gov.uk/bank-holidays.json
+2026-04-03,Good Friday,uk,https://www.gov.uk/bank-holidays.json
+2026-04-06,Easter Monday,uk,https://www.gov.uk/bank-holidays.json
+2026-05-04,Early May bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2026-05-25,Spring bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2026-08-31,Summer bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2026-12-25,Christmas Day,uk,https://www.gov.uk/bank-holidays.json
+2026-12-28,Boxing Day (substitute),uk,https://www.gov.uk/bank-holidays.json
+2027-01-01,New Year's Day,uk,https://www.gov.uk/bank-holidays.json
+2027-03-26,Good Friday,uk,https://www.gov.uk/bank-holidays.json
+2027-03-29,Easter Monday,uk,https://www.gov.uk/bank-holidays.json
+2027-05-03,Early May bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2027-05-31,Spring bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2027-08-30,Summer bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2027-12-27,Christmas Day (substitute),uk,https://www.gov.uk/bank-holidays.json
+2027-12-28,Boxing Day (substitute),uk,https://www.gov.uk/bank-holidays.json
+2028-01-03,New Year's Day,uk,https://www.gov.uk/bank-holidays.json
+2028-04-14,Good Friday,uk,https://www.gov.uk/bank-holidays.json
+2028-04-17,Easter Monday,uk,https://www.gov.uk/bank-holidays.json
+2028-05-01,Early May bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2028-05-29,Spring bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2028-08-28,Summer bank holiday,uk,https://www.gov.uk/bank-holidays.json
+2028-12-25,Christmas Day,uk,https://www.gov.uk/bank-holidays.json
+2028-12-26,Boxing Day,uk,https://www.gov.uk/bank-holidays.json
 2029-01-01,New Year's Day,uk,rule
 2029-03-30,Good Friday,uk,rule
 2029-04-02,Easter Monday,uk,rule
