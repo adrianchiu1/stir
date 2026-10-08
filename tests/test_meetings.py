@@ -32,7 +32,7 @@ def test_maintenance_periods_contiguous():
 def test_fed_file_and_parcels():
     ms = load_meetings("fed")
     sched = [m for m in ms if m.scheduled]
-    assert len(sched) == 136 and all(m.effective_date == Calendar.load("us_fed").next_business_day(m.decision_date) for m in sched)
+    assert len(sched) == 143 and all(m.effective_date == Calendar.load("us_fed").next_business_day(m.decision_date) for m in sched)
     uns = [m for m in ms if not m.scheduled]
     assert {m.decision_date for m in uns} == {dt.date(2020, 3, 3), dt.date(2020, 3, 15)}
     ps = parcels(ms, dt.date(2026, 10, 8), dt.date(2027, 4, 1))
