@@ -56,7 +56,7 @@ _FED_HIST_RE = re.compile(
 
 def _fed_kind(note: str | None) -> str:
     n = (note or "").lower()
-    if "notation" in n or "no meeting" in n:
+    if "notation" in n or "no meeting" in n or "cancel" in n:
         return "skip"
     if "unscheduled" in n or "conference call" in n or "videoconference" in n:
         return "unscheduled"

@@ -97,3 +97,14 @@ def test_boj_live_past_page():
     assert {dt.date(2024, 3, 19), dt.date(2025, 12, 19), dt.date(2010, 8, 30), dt.date(2020, 3, 16),
             dt.date(2020, 5, 22), dt.date(2011, 3, 14)} <= dates
     assert dt.date(2020, 3, 19) not in dates           # brought forward to 16 Mar 2020
+
+
+def test_fed_live_historical_pages():
+    counts = {}
+    for y in range(2010, 2021):
+        got = parse_fed_text(f"{y} FOMC Meetings\n" + (LIVE / f"fed_historical_{y}_20261008.txt").read_text())
+        counts[y] = len({d for d, k in got if k == "scheduled"})      # some pages list a meeting twice
+        if y == 2020:
+            assert (dt.date(2020, 3, 18), "skip") in got                 # "March 17-18 (cancelled)"
+            assert [d for d, k in got if k == "unscheduled"] == [dt.date(2020, 3, 2), dt.date(2020, 3, 15)]
+    assert set(counts.values()) == {8}

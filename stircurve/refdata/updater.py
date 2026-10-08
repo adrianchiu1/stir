@@ -87,6 +87,7 @@ def update_meetings(bank: str, commit: bool = False, historical_years: range | N
                          regime=_regime(bank, d), synthetic=False, source_url=url, retrieved_at=today_iso())
 
     diff = Diff()
+    merged_by_kind: dict[bool, dict[dt.date, Meeting]] = {}
     for unsched in (False, True):
         existing = {m.decision_date: m for m in load_meetings(bank, False, refdata_dir)
                     if m.scheduled != unsched}
@@ -108,9 +109,21 @@ def update_meetings(bank: str, commit: bool = False, historical_years: range | N
         for d in existing:
             if d.year in covered_years and d not in incoming and d > today:
                 diff.removed.append(f"{bank} {d} no longer on source page")
-        if commit and not diff.blocking:
+        merged_by_kind[unsched] = merged
+    diff.problems += _near_duplicates(bank, [m for ms in merged_by_kind.values() for m in ms.values()])
+    if commit and not diff.blocking:
+        for unsched, merged in merged_by_kind.items():
             save_meetings(bank, list(merged.values()), unscheduled=unsched, refdata_dir=refdata_dir)
     return diff
+
+
+def _near_duplicates(bank: str, meetings: list[Meeting], days: int = 4) -> list[str]:
+    """Two decisions a few days apart are almost always one meeting dated two
+    ways (e.g. meeting day vs announcement day): a question, not an add."""
+    ms = sorted(meetings, key=lambda m: m.decision_date)
+    return [f"{bank} {a.decision_date} and {b.decision_date} are {(b.decision_date - a.decision_date).days} days apart "
+            f"({a.source_url} / {b.source_url}): same decision?"
+            for a, b in zip(ms, ms[1:]) if (b.decision_date - a.decision_date).days <= days]
 
 
 def _load_unscheduled(bank: str, refdata_dir: Path) -> list[Meeting]:
