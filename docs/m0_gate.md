@@ -18,7 +18,7 @@ ECB maintenance periods: 242 (1/2004 2004-01-24 – 7/2028 2028-12-12); `validat
 | Wed 2015-12-16 | Thu 2015-12-17 | +1 `us_fed` business day | target_lower 0 → 0.25; target_upper 0.25 → 0.5 | https://www.federalreserve.gov/monetarypolicy/fomchistorical2015.htm |
 | Wed 2017-06-14 | Thu 2017-06-15 | +1 `us_fed` business day | target_lower 0.75 → 1; target_upper 1 → 1.25 | https://www.federalreserve.gov/monetarypolicy/fomchistorical2017.htm |
 | Tue 2020-03-03 (unscheduled) | Wed 2020-03-04 | published implementation date (https://www.federalreserve.gov/newsevents/pressreleases/monetary20200303a1.htm); rule would give 2020-03-04 ✱ | target_lower 1.5 → 1; target_upper 1.75 → 1.25 | https://www.federalreserve.gov/newsevents/pressreleases/monetary20200303a.htm |
-| Sun 2020-03-15 (unscheduled) | Mon 2020-03-16 | +1 `us_fed` business day (Sunday decision) | target_lower 1 → 0; target_upper 1.25 → 0.25 | https://www.federalreserve.gov/newsevents/pressreleases/monetary20200315a.htm |
+| Sun 2020-03-15 (unscheduled) | Mon 2020-03-16 | published implementation date (https://www.federalreserve.gov/newsevents/pressreleases/monetary20200315a1.htm); rule would give 2020-03-16 ✱ | target_lower 1 → 0; target_upper 1.25 → 0.25 | https://www.federalreserve.gov/newsevents/pressreleases/monetary20200315a.htm |
 | Wed 2022-03-16 | Thu 2022-03-17 | +1 `us_fed` business day | target_lower 0 → 0.25; target_upper 0.25 → 0.5 | https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm |
 | Wed 2024-09-18 | Thu 2024-09-19 | +1 `us_fed` business day | target_lower 5.25 → 4.75; target_upper 5.5 → 5 | https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm |
 | Wed 2026-09-16 | Thu 2026-09-17 | +1 `us_fed` business day | target_lower 3.5 → 3.75; target_upper 3.75 → 4 | https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm |
@@ -67,17 +67,20 @@ Bank Rate change since June 1997 falls on a meeting date (tested).
 
 | Decision | Effective (code) | Rule applied | Rate change on effective date | Source |
 | --- | --- | --- | --- | --- |
-| Tue 2010-10-05 | Wed 2010-10-06 | next `jp` business day | policy_rate_target 0.05 [memory] | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
-| Thu 2013-04-04 | Fri 2013-04-05 | next `jp` business day | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
+| Mon 2010-05-10 (unscheduled) | Tue 2010-05-11 | next `jp` business day | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/minu_2010/g100510.pdf |
+| Tue 2010-10-05 | Tue 2010-10-05 | published implementation date (policy-rate change on 2010-10-05); rule would give 2010-10-06 ✱ | call_target_midpoint 0.1 → 0.05 [derived] | https://www.boj.or.jp/en/mopo/mpmsche_minu/minu_2010/index.htm |
 | Fri 2014-10-31 | Tue 2014-11-04 | next `jp` business day (skips Mon 03 Nov Culture Day) | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
 | Fri 2016-01-29 | Tue 2016-02-16 | published implementation date (https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2016/k160129a.pdf); rule would give 2016-02-01 ✱ | policy_rate_balance_rate -0.1 | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
 | Wed 2016-09-21 | Fri 2016-09-23 | next `jp` business day (skips Thu 22 Sep Autumnal Equinox Day) | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
 | Mon 2020-03-16 | Tue 2020-03-17 | next `jp` business day | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
-| Tue 2024-03-19 | Thu 2024-03-21 ✔ confirmed (D15) | next `jp` business day (skips Wed 20 Mar Vernal Equinox Day) | ioer 0.1 | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
-| Fri 2025-12-19 | Mon 2025-12-22 ✔ confirmed (D15) | next `jp` business day | ioer 0.5 → 0.75 | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
-| Tue 2026-06-16 | Wed 2026-06-17 ✔ confirmed (D15) | next `jp` business day | ioer 0.75 → 1 | https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm |
-| Fri 2027-12-17 | Mon 2027-12-20 | next `jp` business day | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm |
+| Tue 2024-03-19 | Thu 2024-03-21 ✔ confirmed (D15) | next `jp` business day (skips Wed 20 Mar Vernal Equinox Day) | call_target_midpoint nan → 0.05 [derived]; policy_rate_balance_rate -0.1 → nan [primary;negative interest rate policy ended] | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
+| Fri 2025-12-19 | Mon 2025-12-22 ✔ confirmed (D15) | next `jp` business day | call_target_midpoint 0.5 → 0.75 [derived]; ioer 0.5 → 0.75 | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
+| Tue 2026-06-16 | Wed 2026-06-17 ✔ confirmed (D15) | next `jp` business day | call_target_midpoint 0.75 → 1 [derived]; ioer 0.75 → 1 | https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm |
+| Fri 2026-09-18 | Thu 2026-09-24 | next `jp` business day (skips Mon 21 Sep Respect for the Aged Day, Tue 22 Sep Citizens' Holiday, Wed 23 Sep Autumnal Equinox Day) | call_target_midpoint 1 → 1.25 [derived]; ioer 1 → 1.25 | https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm |
 
 The three D15 confirmations (✔) reproduce. 2016-01-29 (✱): the negative rate applied from the
 reserve maintenance period commencing 16 Feb 2016 (statement k160129a); recorded in
-`meetings/published_effective.csv`, which wins over the next-business-day rule.
+`meetings/published_effective.csv`. 2010-10-05 (✱): the statement says the new guideline
+applied 'effective immediately', as for every change 2006-2010; since 2024 the statements
+date it the next business day. Unscheduled meetings (from the minutes) are in
+`boj_unscheduled.csv`.

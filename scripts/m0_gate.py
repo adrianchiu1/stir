@@ -33,12 +33,12 @@ PICKS = {
             "2019-09-12", "2022-07-21", "2023-12-14", "2024-06-06", "2027-04-29"],
     "boe": ["2010-03-04", "2013-08-01", "2016-08-04", "2017-11-02", "2020-03-11",
             "2020-03-19", "2022-02-03", "2024-08-01", "2026-09-17", "2027-12-16"],
-    "boj": ["2010-10-05", "2013-04-04", "2014-10-31", "2016-01-29", "2016-09-21",
-            "2020-03-16", "2024-03-19", "2025-12-19", "2026-06-16", "2027-12-17"],
+    "boj": ["2010-05-10", "2010-10-05", "2014-10-31", "2016-01-29", "2016-09-21",
+            "2020-03-16", "2024-03-19", "2025-12-19", "2026-06-16", "2026-09-18"],
 }
 BOJ_CONFIRMED = {D("2024-03-19"): D("2024-03-21"), D("2025-12-19"): D("2025-12-22"), D("2026-06-16"): D("2026-06-17")}
 ANCHORS = {"fed": ["target_lower", "target_upper"], "ecb": ["dfr", "mro", "mlf"], "boe": ["bank_rate"],
-           "boj": ["policy_rate_target", "policy_rate_balance_rate", "ioer"]}
+           "boj": ["call_target_midpoint", "policy_rate_balance_rate", "ioer"]}
 
 
 def _skipped(cal: Calendar, a: dt.date, b: dt.date) -> str:
@@ -47,9 +47,13 @@ def _skipped(cal: Calendar, a: dt.date, b: dt.date) -> str:
     return f" (skips {', '.join(names)})" if names else ""
 
 
-def _rule(bank: str, dec: dt.date, eff: dt.date, cal: Calendar, mps_by_meeting: dict, overrides: dict) -> str:
+def _rule(bank: str, dec: dt.date, eff: dt.date, cal: Calendar, mps_by_meeting: dict, overrides: dict,
+          lookup: dict) -> str:
+    rule = effective_date(bank, dec, cal)
     if dec in overrides:
-        return f"published implementation date ({overrides[dec][1]}); rule would give {effective_date(bank, dec, cal)} ✱"
+        return f"published implementation date ({overrides[dec][1]}); rule would give {rule} ✱"
+    if bank in ("fed", "boj") and lookup.get(dec) == eff and eff != rule:
+        return f"published implementation date (policy-rate change on {eff}); rule would give {rule} ✱"
     if bank == "fed":
         return f"+1 `us_fed` business day{_skipped(cal, dec, eff)}" + (" (Sunday decision)" if dec.weekday() == 6 else "")
     if bank == "boe":
@@ -107,7 +111,7 @@ def main() -> int:
             assert eff == m.effective_date, (bank, dec, eff, m.effective_date)   # code agrees with the CSV
             kind = "" if m.scheduled else " (unscheduled)"
             conf = " ✔ confirmed (D15)" if BOJ_CONFIRMED.get(dec) == eff else ""
-            lines.append(f"| {dec:%a %Y-%m-%d}{kind} | {eff:%a %Y-%m-%d}{conf} | {_rule(bank, dec, eff, cal, mps_by_meeting, overrides)} "
+            lines.append(f"| {dec:%a %Y-%m-%d}{kind} | {eff:%a %Y-%m-%d}{conf} | {_rule(bank, dec, eff, cal, mps_by_meeting, overrides, lookup)} "
                          f"| {_changes(rates, ANCHORS[bank], eff)} | {m.source_url} |")
         lines.append("")
         if bank == "ecb":
@@ -122,7 +126,10 @@ def main() -> int:
         if bank == "boj":
             lines += ["The three D15 confirmations (✔) reproduce. 2016-01-29 (✱): the negative rate applied from the",
                       "reserve maintenance period commencing 16 Feb 2016 (statement k160129a); recorded in",
-                      "`meetings/published_effective.csv`, which wins over the next-business-day rule.", ""]
+                      "`meetings/published_effective.csv`. 2010-10-05 (✱): the statement says the new guideline",
+                      "applied 'effective immediately', as for every change 2006-2010; since 2024 the statements",
+                      "date it the next business day. Unscheduled meetings (from the minutes) are in",
+                      "`boj_unscheduled.csv`.", ""]
     out = ROOT / "docs" / "m0_gate.md"
     out.write_text("\n".join(lines), encoding="utf-8")
     print(f"wrote {out}")
