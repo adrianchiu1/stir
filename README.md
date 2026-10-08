@@ -22,7 +22,7 @@ data/market/          Bloomberg CSV dumps written by pxts (M1)
 data/curves/          local parquet store, git-ignored
 exports/              analytics shared with the team
 scripts/              update_refdata.py, run_tests.py
-tests/                fixtures captured from the central-bank pages on 8 Oct 2026
+tests/                fixtures/live: pages captured by --save-fixtures on 8 Oct 2026
 ```
 
 ## Install
@@ -40,6 +40,7 @@ public sources on a machine with outbound internet and never write silently:
 
 ```
 python scripts/update_refdata.py --bank fed --dry-run               # diff only
+python scripts/update_refdata.py --bank boe --dry-run --save-fixtures tests/fixtures/live
 python scripts/update_refdata.py --bank fed --historical 2010-2020 --commit
 python scripts/update_refdata.py --ecb-maintenance --years 2010-2027 --commit
 python scripts/update_refdata.py --bank ecb --commit                 # ECB meetings come from the MP tables
@@ -78,18 +79,21 @@ idea: the May 2025 slot became 29 April 2026, one week and one month away.
 python scripts/run_tests.py      # or: pytest
 ```
 
-## Seeded data (8 Oct 2026)
+## Reference data after the first live run (8 Oct 2026)
 
-* `meetings/fed.csv`: 2021–2027 scheduled meetings from the Fed calendar page;
-  2020 unscheduled cuts in `fed_unscheduled.csv`. 2010–2020 come from
-  `--historical 2010-2020`.
-* `maintenance_periods/ecb.csv` and `meetings/ecb.csv`: MP 8/2026 and 1–8/2027
-  from the 30 Jun 2026 press release. Earlier years come from `--ecb-maintenance`.
-* `meetings/boe.csv`, `meetings/boj.csv`: headers only; first updater run fills them.
-* Holidays: rule-generated 2005–2035; `--holidays` overlays the official sources.
-* Policy rates: Fed target range 2008–2026 from the Fed's open-market table (IORB derived as top−10bp
-  from Mar 2022; IOER 2010–21 from memory until `--policy-rates fed` pulls FRED); ECB 2019–2026 from the
-  key-rates table (2009–2016 rows from memory, confidence `memory`, confirmed on the first `--policy-rates ecb`
-  run); BoE 2009–2025 from the Bank Rate database; BoJ from the Statements on Monetary Policy.
+* Meetings: Fed 2010–2019 and 2021–2027 (2020 held for a decision: `--historical 2020`
+  dates the emergency cut 2 Mar, the committed row says 3 Mar); ECB 2010–2027 from the
+  maintenance tables; BoJ 2010–2027 (schedule + past-meetings pages); BoE 2026–2027 only
+  (the MPC dates page has no history).
+* `maintenance_periods/ecb.csv`: 1/2010 – 8/2027, contiguous.
+* Holidays: rule-generated 2005–2035; `source` names gov.uk / Cabinet Office where they
+  confirm a date. `us_sifma` is still rule-only (Good Friday 2026 question).
+* Policy rates: Fed, ECB, BoE from the primary tables and FRED; no `memory` rows left except
+  BoJ 2010-10-06 (BoJ is maintained by hand).
+* `docs/m0_gate.md` (`python scripts/m0_gate.py`): effective-date spot checks for the M0 gate.
+
+`--save-fixtures DIR` writes the text of every fetched page to `DIR/<source>_<YYYYMMDD>.txt`;
+`tests/fixtures/live` holds the 8 Oct 2026 capture and `tests/test_live_fixtures.py` pins
+each parser's row count on it.
 
 See `CLAUDE.md` for working rules and `docs/decisions.md` for the decision log and build plan.
