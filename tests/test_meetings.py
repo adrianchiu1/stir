@@ -23,15 +23,16 @@ def test_effective_rules():
 
 def test_maintenance_periods_contiguous():
     mps = load_maintenance_periods()
-    assert len(mps) == 9
+    assert len(mps) == 5 * 12 + 13 * 8          # monthly 2010-14, eight a year 2015-27 (live run 8 Oct 2026)
     assert validate_maintenance_periods(mps) == []
-    assert mps[0].length_days == 49 and mps[1].length_days == 42
+    by = {m.label: m for m in mps}
+    assert by["8/2026"].length_days == 49 and by["1/2027"].length_days == 42 and by["1/2010"].length_days == 21
 
 
 def test_fed_file_and_parcels():
     ms = load_meetings("fed")
     sched = [m for m in ms if m.scheduled]
-    assert len(sched) == 56 and all(m.effective_date == Calendar.load("us_fed").next_business_day(m.decision_date) for m in sched)
+    assert len(sched) == 136 and all(m.effective_date == Calendar.load("us_fed").next_business_day(m.decision_date) for m in sched)
     uns = [m for m in ms if not m.scheduled]
     assert {m.decision_date for m in uns} == {dt.date(2020, 3, 3), dt.date(2020, 3, 15)}
     ps = parcels(ms, dt.date(2026, 10, 8), dt.date(2027, 4, 1))

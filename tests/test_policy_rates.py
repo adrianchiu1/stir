@@ -42,7 +42,8 @@ def test_rate_in_effect_all_banks():
     assert rate_in_effect(fed, "iorb", dt.date(2026, 10, 8)) == 3.90
     assert rate_in_effect(fed, "target_midpoint", dt.date(2010, 6, 1)) == 0.125
     ecb = load_policy_rates("ecb")
-    assert rate_in_effect(ecb, "dfr", dt.date(2027, 1, 1)) == 2.25
+    assert rate_in_effect(ecb, "dfr", dt.date(2027, 1, 1)) == 2.50          # 16 Sep 2026 change (live key-rates page)
+    assert rate_in_effect(ecb, "dfr", dt.date(2026, 9, 15)) == 2.25
     assert rate_in_effect(ecb, "dfr", dt.date(2025, 6, 10)) == 2.25 and rate_in_effect(ecb, "dfr", dt.date(2025, 6, 11)) == 2.00
     assert rate_in_effect(ecb, "dfr", dt.date(2015, 1, 1)) == -0.20
     boe = load_policy_rates("boe")
