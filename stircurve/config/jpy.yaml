@@ -5,11 +5,12 @@ fixing_calendars:
   TONA: jp
 meetings:
   expected_per_year: 8
-  effective_rule: next_business_day
+  effective_rule: next_business_day   # same day for decisions before 19 Mar 2024 (D18)
   cadence_template: latest_full_year
   synthetic_horizon_years: 3
 policy_anchors:
-  - {from: "2010-01-01", anchor: call_target_midpoint, note: "0-0.1% target -> 0.05; NaN under QQE 2013-04-05..2016-02-15 (no rate target): AC to choose (ioer 0.1?)"}
+  - {from: "2010-01-01", anchor: call_target_midpoint, note: "0-0.1% target -> 0.05"}
+  - {from: "2013-04-04", anchor: ioer, note: "QQE: no call-rate target; complementary deposit facility 0.1% (AC, PR #1)"}
   - {from: "2016-02-16", anchor: policy_rate_balance_rate}
   - {from: "2024-03-21", anchor: ioer}
 families:

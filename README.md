@@ -60,10 +60,10 @@ Office holiday CSV; SIFMA holiday schedule; TARGET and US federal holidays by ru
 
 | Bank | Rule | Notes |
 | --- | --- | --- |
-| Fed | decision + 1 `us_fed` business day | decision = statement date (2020-03-03, meeting 2–3 Mar); published: target changes until 2008 same day |
+| Fed | decision + 1 `us_fed` business day; before 2009 the decision day (D18) | decision = statement date (2020-03-03, meeting 2–3 Mar) |
 | ECB | start of the maintenance period attached to the meeting | published table wins; Wednesday-after rule is the fallback for synthetic meetings |
 | BoE | decision date | |
-| BoJ | next `jp` business day | confirmed: 2024-03-19→21 Mar (20 Mar holiday), 2025-12-19→22 Dec, 2026-06-16→17 Jun; published: 2016-01-29→16 Feb, 2006–2010 changes same day |
+| BoJ | next `jp` business day; before 19 Mar 2024 the decision day (D18) | confirmed: 2024-03-19→21 Mar (20 Mar holiday), 2025-12-19→22 Dec, 2026-06-16→17 Jun; published: 2016-01-29→16 Feb |
 
 For every bank a published implementation date wins over the rule: the ECB maintenance-period
 table, and `meetings/published_effective.csv` (one row per decision, with `source_url`).

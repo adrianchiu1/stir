@@ -13,6 +13,11 @@ def test_effective_rules():
     assert effective_date("boj", dt.date(2025, 1, 24), jp) == dt.date(2025, 1, 27)   # Friday -> Monday
     assert effective_date("boj", dt.date(2025, 12, 19), jp) == dt.date(2025, 12, 22)
     assert effective_date("boj", dt.date(2024, 3, 19), jp) == dt.date(2024, 3, 21)   # 20 Mar 2024 holiday
+    # era rule (D18): same day before 2009 (Fed) / 19 Mar 2024 (BoJ), rolled to a business day
+    assert effective_date("fed", dt.date(2006, 8, 8), us) == dt.date(2006, 8, 8)
+    assert effective_date("fed", dt.date(2009, 1, 28), us) == dt.date(2009, 1, 29)
+    assert effective_date("boj", dt.date(2016, 9, 21), jp) == dt.date(2016, 9, 21)
+    assert effective_date("boj", dt.date(2024, 1, 23), jp) == dt.date(2024, 1, 23)
     # ECB rule fallback: Thursday -> following Wednesday
     assert ecb_rule_effective(dt.date(2027, 2, 4), tg) == dt.date(2027, 2, 10)
     # ECB published table overrides the rule (MP 3/2027 starts Thu 6 May)
@@ -84,7 +89,7 @@ def test_published_effective_dates_win_over_the_rule():
     from stircurve.refdata.meetings import load_published_effective, published_lookup
     jp = Calendar.load("jp")
     boj = published_lookup("boj")
-    assert effective_date("boj", dt.date(2016, 1, 29), jp) == dt.date(2016, 2, 1)            # rule
+    assert effective_date("boj", dt.date(2016, 1, 29), jp) == dt.date(2016, 1, 29)           # rule (same day pre-2024)
     assert effective_date("boj", dt.date(2016, 1, 29), jp, boj) == dt.date(2016, 2, 16)      # published (k160129a)
     assert effective_date("boj", dt.date(2024, 3, 19), jp, boj) == dt.date(2024, 3, 21)      # rule still applies
     assert published_lookup("fed")[dt.date(2020, 3, 3)] == dt.date(2020, 3, 4)

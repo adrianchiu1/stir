@@ -6,13 +6,15 @@ Unscheduled decisions live in ``<bank>_unscheduled.csv`` with the same columns.
 
 Effective-date rules (see the design spec, "Reference data"):
 
-* fed: decision date + 1 business day on the ``us_fed`` calendar.
+* fed: decision date + 1 business day on the ``us_fed`` calendar (decisions
+  before 2009: the decision day, ``SAME_DAY_UNTIL``).
 * ecb: start of the reserve maintenance period attached to the meeting in
   ``data/refdata/maintenance_periods/ecb.csv``; rule-based fallback for
   synthetic meetings (Wednesday after a Thursday decision, rolled forward
   over TARGET closing days).
 * boe: the decision date itself.
-* boj: next business day on the ``jp`` calendar (D15).
+* boj: next business day on the ``jp`` calendar (D15); decisions before
+  19 Mar 2024: the decision day (D18).
 
 For every bank a published implementation date wins over the rule: the ECB
 maintenance-period table, and ``meetings/published_effective.csv`` for
@@ -120,6 +122,15 @@ def save_meetings(bank: str, meetings: list[Meeting], unscheduled: bool = False,
 # ---------------------------------------------------------------------------
 # effective-date rules
 # ---------------------------------------------------------------------------
+# Era rule (D18): decisions took effect the same day (rolled to a business day)
+# before these dates and the next business day from them. Fed: target changes
+# were effective on the decision day through Dec 2008; next business day since
+# the first post-2008 change (Dec 2015). BoJ: 'effective immediately' (2006-2010
+# statements); the 19 Mar 2024 statement is the first to date the change for the
+# next business day.
+SAME_DAY_UNTIL = {"fed": dt.date(2009, 1, 1), "boj": dt.date(2024, 3, 19)}
+
+
 def effective_date(bank: str, decision: dt.date, calendar: Calendar,
                    published: dict[dt.date, dt.date] | None = None) -> dt.date:
     """Date on which a decision taken on ``decision`` applies to the overnight rate.
@@ -129,6 +140,8 @@ def effective_date(bank: str, decision: dt.date, calendar: Calendar,
     """
     if published and decision in published:
         return published[decision]
+    if bank in SAME_DAY_UNTIL and decision < SAME_DAY_UNTIL[bank]:
+        return calendar.next_business_day(decision, include=True)
     if bank == "fed":
         return calendar.next_business_day(decision)
     if bank == "boe":
@@ -206,8 +219,9 @@ def published_lookup(bank: str, refdata_dir: Path = REFDATA_DIR,
         if decisions is None:
             decisions = [m.decision_date for m in load_meetings(bank, True, refdata_dir)]
         rates = load_policy_rates(bank, refdata_dir)
-        changes = [r.effective_date for i, r in enumerate(rates) if r.anchor in RATE_CHANGE_ANCHORS[bank]
-                   and r.effective_date >= min(decisions, default=r.effective_date)]
+        changes = [r.effective_date for r in rates if r.anchor in RATE_CHANGE_ANCHORS[bank]
+                   and r.effective_date >= min(decisions, default=r.effective_date)
+                   and "effective date by rule" not in r.confidence]     # rule-dated rows publish nothing
         out.update(published_from_rate_changes(decisions, changes, RATE_CHANGE_WINDOW_DAYS[bank]))
     out.update({d: eff for d, (eff, _) in load_published_effective(bank, refdata_dir).items()})
     return out

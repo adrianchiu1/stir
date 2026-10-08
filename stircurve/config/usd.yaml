@@ -6,7 +6,7 @@ fixing_calendars:
   SOFR: us_sofr                     # SOFR publication days; us_sifma = SIFMA closes (ISDA USGS business days)
 meetings:
   expected_per_year: 8
-  effective_rule: next_business_day
+  effective_rule: next_business_day   # same day for decisions before 2009 (D18)
   cadence_template: latest_full_year
   synthetic_horizon_years: 3
 policy_anchors:                     # dated schedule; the spread estimator uses the anchor in effect

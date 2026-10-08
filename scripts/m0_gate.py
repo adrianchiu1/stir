@@ -54,6 +54,9 @@ def _rule(bank: str, dec: dt.date, eff: dt.date, cal: Calendar, mps_by_meeting: 
         return f"published implementation date ({overrides[dec][1]}); rule would give {rule} ✱"
     if bank in ("fed", "boj") and lookup.get(dec) == eff and eff != rule:
         return f"published implementation date (policy-rate change on {eff}); rule would give {rule} ✱"
+    from stircurve.refdata.meetings import SAME_DAY_UNTIL
+    if bank in SAME_DAY_UNTIL and dec < SAME_DAY_UNTIL[bank]:
+        return f"same day (before {SAME_DAY_UNTIL[bank]}, D18){_skipped(cal, dec, eff)}"
     if bank == "fed":
         return f"+1 `us_fed` business day{_skipped(cal, dec, eff)}" + (" (Sunday decision)" if dec.weekday() == 6 else "")
     if bank == "boe":
@@ -126,10 +129,9 @@ def main() -> int:
         if bank == "boj":
             lines += ["The three D15 confirmations (✔) reproduce. 2016-01-29 (✱): the negative rate applied from the",
                       "reserve maintenance period commencing 16 Feb 2016 (statement k160129a); recorded in",
-                      "`meetings/published_effective.csv`. 2010-10-05 (✱): the statement says the new guideline",
-                      "applied 'effective immediately', as for every change 2006-2010; since 2024 the statements",
-                      "date it the next business day. Unscheduled meetings (from the minutes) are in",
-                      "`boj_unscheduled.csv`.", ""]
+                      "`meetings/published_effective.csv`. Before 19 Mar 2024 decisions take effect the same day",
+                      "(D18; the 2006-2010 statements say 'effective immediately'); since then the statements date",
+                      "them the next business day. Unscheduled meetings (from the minutes) are in `boj_unscheduled.csv`.", ""]
     out = ROOT / "docs" / "m0_gate.md"
     out.write_text("\n".join(lines), encoding="utf-8")
     print(f"wrote {out}")

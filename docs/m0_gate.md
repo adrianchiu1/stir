@@ -67,12 +67,12 @@ Bank Rate change since June 1997 falls on a meeting date (tested).
 
 | Decision | Effective (code) | Rule applied | Rate change on effective date | Source |
 | --- | --- | --- | --- | --- |
-| Mon 2010-05-10 (unscheduled) | Tue 2010-05-11 | next `jp` business day | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/minu_2010/g100510.pdf |
-| Tue 2010-10-05 | Tue 2010-10-05 | published implementation date (policy-rate change on 2010-10-05); rule would give 2010-10-06 ✱ | call_target_midpoint 0.1 → 0.05 [derived] | https://www.boj.or.jp/en/mopo/mpmsche_minu/minu_2010/index.htm |
-| Fri 2014-10-31 | Tue 2014-11-04 | next `jp` business day (skips Mon 03 Nov Culture Day) | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
-| Fri 2016-01-29 | Tue 2016-02-16 | published implementation date (https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2016/k160129a.pdf); rule would give 2016-02-01 ✱ | policy_rate_balance_rate -0.1 | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
-| Wed 2016-09-21 | Fri 2016-09-23 | next `jp` business day (skips Thu 22 Sep Autumnal Equinox Day) | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
-| Mon 2020-03-16 | Tue 2020-03-17 | next `jp` business day | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
+| Mon 2010-05-10 (unscheduled) | Mon 2010-05-10 | same day (before 2024-03-19, D18) | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/minu_2010/g100510.pdf |
+| Tue 2010-10-05 | Tue 2010-10-05 | same day (before 2024-03-19, D18) | call_target_midpoint 0.1 → 0.05 [derived] | https://www.boj.or.jp/en/mopo/mpmsche_minu/minu_2010/index.htm |
+| Fri 2014-10-31 | Fri 2014-10-31 | same day (before 2024-03-19, D18) | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
+| Fri 2016-01-29 | Tue 2016-02-16 | published implementation date (https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2016/k160129a.pdf); rule would give 2016-01-29 ✱ | policy_rate_balance_rate -0.1 | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
+| Wed 2016-09-21 | Wed 2016-09-21 | same day (before 2024-03-19, D18) | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
+| Mon 2020-03-16 | Mon 2020-03-16 | same day (before 2024-03-19, D18) | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
 | Tue 2024-03-19 | Thu 2024-03-21 ✔ confirmed (D15) | next `jp` business day (skips Wed 20 Mar Vernal Equinox Day) | call_target_midpoint nan → 0.05 [derived]; policy_rate_balance_rate -0.1 → nan [primary;negative interest rate policy ended] | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
 | Fri 2025-12-19 | Mon 2025-12-22 ✔ confirmed (D15) | next `jp` business day | call_target_midpoint 0.5 → 0.75 [derived]; ioer 0.5 → 0.75 | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
 | Tue 2026-06-16 | Wed 2026-06-17 ✔ confirmed (D15) | next `jp` business day | call_target_midpoint 0.75 → 1 [derived]; ioer 0.75 → 1 | https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm |
@@ -80,7 +80,6 @@ Bank Rate change since June 1997 falls on a meeting date (tested).
 
 The three D15 confirmations (✔) reproduce. 2016-01-29 (✱): the negative rate applied from the
 reserve maintenance period commencing 16 Feb 2016 (statement k160129a); recorded in
-`meetings/published_effective.csv`. 2010-10-05 (✱): the statement says the new guideline
-applied 'effective immediately', as for every change 2006-2010; since 2024 the statements
-date it the next business day. Unscheduled meetings (from the minutes) are in
-`boj_unscheduled.csv`.
+`meetings/published_effective.csv`. Before 19 Mar 2024 decisions take effect the same day
+(D18; the 2006-2010 statements say 'effective immediately'); since then the statements date
+them the next business day. Unscheduled meetings (from the minutes) are in `boj_unscheduled.csv`.
