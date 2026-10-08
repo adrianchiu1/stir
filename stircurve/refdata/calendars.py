@@ -375,12 +375,14 @@ class Calendar:
         return self.adjust(x, convention)
 
     # --- io -----------------------------------------------------------------
-    def write_csv(self, path: Path, source: str = "rule") -> None:
+    def write_csv(self, path: Path, source: str | dict[dt.date, str] = "rule") -> None:
+        """``source``: one label for every row, or a per-date mapping (missing dates: 'rule')."""
         with path.open("w", newline="", encoding="utf-8") as fh:
-            w = csv.writer(fh)
+            w = csv.writer(fh, lineterminator="\n")
             w.writerow(["date", "name", "calendar", "source"])
             for d in sorted(self.holidays):
-                w.writerow([d.isoformat(), self.holidays[d], self.name, source])
+                src = source.get(d, "rule") if isinstance(source, dict) else source
+                w.writerow([d.isoformat(), self.holidays[d], self.name, src])
 
 
 # ---------------------------------------------------------------------------

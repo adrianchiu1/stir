@@ -226,7 +226,8 @@ def update_holidays(name: str, commit: bool = False, years: range = range(2005, 
             diff.removed.append(f"{name} {d} {existing.holidays[d]}")
     if commit and not diff.blocking:
         out = Calendar(name, merged)
-        out.write_csv(refdata_dir / "holidays" / f"{name}.csv", source=source)
+        out.write_csv(refdata_dir / "holidays" / f"{name}.csv",
+                      source={d: source for d in official} if official else source)
     return diff
 
 

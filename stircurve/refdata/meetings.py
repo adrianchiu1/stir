@@ -107,7 +107,7 @@ def save_meetings(bank: str, meetings: list[Meeting], unscheduled: bool = False,
     p = meetings_path(bank, unscheduled, refdata_dir)
     p.parent.mkdir(parents=True, exist_ok=True)
     with p.open("w", newline="", encoding="utf-8") as fh:
-        w = csv.DictWriter(fh, fieldnames=COLUMNS)
+        w = csv.DictWriter(fh, fieldnames=COLUMNS, lineterminator="\n")
         w.writeheader()
         for m in sorted(meetings, key=lambda m: m.decision_date):
             w.writerow(m.as_row())

@@ -78,7 +78,7 @@ def save_maintenance_periods(mps: list[MaintenancePeriod], refdata_dir: Path = R
     p = mp_path(refdata_dir)
     p.parent.mkdir(parents=True, exist_ok=True)
     with p.open("w", newline="", encoding="utf-8") as fh:
-        w = csv.writer(fh)
+        w = csv.writer(fh, lineterminator="\n")
         w.writerow(MP_COLUMNS)
         for m in sorted(mps, key=lambda m: m.start):
             w.writerow([m.label, m.meeting_decision_date.isoformat() if m.meeting_decision_date else "",
@@ -152,7 +152,7 @@ def save_policy_rates(bank: str, rates: list[PolicyRate], refdata_dir: Path = RE
     p = refdata_dir / "policy_rates" / f"{bank}.csv"
     p.parent.mkdir(parents=True, exist_ok=True)
     with p.open("w", newline="", encoding="utf-8") as fh:
-        w = csv.writer(fh)
+        w = csv.writer(fh, lineterminator="\n")
         w.writerow(PR_COLUMNS)
         for r in sorted(rates, key=lambda r: (r.anchor, r.effective_date)):
             w.writerow([r.effective_date.isoformat(), r.anchor, r.rate, r.confidence, r.source_url, r.retrieved_at])
