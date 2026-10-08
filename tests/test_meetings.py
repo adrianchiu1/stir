@@ -92,10 +92,11 @@ def test_published_effective_dates_win_over_the_rule():
 
 
 def test_policy_rate_changes_fall_on_meeting_effective_dates():
-    """Fed target / ECB DFR / BoJ policy-rate changes since 2010 are implementation
+    """Fed target / ECB DFR, MRO / BoE Bank Rate / BoJ policy-rate changes since 2010 are implementation
     dates of committed meetings (published or rule)."""
     from stircurve.refdata.maintenance import load_policy_rates
-    for bank, anchors in (("fed", {"target_upper"}), ("ecb", {"dfr", "mro"}), ("boj", {"policy_rate_balance_rate", "ioer"})):
+    for bank, anchors in (("fed", {"target_upper"}), ("ecb", {"dfr", "mro"}), ("boe", {"bank_rate"}),
+                          ("boj", {"policy_rate_balance_rate", "ioer"})):
         eff = {m.effective_date for m in load_meetings(bank)}
         miss = [(r.anchor, r.effective_date) for r in load_policy_rates(bank)
                 if r.anchor in anchors and r.effective_date >= dt.date(2010, 1, 1) and r.effective_date not in eff]
