@@ -1,1 +1,4 @@
 decision_date,effective_date,scheduled,regime,synthetic,source_url,retrieved_at
+2001-09-18,2001-09-18,0,boe_monthly,0,https://www.bankofengland.co.uk/-/media/boe/files/news/2001/september/mpc-18-september-2001.pdf,2026-10-08
+2020-03-11,2020-03-11,0,boe_eight,0,https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2020/13march-2020,2026-10-08
+2020-03-19,2020-03-19,0,boe_eight,0,https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2020/monetary-policy-summary-for-the-special-monetary-policy-committee-meeting-on-19-march-2020,2026-10-08
