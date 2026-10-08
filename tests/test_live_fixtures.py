@@ -169,7 +169,13 @@ def _parse(path: Path):
 
 
 def test_every_live_fixture_has_an_expected_count():
-    assert sorted(p.name for p in LIVE.iterdir()) == sorted(EXPECTED)
+    # market-data manifest sources (rule documents) are checked quote by quote in test_manifest
+    from stircurve.marketdata.manifest import load_manifest
+    from stircurve.marketdata.sources import latest_fixture
+    m = load_manifest("usd")
+    rule_docs = {latest_fixture(s["fixture"], LIVE).name for s in m.sources.values()
+                 if s.get("fixture") and s.get("status", "captured") == "captured"}
+    assert sorted(p.name for p in LIVE.iterdir() if p.name not in rule_docs) == sorted(EXPECTED)
 
 
 def test_live_fixture_row_counts():
