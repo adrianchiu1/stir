@@ -32,9 +32,14 @@ def test_maintenance_periods_contiguous():
 def test_fed_file_and_parcels():
     ms = load_meetings("fed")
     sched = [m for m in ms if m.scheduled]
-    assert len(sched) == 143 and all(m.effective_date == Calendar.load("us_fed").next_business_day(m.decision_date) for m in sched)
-    uns = [m for m in ms if not m.scheduled]
-    assert {m.decision_date for m in uns} == {dt.date(2020, 3, 3), dt.date(2020, 3, 15)}
+    from stircurve.refdata.meetings import published_lookup
+    us, pub = Calendar.load("us_fed"), published_lookup("fed")
+    assert len(sched) == 33 * 8 + 9 - 1     # 1994-2027, 2003 lists 15 and 16 Sep, 2020 March cancelled
+    assert all(m.effective_date == effective_date("fed", m.decision_date, us, pub) for m in ms)
+    # target changes took effect on the decision day until 2008, the next business day since 2015
+    assert pub[dt.date(2008, 12, 16)] == dt.date(2008, 12, 16) and pub[dt.date(2015, 12, 16)] == dt.date(2015, 12, 17)
+    uns = {m.decision_date for m in ms if not m.scheduled}
+    assert {dt.date(2008, 1, 22), dt.date(2008, 10, 8), dt.date(2020, 3, 3), dt.date(2020, 3, 15)} <= uns
     ps = parcels(ms, dt.date(2026, 10, 8), dt.date(2027, 4, 1))
     assert ps[0].start == dt.date(2026, 10, 8) and ps[0].decision_date is None
     assert ps[1].start == dt.date(2026, 10, 29) and ps[1].decision_date == dt.date(2026, 10, 28)
