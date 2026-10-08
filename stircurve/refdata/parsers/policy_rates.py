@@ -10,8 +10,12 @@
   operations | Marginal lending facility"; column order is read from the header.
 * BoE: https://www.bankofengland.co.uk/boeapps/database/Bank-Rate.asp —
   "Date Changed | Rate" with dates like "18 Dec 25".
-* BoJ: no machine-readable table; rows are maintained by hand from the
-  Statement on Monetary Policy PDFs (effective date in the footnote).
+* BoJ: no machine-readable table. History 1998-2026 is curated from the
+  statements (one source_url per row); new meetings are read from their
+  statement, https://www.boj.or.jp/en/mopo/mpmdeci/mpr_<YYYY>/k<YYMMDD>a.pdf
+  (state_<YYYY>/ for some), by ``parse_boj_statement``: the guideline for the
+  uncollateralized overnight call rate, the complementary deposit facility
+  rate, the basic loan rate and the stated effective date.
 """
 from __future__ import annotations
 
@@ -195,3 +199,88 @@ def _boe_rows(lines: list[str]) -> list[tuple[dt.date, float]]:
 
 def fetch_boe_bank_rate() -> list[tuple[dt.date, float]]:
     return parse_boe_bank_rate_text(fetch_text(BOE_BANK_RATE_URL, "boe_bank_rate"))
+
+
+BOJ_STATEMENT_URLS = ("https://www.boj.or.jp/en/mopo/mpmdeci/mpr_{y}/k{ymd}a.pdf",
+                      "https://www.boj.or.jp/en/mopo/mpmdeci/state_{y}/k{ymd}a.pdf")
+_FN = r"(?:\d|\[note\])*"       # footnote markers glued to words once whitespace is removed
+
+
+def _squash(text: str) -> str:
+    """Lower-case, no whitespace: PDF text splits words ('uncollaterali zed')."""
+    t = re.sub(r"\s+", "", text).lower()
+    # drop dissenting proposals ('... proposed ... the bank would encourage ... The proposal was defeated')
+    return re.sub(r"proposed[^.]{0,80}?(?:that|to)[^.]*?(?:\.[^.]*?){0,3}?defeated", "", t)
+
+
+def parse_boj_statement(text: str) -> dict:
+    """Current-regime statement -> {'call_rate_target': (lo, hi) | None,
+    'cdf_rate': float | None, 'basic_loan_rate': float | None,
+    'effective': date | None}. A statement whose guideline is not a call-rate
+    target returns call_rate_target None; the updater treats that as a regime
+    change for a human to record."""
+    t = _squash(text)
+    out: dict = {"call_rate_target": None, "cdf_rate": None, "basic_loan_rate": None, "effective": None}
+    g = re.search(r"guidelineformoneymarketoperations.{0,80}?:(.{0,600})", t)
+    if g:
+        m = re.search(r"overnightcallratetoremainataround" + _FN + r"(\d+(?:\.\d+)?)(?:to(\d+(?:\.\d+)?))?percent", g.group(1))
+        if m:
+            lo = float(m.group(1))
+            out["call_rate_target"] = (lo, float(m.group(2)) if m.group(2) else lo)
+    m = re.search(r"interestrateappliedtothecomplementarydepositfacility\(.{0,200}?\)willbe(\d+(?:\.\d+)?)percent", t)
+    if m:
+        out["cdf_rate"] = float(m.group(1))
+    m = re.search(r"basicloanrate" + _FN + r"thebasicloanrateapplicable.{0,80}?willbe(\d+(?:\.\d+)?)percent", t)
+    if m:
+        out["basic_loan_rate"] = float(m.group(1))
+    m = re.search(rf"newguidelineformoneymarketoperationswillbeeffectivefrom{MONTH_RE.lower()}[a-z]*(\d{{1,2}}),(\d{{4}})", t)
+    if m:
+        out["effective"] = dt.date(int(m.group(3)), month_number(m.group(1)), int(m.group(2)))
+    return out
+
+
+def fetch_boj_statement(decision: dt.date) -> tuple[str, str] | None:
+    """(url, text) of a meeting's statement, or None if not (yet) published."""
+    import io
+    import logging
+
+    import requests
+    from pypdf import PdfReader
+    from .common import TIMEOUT, USER_AGENT, save_fixture
+    logging.getLogger("pypdf").setLevel(logging.CRITICAL)
+    for pattern in BOJ_STATEMENT_URLS:
+        url = pattern.format(y=decision.year, ymd=f"{decision:%y%m%d}")
+        r = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=TIMEOUT)
+        if r.status_code == 200 and r.content.startswith(b"%PDF"):
+            text = "\n".join((p.extract_text() or "") for p in PdfReader(io.BytesIO(r.content)).pages[:4])
+            save_fixture(f"boj_statement_{decision:%Y%m%d}", text)
+            return url, text
+    return None
+
+
+BOJ_DISCOUNT_CSV_URLS = ("https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0100.csv",   # 1972-1995 (ODR)
+                         "https://www.boj.or.jp/en/statistics/boj/other/discount/cdab0101.csv")   # 2001- (basic loan rate)
+
+
+def parse_boj_discount_csv(payload: str) -> list[tuple[dt.date, float]]:
+    """'2026.09.24,1.5' rows -> (effective date, basic discount/loan rate). In the
+    1972-1995 file the first rate column (discount rate of commercial bills) is used."""
+    out = []
+    for row in csv.reader(io.StringIO(payload)):
+        if len(row) >= 2 and re.fullmatch(r"\d{4}\.\d{2}\.\d{2}", row[0].strip()) and _NUM.match(row[1].strip()):
+            y, m, d = map(int, row[0].strip().split("."))
+            out.append((dt.date(y, m, d), float(row[1])))
+    return sorted(out)
+
+
+def fetch_boj_discount() -> list[tuple[dt.date, float, str]]:
+    import requests
+    from .common import TIMEOUT, USER_AGENT
+    out = []
+    for i, url in enumerate(BOJ_DISCOUNT_CSV_URLS):
+        r = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=TIMEOUT)
+        r.raise_for_status()
+        payload = r.content.decode("cp932", errors="replace")
+        save_fixture(f"boj_discount_{i}", payload)
+        out += [(d, v, url) for d, v in parse_boj_discount_csv(payload)]
+    return out

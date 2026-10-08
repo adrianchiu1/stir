@@ -73,3 +73,27 @@ def test_policy_rate_live_pages():
     assert len(boe) == 258 and boe[-1] == (dt.date(2025, 12, 18), 3.75) and (dt.date(2020, 3, 19), 0.1) in boe
     assert len(parse_fred_csv((LIVE / "fred_iorb_20261008.txt").read_text())) == 19
     assert len(parse_fred_csv((LIVE / "fred_ioer_20261008.txt").read_text())) == 22
+
+
+def test_boj_statements_and_history():
+    import math
+    from stircurve.refdata.parsers.policy_rates import parse_boj_statement, parse_boj_discount_csv
+    p = parse_boj_statement((LIVE / "boj_statement_20260918_20261008.txt").read_text())
+    assert p == {"call_rate_target": (1.25, 1.25), "cdf_rate": 1.25, "basic_loan_rate": 1.5,
+                 "effective": dt.date(2026, 9, 24)}
+    blr = parse_boj_discount_csv((LIVE / "boj_discount_1_20261008.txt").read_text())
+    assert blr[0] == (dt.date(2001, 1, 4), 0.5) and (dt.date(2006, 7, 14), 0.4) in blr
+    boj = load_policy_rates("boj")
+    assert math.isnan(rate_in_effect(boj, "call_target_midpoint", dt.date(2015, 6, 1)))     # QQE: no call-rate target
+    assert rate_in_effect(boj, "call_target_midpoint", dt.date(2010, 10, 5)) == 0.05         # "effective immediately"
+    assert rate_in_effect(boj, "policy_rate_balance_rate", dt.date(2016, 2, 16)) == -0.1
+    assert math.isnan(rate_in_effect(boj, "policy_rate_balance_rate", dt.date(2024, 3, 21)))
+    assert rate_in_effect(boj, "ioer", dt.date(2026, 9, 24)) == 1.25
+    assert all(r.source_url.startswith("https://www.boj.or.jp/") for r in boj)
+    assert not [r for r in boj if r.confidence.startswith("memory")]
+
+
+def test_boj_statement_ignores_defeated_proposal():
+    from stircurve.refdata.parsers.policy_rates import parse_boj_statement
+    p = parse_boj_statement((LIVE / "boj_statement_20260123_20261008.txt").read_text())
+    assert p["call_rate_target"] == (0.75, 0.75)          # a member's proposal of 1.0 percent was defeated

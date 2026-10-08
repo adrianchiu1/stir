@@ -17,6 +17,7 @@ PARSERS = {
     "boj_mpm_past": banks.parse_boj_text,
     "boj_minutes_checked": lambda t: [b for b in t.split("=== ")[1:] if banks.boj_minutes_unscheduled(b)],
     "fed_openmarket": policy_rates.parse_fed_openmarket_text,
+    "boj_discount": policy_rates.parse_boj_discount_csv,
     "fred_iorb": policy_rates.parse_fred_csv,
     "fred_ioer": policy_rates.parse_fred_csv,
     "fred_dfedtar": policy_rates.parse_fred_csv,
@@ -35,6 +36,8 @@ EXPECTED = {
     "boe_bank_rate_20261008.txt": 258,
     "boe_mpc_voting_20261008.txt": 315,
     "boe_upcoming_mpc_dates_20261008.txt": 16,
+    "boj_discount_0_20261008.txt": 43,
+    "boj_discount_1_20261008.txt": 13,
     "boj_minutes_checked_20261008.txt": 9,
     "boj_minutes_index_1998_20261008.txt": 20,
     "boj_minutes_index_1999_20261008.txt": 18,
@@ -67,6 +70,15 @@ EXPECTED = {
     "boj_minutes_index_2026_20261008.txt": 5,
     "boj_mpm_past_20261008.txt": 168,
     "boj_mpm_schedule_20261008.txt": 16,
+    "boj_statement_20250919_20261008.txt": 1,
+    "boj_statement_20251030_20261008.txt": 1,
+    "boj_statement_20251219_20261008.txt": 4,
+    "boj_statement_20260123_20261008.txt": 1,
+    "boj_statement_20260319_20261008.txt": 1,
+    "boj_statement_20260428_20261008.txt": 1,
+    "boj_statement_20260616_20261008.txt": 4,
+    "boj_statement_20260731_20261008.txt": 1,
+    "boj_statement_20260918_20261008.txt": 4,
     "ecb_key_rates_20261008.txt": 50,
     "ecb_mp_1999_20261008.txt": 0,
     "ecb_mp_2000_20261008.txt": 0,
@@ -147,6 +159,10 @@ def _parse(path: Path):
         return banks.parse_fed_text(f"{year} FOMC Meetings\n" + text)   # as fetch_fed does
     if name.startswith("boj_minutes_index_"):
         return banks.parse_boj_minutes_index(text, int(name.split("_")[3]))
+    if name.startswith("boj_statement_"):     # one row per rate the statement sets
+        return [v for k, v in policy_rates.parse_boj_statement(text).items() if v is not None]
+    if name.startswith("boj_discount_"):
+        return policy_rates.parse_boj_discount_csv(text)
     if name.startswith("ecb_mp_"):
         return banks.parse_ecb_mp_table(text, year_hint=int(name.split("_")[2]))
     return PARSERS[name.rsplit("_", 1)[0]](text)

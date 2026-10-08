@@ -38,7 +38,7 @@ def main(argv=None) -> int:
     ap.add_argument("--ecb-maintenance", action="store_true", help="refresh ECB maintenance periods")
     ap.add_argument("--years", help="year range for --ecb-maintenance, e.g. 2015-2027")
     ap.add_argument("--holidays", nargs="*", help="calendars to refresh from official sources: uk jp us_sifma us_sofr (target/us_fed are rule-based)")
-    ap.add_argument("--policy-rates", choices=["fed", "ecb", "boe"], action="append", help="policy-rate file(s) to refresh")
+    ap.add_argument("--policy-rates", choices=["fed", "ecb", "boe", "boj"], action="append", help="policy-rate file(s) to refresh")
     ap.add_argument("--commit", action="store_true", help="write files when the diff is non-blocking")
     ap.add_argument("--dry-run", action="store_true", help="(default) show the diff only")
     ap.add_argument("--save-fixtures", metavar="DIR",

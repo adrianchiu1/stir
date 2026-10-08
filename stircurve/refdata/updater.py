@@ -10,6 +10,8 @@ from __future__ import annotations
 
 import datetime as dt
 import functools
+import math
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -18,7 +20,7 @@ from .calendars import CALENDAR_NAMES, HOLIDAY_YEARS, SIFMA_UNSCHEDULED_CLOSES, 
 
 # rule dates sourced individually (not in the annual schedules the updater reads)
 SOURCED_ONE_OFFS = set(SIFMA_UNSCHEDULED_CLOSES)
-from .maintenance import (MaintenancePeriod, PolicyRate, load_maintenance_periods, load_policy_rates,
+from .maintenance import (MaintenancePeriod, PolicyRate, load_maintenance_periods, load_policy_rates, rate_in_effect,
                           save_maintenance_periods, save_policy_rates, validate_maintenance_periods)
 from .meetings import (BANK_CALENDAR, Meeting, effective_date, load_meetings, load_published_effective,
                        published_lookup, save_meetings)
@@ -92,7 +94,7 @@ def update_meetings(bank: str, commit: bool = False, historical_years: range | N
     else:
         raise ValueError(bank)
 
-    if bank == "fed":   # match target changes to the fetched decisions too, not only committed ones
+    if bank in ("fed", "boj"):   # match rate changes to the fetched decisions too, not only committed ones
         lookup.update(published_lookup(bank, refdata_dir, decisions=[d for d, k, _ in fetched if k != "skip"]
                                        + [m.decision_date for m in load_meetings(bank, True, refdata_dir)]))
         lookup.update({d: e for d, (e, _) in overrides.items()})
@@ -128,6 +130,10 @@ def update_meetings(bank: str, commit: bool = False, historical_years: range | N
                 if d in overrides and overrides[d][0] == m.effective_date:
                     # from the reviewed published_effective.csv, not from a scraped page
                     diff.added.append(f"{msg} (published: {overrides[d][1]})")
+                    merged[d] = m
+                elif lookup.get(d) == m.effective_date and bank in ("fed", "boj", "ecb"):
+                    # from committed published data: rate-change dates (D16) or the MP table
+                    diff.added.append(f"{msg} (published implementation date)")
                     merged[d] = m
                 else:
                     (diff.changed if d <= today else diff.added).append(msg)
@@ -344,19 +350,22 @@ def update_policy_rates(bank: str, commit: bool = False, refdata_dir: Path = REF
         for d, v in pr_parsers.fetch_boe_bank_rate():
             fetched.append(PolicyRate(d, "bank_rate", v, "primary", pr_parsers.BOE_BANK_RATE_URL, today_iso()))
     elif bank == "boj":
-        return Diff()   # maintained by hand from the statements
+        fetched, problems = _boj_policy_rates(refdata_dir, today)
     else:
         raise ValueError(bank)
+    if bank != "boj":
+        problems = []
 
     existing = {(r.anchor, r.effective_date): r for r in load_policy_rates(bank, refdata_dir)}
     diff, merged = Diff(), dict(existing)
+    diff.problems += problems
     for r in fetched:
         key = (r.anchor, r.effective_date)
         old = existing.get(key)
         if old is None:
             diff.added.append(f"{bank} {r.anchor} {r.effective_date} = {r.rate}")
             merged[key] = r
-        elif abs(old.rate - r.rate) > 1e-9:
+        elif abs(old.rate - r.rate) > 1e-9 and not (math.isnan(old.rate) and math.isnan(r.rate)):
             msg = f"{bank} {r.anchor} {r.effective_date}: {old.rate} -> {r.rate} (was {old.confidence})"
             if old.confidence.startswith("primary") and r.effective_date <= today:
                 diff.changed.append(msg)
@@ -369,3 +378,42 @@ def update_policy_rates(bank: str, commit: bool = False, refdata_dir: Path = REF
     if commit and not diff.blocking:
         save_policy_rates(bank, list(merged.values()), refdata_dir)
     return diff
+
+
+def _boj_policy_rates(refdata_dir: Path, today: dt.date) -> tuple[list[PolicyRate], list[str]]:
+    """BoJ: basic loan rate from the BoJ CSVs (full history); call-rate target and
+    complementary deposit facility rate from the statements of meetings in the
+    last 400 days, added only when the level changes. History before that is
+    curated from the statements (one source_url per row). A statement that sets
+    a guideline the parser cannot read is a problem: probably a new regime."""
+    rows = [PolicyRate(d, "basic_loan_rate", v, "primary", url, today_iso())
+            for d, v, url in pr_parsers.fetch_boj_discount()]
+    problems: list[str] = []
+    committed = load_policy_rates("boj", refdata_dir)
+    cal = Calendar.load("jp", refdata_dir=refdata_dir)
+    lookup = published_lookup("boj", refdata_dir)
+    recent = [m for m in load_meetings("boj", True, refdata_dir)
+              if today - dt.timedelta(days=400) <= m.decision_date <= today]
+    for m in recent:
+        got = pr_parsers.fetch_boj_statement(m.decision_date)
+        if got is None:
+            continue
+        url, text = got
+        p = pr_parsers.parse_boj_statement(text)
+        if p["call_rate_target"] is None:
+            if re.search(r"guideline\s*for\s*money\s*market\s*operations", text, re.I) and m.scheduled:
+                problems.append(f"boj {m.decision_date}: guideline in {url} not read (new regime?)")
+            continue
+        eff = p["effective"] or effective_date("boj", m.decision_date, cal, lookup)
+        lo, hi = p["call_rate_target"]
+        cur = rate_in_effect(committed, "call_target_upper", eff - dt.timedelta(days=1))
+        if cur is None or math.isnan(cur) or abs(cur - hi) > 1e-9 or \
+                abs((rate_in_effect(committed, "call_target_lower", eff - dt.timedelta(days=1)) or 0) - lo) > 1e-9:
+            rows += [PolicyRate(eff, "call_target_lower", lo, "primary", url, today_iso()),
+                     PolicyRate(eff, "call_target_upper", hi, "primary", url, today_iso()),
+                     PolicyRate(eff, "call_target_midpoint", round((lo + hi) / 2, 4), "derived", url, today_iso())]
+        if p["cdf_rate"] is not None:
+            cur = rate_in_effect(committed, "ioer", eff - dt.timedelta(days=1))
+            if cur is None or abs(cur - p["cdf_rate"]) > 1e-9:
+                rows.append(PolicyRate(eff, "ioer", p["cdf_rate"], "primary", url, today_iso()))
+    return rows, problems

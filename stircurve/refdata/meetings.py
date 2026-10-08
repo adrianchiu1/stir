@@ -165,39 +165,50 @@ def load_published_effective(bank: str, refdata_dir: Path = REFDATA_DIR) -> dict
     return out
 
 
-FED_TABLE_WINDOW_DAYS = 3
+# A rate change is the published implementation date of the latest decision up to
+# this many calendar days before it (Japan: holiday clusters, 18 -> 24 Sep 2026).
+RATE_CHANGE_WINDOW_DAYS = {"fed": 3, "boj": 7}
+RATE_CHANGE_ANCHORS = {"fed": ("target_upper",),
+                       "boj": ("call_target_upper", "ioer", "policy_rate_balance_rate", "basic_loan_rate")}
 
 
-def fed_published_from_rates(decisions: list[dt.date], change_dates: list[dt.date]) -> dict[dt.date, dt.date]:
-    """Fed: the open-market table (and FRED DFEDTAR before 2003) dates each target
-    change by when it took effect: the decision day until 2008, the next business
-    day since 2015. Each change is the published implementation date of the latest
-    decision on or up to ``FED_TABLE_WINDOW_DAYS`` before it."""
+def published_from_rate_changes(decisions: list[dt.date], change_dates: list[dt.date],
+                                window_days: int = 3) -> dict[dt.date, dt.date]:
+    """Each policy-rate change dates when a decision took effect: the latest
+    decision on or up to ``window_days`` before it. Fed: the open-market table
+    (FRED DFEDTAR before 2003) — the decision day until 2008, the next business
+    day since 2015. BoJ: statements and the basic loan rate CSV — 'effective
+    immediately' 2006-2010, the next business day since 2024."""
     ds = sorted(set(decisions))
     out = {}
     for c in sorted(set(change_dates)):
-        cands = [d for d in ds if 0 <= (c - d).days <= FED_TABLE_WINDOW_DAYS]
+        cands = [d for d in ds if 0 <= (c - d).days <= window_days]
         if cands:
             out[cands[-1]] = c
     return out
 
 
+fed_published_from_rates = published_from_rate_changes   # name used in earlier tests
+
+
 def published_lookup(bank: str, refdata_dir: Path = REFDATA_DIR,
                      decisions: list[dt.date] | None = None) -> dict[dt.date, dt.date]:
     """decision -> published implementation date: the ECB maintenance-period
-    table; for the Fed the target-change dates of the policy-rate history
+    table; for the Fed and the BoJ the change dates of the policy-rate history
     matched to ``decisions`` (default: committed meetings); then
     ``published_effective.csv`` (which wins on a clash)."""
     out: dict[dt.date, dt.date] = {}
     if bank == "ecb":
         from .maintenance import load_maintenance_periods, mp_lookup   # local import: maintenance imports meetings lazily
         out.update(mp_lookup(load_maintenance_periods(refdata_dir)))
-    if bank == "fed":
+    if bank in RATE_CHANGE_ANCHORS:
         from .maintenance import load_policy_rates
         if decisions is None:
-            decisions = [m.decision_date for m in load_meetings("fed", True, refdata_dir)]
-        changes = [r.effective_date for r in load_policy_rates("fed", refdata_dir) if r.anchor == "target_upper"]
-        out.update(fed_published_from_rates(decisions, changes))
+            decisions = [m.decision_date for m in load_meetings(bank, True, refdata_dir)]
+        rates = load_policy_rates(bank, refdata_dir)
+        changes = [r.effective_date for i, r in enumerate(rates) if r.anchor in RATE_CHANGE_ANCHORS[bank]
+                   and r.effective_date >= min(decisions, default=r.effective_date)]
+        out.update(published_from_rate_changes(decisions, changes, RATE_CHANGE_WINDOW_DAYS[bank]))
     out.update({d: eff for d, (eff, _) in load_published_effective(bank, refdata_dir).items()})
     return out
 
