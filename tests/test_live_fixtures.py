@@ -15,6 +15,7 @@ PARSERS = {
     "boe_mpc_voting": banks.parse_boe_voting_text,
     "boj_mpm_schedule": banks.parse_boj_text,
     "boj_mpm_past": banks.parse_boj_text,
+    "boj_minutes_checked": lambda t: [b for b in t.split("=== ")[1:] if banks.boj_minutes_unscheduled(b)],
     "fed_openmarket": policy_rates.parse_fed_openmarket_text,
     "fred_iorb": policy_rates.parse_fred_csv,
     "fred_ioer": policy_rates.parse_fred_csv,
@@ -27,11 +28,41 @@ PARSERS = {
 }
 
 # parser output rows per fixture (Fed: notation votes / cancelled meetings come back
-# as kind "skip"; ECB 1999-2003 releases carry no maintenance table, only PDF annexes)
+# as kind "skip"; boj_minutes_checked: minutes that call the meeting unscheduled; ECB 1999-2003 releases carry no maintenance table, only PDF annexes)
 EXPECTED = {
     "boe_bank_rate_20261008.txt": 258,
     "boe_mpc_voting_20261008.txt": 315,
     "boe_upcoming_mpc_dates_20261008.txt": 16,
+    "boj_minutes_checked_20261008.txt": 9,
+    "boj_minutes_index_1998_20261008.txt": 20,
+    "boj_minutes_index_1999_20261008.txt": 18,
+    "boj_minutes_index_2000_20261008.txt": 18,
+    "boj_minutes_index_2001_20261008.txt": 17,
+    "boj_minutes_index_2002_20261008.txt": 16,
+    "boj_minutes_index_2003_20261008.txt": 16,
+    "boj_minutes_index_2004_20261008.txt": 16,
+    "boj_minutes_index_2005_20261008.txt": 15,
+    "boj_minutes_index_2006_20261008.txt": 14,
+    "boj_minutes_index_2007_20261008.txt": 14,
+    "boj_minutes_index_2008_20261008.txt": 18,
+    "boj_minutes_index_2009_20261008.txt": 15,
+    "boj_minutes_index_2010_20261008.txt": 16,
+    "boj_minutes_index_2011_20261008.txt": 15,
+    "boj_minutes_index_2012_20261008.txt": 14,
+    "boj_minutes_index_2013_20261008.txt": 14,
+    "boj_minutes_index_2014_20261008.txt": 14,
+    "boj_minutes_index_2015_20261008.txt": 14,
+    "boj_minutes_index_2016_20261008.txt": 8,
+    "boj_minutes_index_2017_20261008.txt": 8,
+    "boj_minutes_index_2018_20261008.txt": 8,
+    "boj_minutes_index_2019_20261008.txt": 8,
+    "boj_minutes_index_2020_20261008.txt": 9,
+    "boj_minutes_index_2021_20261008.txt": 8,
+    "boj_minutes_index_2022_20261008.txt": 8,
+    "boj_minutes_index_2023_20261008.txt": 8,
+    "boj_minutes_index_2024_20261008.txt": 8,
+    "boj_minutes_index_2025_20261008.txt": 8,
+    "boj_minutes_index_2026_20261008.txt": 5,
     "boj_mpm_past_20261008.txt": 168,
     "boj_mpm_schedule_20261008.txt": 16,
     "ecb_key_rates_20261008.txt": 50,
@@ -110,6 +141,8 @@ def _parse(path: Path):
     if name.startswith("fed_historical_"):
         year = name.split("_")[2]
         return banks.parse_fed_text(f"{year} FOMC Meetings\n" + text)   # as fetch_fed does
+    if name.startswith("boj_minutes_index_"):
+        return banks.parse_boj_minutes_index(text, int(name.split("_")[3]))
     if name.startswith("ecb_mp_"):
         return banks.parse_ecb_mp_table(text, year_hint=int(name.split("_")[2]))
     return PARSERS[name.rsplit("_", 1)[0]](text)

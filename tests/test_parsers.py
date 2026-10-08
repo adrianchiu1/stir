@@ -200,3 +200,23 @@ def test_fed_published_effective_from_target_changes():
     decisions = [dt.date(2008, 1, 22), dt.date(2008, 1, 30), dt.date(2015, 12, 16)]
     changes = [dt.date(2008, 1, 22), dt.date(2008, 1, 30), dt.date(2015, 12, 17)]
     assert fed_published_from_rates(decisions, changes) == dict(zip(decisions, changes))
+
+
+def test_boj_live_minutes_indexes():
+    from stircurve.refdata.parsers.banks import parse_boj_minutes_index
+    r2001 = parse_boj_minutes_index((LIVE / "boj_minutes_index_2001_20261008.txt").read_text(), 2001)
+    assert len(r2001) == 17 and (dt.date(2001, 12, 19), False) in [(d, o) for d, _, o in r2001]   # "December 18 and 19"
+    r2010 = parse_boj_minutes_index((LIVE / "boj_minutes_index_2010_20261008.txt").read_text(), 2010)
+    assert [d for d, _, o in r2010 if o] == [dt.date(2010, 4, 30), dt.date(2010, 5, 10), dt.date(2010, 8, 30),
+                                             dt.date(2010, 10, 28)]                       # one-day meetings
+    assert r2010[0][1].endswith("/minu_2010/g100126.pdf")
+
+
+def test_boj_live_unscheduled_from_minutes():
+    from stircurve.refdata.parsers.banks import boj_minutes_unscheduled
+    blocks = (LIVE / "boj_minutes_checked_20261008.txt").read_text().split("=== ")[1:]
+    unsched = sorted(b.split()[0] for b in blocks if boj_minutes_unscheduled(b))
+    assert unsched == ["2008-09-18", "2008-09-29", "2008-10-14", "2008-12-02", "2009-12-01",
+                       "2010-05-10", "2010-08-30", "2011-11-30", "2020-05-22"]
+    # brought forward, not unscheduled; the word appears only in the discussion
+    assert not boj_minutes_unscheduled(next(b for b in blocks if b.startswith("2020-03-16")))

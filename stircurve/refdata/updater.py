@@ -72,7 +72,13 @@ def update_meetings(bank: str, commit: bool = False, historical_years: range | N
     elif bank == "boe":
         fetched = bank_parsers.fetch_boe()
     elif bank == "boj":
+        # schedule pages (this year, next, 2010+) and the minutes indexes (1998+); the minutes
+        # of new or recent one-day meetings are read to find unscheduled ones
+        committed = {m.decision_date for m in load_meetings(bank, True, refdata_dir)}
+        recent = today - dt.timedelta(days=400)
         fetched = bank_parsers.fetch_boj()
+        fetched += bank_parsers.fetch_boj_minutes(   # --historical: re-read every one-day meeting in range
+            historical_years, classify=None if historical_years else (lambda d: d not in committed or d >= recent))
     elif bank == "ecb":
         # ECB meetings come from the maintenance-period tables (relevant GC meeting column)
         # (an open last MP, end "tbd", still publishes its meeting and start date)
@@ -90,8 +96,8 @@ def update_meetings(bank: str, commit: bool = False, historical_years: range | N
 
     new: dict[dt.date, Meeting] = {}
     for d, kind, url in fetched:
-        if kind == "skip":
-            continue
+        if kind == "skip" or (d in new and not new[d].scheduled):
+            continue    # a source that marks the decision unscheduled wins over a schedule table
         new[d] = Meeting(bank, d, effective_date(bank, d, cal, lookup), scheduled=(kind == "scheduled"),
                          regime=_regime(bank, d), synthetic=False, source_url=url, retrieved_at=today_iso())
 
@@ -144,13 +150,15 @@ def update_meetings(bank: str, commit: bool = False, historical_years: range | N
 def _near_duplicates(bank: str, meetings: list[Meeting], days: int = 4) -> list[str]:
     """Two decisions a few days apart from *different* sources are almost always
     one meeting dated two ways (meeting day vs announcement day): a question,
-    not an add. Entries on one source page are distinct events (e.g. FOMC
-    conference call 13 Sep 2001 and the 17 Sep 2001 call)."""
+    not an add. Entries on one source page are distinct events (FOMC calls of
+    13 and 17 Sep 2001), as is an unscheduled meeting right after a scheduled
+    one (BoJ 17 and 18 Sep 2008)."""
     ms = sorted(meetings, key=lambda m: m.decision_date)
     return [f"{bank} {a.decision_date} and {b.decision_date} are {(b.decision_date - a.decision_date).days} days apart "
             f"({a.source_url} / {b.source_url}): same decision?"
             for a, b in zip(ms, ms[1:])
-            if (b.decision_date - a.decision_date).days <= days and a.source_url != b.source_url]
+            if (b.decision_date - a.decision_date).days <= days and a.source_url != b.source_url
+            and a.scheduled == b.scheduled]
 
 
 def _load_unscheduled(bank: str, refdata_dir: Path) -> list[Meeting]:

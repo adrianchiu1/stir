@@ -25,7 +25,10 @@ Sources
 * BoJ: https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm (current and next
   year) and .../past.htm (2010+): one table per year whose first column is
   "Jan. 22 (Thurs.), 23 (Fri.)" (decision on the last day; one-day meetings
-  occur, e.g. "Apr. 30 (Fri.)").
+  occur, e.g. "Apr. 30 (Fri.)"). Every meeting since January 1998 is in the
+  minutes indexes .../minu_<YYYY>/index.htm ("Meeting on May 10, 2010"); the
+  minutes of an unscheduled meeting say so ("the Unscheduled Monetary Policy
+  Meeting"), which is how unscheduled meetings are classified.
 
 All four parsers are validated against live pages captured 8 Oct 2026
 (``tests/fixtures/live``).
@@ -35,7 +38,7 @@ from __future__ import annotations
 import datetime as dt
 import re
 
-from .common import MONTH_RE, fetch, fetch_text, join_table_rows, month_number, save_fixture
+from .common import MONTH_RE, fetch, fetch_text, html_to_text, join_table_rows, month_number, save_fixture
 
 FED_CALENDAR_URL = "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
 FED_HISTORICAL_URL = "https://www.federalreserve.gov/monetarypolicy/fomchistorical{year}.htm"
@@ -45,6 +48,8 @@ BOE_UPCOMING_URL = "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc
 BOE_VOTING_XLSX_URL = "https://www.bankofengland.co.uk/-/media/boe/files/monetary-policy-summary-and-minutes/mpcvoting.xlsx"
 BOJ_SCHEDULE_URL = "https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm"
 BOJ_PAST_URL = "https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm"
+BOJ_MINUTES_INDEX_URL = "https://www.boj.or.jp/en/mopo/mpmsche_minu/minu_{year}/index.htm"
+BOJ_FIRST_MINUTES_YEAR = 1998
 
 
 # ---------------------------------------------------------------------------
@@ -459,4 +464,98 @@ def fetch_boj() -> list[tuple[dt.date, str, str]]:
     out = []
     for url, source in ((BOJ_SCHEDULE_URL, "boj_mpm_schedule"), (BOJ_PAST_URL, "boj_mpm_past")):
         out += [(d, k, url) for d, k in parse_boj_text(fetch_text(url, source))]
+    return out
+
+
+_BOJ_MINUTES_LINK_RE = re.compile(
+    r'(<a\b[^>]*href="([^"]*/minu_\d{4}/g\d{6}[a-z]?\.(?:htm|pdf))"[^>]*>)(.*?)</a>', re.I | re.S)
+_BOJ_MINUTES_ROW_RE = re.compile(
+    rf"Meeting on {MONTH_RE}\.?\s+(\d{{1,2}})(?:\s*(?:and|-|–)\s*(?:{MONTH_RE}\.?\s+)?(\d{{1,2}})(?!\d))?(?:,\s*(\d{{4}}))?"
+    r".*?\[minutes: (\S+)\]", re.I)
+# the minutes' own statement of purpose, not a mention in the discussion ("the Bank
+# could take timely actions, including an unscheduled Monetary Policy Meeting")
+_BOJ_UNSCHEDULED_RE = re.compile(
+    r"\b(?:Purpose\s+of\s+(?:the|this)\s+Unscheduled|call(?:ed)?\s+(?:an|the|this)\s+unscheduled)\s+"
+    r"Monetary\s+Policy\s+Meeting\b", re.I)
+
+
+def boj_inline_minutes_links(html: str) -> str:
+    """Keep each minutes link in the text: 'Meeting on May 10, 2010 [minutes: <url>]'."""
+    def repl(m: re.Match) -> str:
+        url = m.group(2) if m.group(2).startswith("http") else "https://www.boj.or.jp" + m.group(2)
+        return f"{m.group(1)}{m.group(3)} [minutes: {url}]</a>"
+    return _BOJ_MINUTES_LINK_RE.sub(repl, html)
+
+
+def parse_boj_minutes_index(text: str, year: int) -> list[tuple[dt.date, str, bool]]:
+    """(decision date, minutes URL, one-day meeting) for every meeting in one
+    year's minutes index. 'Meeting on December 18 and 19' (1998-2005 omit the
+    year) -> 19 Dec."""
+    out = []
+    for line in text.splitlines():
+        m = _BOJ_MINUTES_ROW_RE.search(line)
+        if not m:
+            continue
+        ma, d1, mb, d2, y, url = m.groups()
+        month = month_number(mb or ma)
+        out.append((dt.date(int(y or year), month, int(d2 or d1)), url, d2 is None))
+    return sorted(out)
+
+
+def boj_minutes_unscheduled(text: str) -> bool:
+    """True when the minutes call the meeting unscheduled ('Remarks on the Purpose
+    of the Unscheduled Monetary Policy Meeting'; 'call an unscheduled ...')."""
+    return bool(_BOJ_UNSCHEDULED_RE.search(" ".join(text.split())))
+
+
+def boj_minutes_text(url: str) -> str:
+    """Plain text of one set of minutes (HTML until 2005 and again from 2025, PDF otherwise)."""
+    if url.lower().endswith(".pdf"):
+        import io
+
+        import requests
+        import logging
+
+        from pypdf import PdfReader
+        from .common import TIMEOUT, USER_AGENT
+        logging.getLogger("pypdf").setLevel(logging.CRITICAL)   # font-encoding chatter
+        r = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=TIMEOUT)
+        r.raise_for_status()
+        texts = []
+        for page in PdfReader(io.BytesIO(r.content)).pages[:8]:   # the purpose comes after the attendance list
+            texts.append(page.extract_text() or "")
+            if boj_minutes_unscheduled(texts[-1]):
+                break
+        return "\n".join(texts)
+    return html_to_text(fetch(url))
+
+
+def fetch_boj_minutes(years: range | None = None, classify=None) -> list[tuple[dt.date, str, str]]:
+    """Meetings from the minutes indexes (default: 1998 to this year) as
+    (decision, kind, source_url); an unscheduled meeting's source is its
+    minutes. Minutes are read only for one-day meetings (an unscheduled meeting
+    is called for one day), and of those only where ``classify(date)`` is true
+    when a predicate is given. Each document read goes into the 'boj_minutes_checked'
+    fixture (url, opening 400 characters and the passage naming the meeting
+    unscheduled, if any)."""
+    years = years or range(BOJ_FIRST_MINUTES_YEAR, dt.date.today().year + 1)
+    out, checked = [], []
+    for y in years:
+        try:
+            t = fetch_text(BOJ_MINUTES_INDEX_URL.format(year=y), f"boj_minutes_index_{y}", prepare=boj_inline_minutes_links)
+        except Exception as exc:  # pragma: no cover
+            print(f"  boj minutes {y}: fetch failed ({exc})")
+            continue
+        for d, url, one_day in parse_boj_minutes_index(t, y):
+            kind = "scheduled"
+            if one_day and (classify is None or classify(d)):
+                body = " ".join(boj_minutes_text(url).split())
+                hit = _BOJ_UNSCHEDULED_RE.search(body)
+                excerpt = body[:400] + (" ... " + body[max(0, hit.start() - 300):hit.end() + 300] if hit else "")
+                checked.append(f"=== {d} {url}\n{excerpt}")
+                if boj_minutes_unscheduled(body):
+                    kind = "unscheduled"
+            out.append((d, kind, url if kind == "unscheduled" else BOJ_MINUTES_INDEX_URL.format(year=y)))
+    if checked:
+        save_fixture("boj_minutes_checked", "\n".join(checked) + "\n")
     return out

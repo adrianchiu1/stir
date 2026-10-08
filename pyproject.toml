@@ -17,6 +17,7 @@ dependencies = [
     "requests>=2.28",
     "lxml>=4.9",
     "openpyxl>=3.1",   # BoE MPC voting-history workbook (refdata updater)
+    "pypdf>=4",        # BoJ minutes and statements (refdata updater)
 ]
 
 [project.optional-dependencies]
