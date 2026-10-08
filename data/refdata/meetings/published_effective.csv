@@ -1,3 +1,4 @@
 bank,decision_date,effective_date,source_url,note
 fed,2020-03-03,2020-03-04,https://www.federalreserve.gov/newsevents/pressreleases/monetary20200303a1.htm,"Implementation note: target range and IORB changes effective March 4, 2020 (unscheduled meeting 2-3 Mar, statement 3 Mar)"
 boj,2016-01-29,2016-02-16,https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2016/k160129a.pdf,"Negative interest rate effective from the reserve maintenance period commencing February 16, 2016 (rule would give 1 Feb)"
+fed,2020-03-15,2020-03-16,https://www.federalreserve.gov/newsevents/pressreleases/monetary20200315a1.htm,"Implementation note: target range and IORB changes effective March 16, 2020 (unscheduled meeting Sunday 15 Mar)"

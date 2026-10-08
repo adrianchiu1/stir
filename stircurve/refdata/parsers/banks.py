@@ -54,8 +54,10 @@ _FED_YEAR_RE = re.compile(r"\b(20\d\d|19\d\d)\s+FOMC\s+Meetings\b", re.I)
 _FED_MONTH_RE = re.compile(rf"^\s*\*?\*?\s*{MONTH_RE}(?:\s*/\s*{MONTH_RE})?\s*\*?\*?\s*$", re.I)
 _FED_DAYS_RE = re.compile(r"^\s*(\d{1,2})(?:\s*[-–]\s*(\d{1,2}))?\*?\s*(\(([^)]*)\))?\s*(Meeting)?\s*$", re.I)
 # historical pages: "January 26-27 Meeting", "March 15 (unscheduled) Meeting", "July 31-August 1 Meeting"
+# also "January 21 Conference Call - 2008" and "October 4 (unscheduled) - 2019"
 _FED_HIST_RE = re.compile(
-    rf"\b{MONTH_RE}(?:\s*/\s*{MONTH_RE})?\s+(\d{{1,2}})(?:\s*[-–]\s*(?:{MONTH_RE}\s+)?(\d{{1,2}}))?\*?\s*(\(([^)]*)\))?\s*Meeting\b", re.I)
+    rf"\b{MONTH_RE}(?:\s*/\s*{MONTH_RE})?\s+(\d{{1,2}})(?:\s*[-–]\s*(?:{MONTH_RE}\s+)?(\d{{1,2}}))?\*?\s*(\(([^)]*)\))?"
+    r"\s*(Meeting\b|Conference Call\b|(?=-\s*\d{4}\s*$))", re.I)
 
 
 _FED_RELEASED_RE = re.compile(rf"\bStatement\b.*\bReleased\s+{MONTH_RE}\w*\s+(\d{{1,2}}),\s+(\d{{4}})", re.I)
@@ -95,7 +97,9 @@ def parse_fed_text(text: str) -> list[tuple[dt.date, str]]:
             continue
         # historical single-line form
         for m in filter(None, [_FED_HIST_RE.match(line)]):   # header lines only, not "minutes of March 15 meeting"
-            ma, mb, d1, mc, d2, _, note = m.groups()
+            ma, mb, d1, mc, d2, _, note, what = m.groups()
+            if what.lower().startswith("conference") or (not what and not note):
+                note = f"{note or ''} conference call"
             mb = mb or mc
             month = month_number(mb) if mb else month_number(ma)
             day = int(d2 or d1)
@@ -120,6 +124,23 @@ def parse_fed_text(text: str) -> list[tuple[dt.date, str]]:
     return out
 
 
+_FED_STATEMENT_LINK_RE = re.compile(
+    r'<a\b[^>]*href="[^"]*?/(?:monetary/|monetary)(\d{4})(\d{2})(\d{2})[a-z0-9]*(?:/default)?\.htm"[^>]*>\s*Statement\s*</a>', re.I)
+_MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
+                "October", "November", "December"]
+
+
+def fed_inline_statement_dates(html: str) -> str:
+    """Historical pages link each block's statement to a dated press release
+    (``/newsevents/press/monetary/20080122b.htm``); write that date into the
+    link text, "Statement (Released January 22, 2008)", so the text parser sees
+    when a conference-call decision was announced (21 Jan call -> 22 Jan)."""
+    def repl(m: re.Match) -> str:
+        y, mo, d = (int(g) for g in m.groups())
+        return f"{m.group(0)[:-4].rsplit('>', 1)[0]}>Statement (Released {_MONTH_NAMES[mo - 1]} {d}, {y})</a>"
+    return _FED_STATEMENT_LINK_RE.sub(repl, html)
+
+
 def fetch_fed(years_historical: range | None = None) -> list[tuple[dt.date, str, str]]:
     """Current calendar page plus historical pages for ``years_historical``.
     Returns (decision_date, kind, source_url)."""
@@ -129,7 +150,7 @@ def fetch_fed(years_historical: range | None = None) -> list[tuple[dt.date, str,
     for y in years_historical or []:
         url = FED_HISTORICAL_URL.format(year=y)
         try:
-            t = fetch_text(url, f"fed_historical_{y}")
+            t = fetch_text(url, f"fed_historical_{y}", prepare=fed_inline_statement_dates)
         except Exception as exc:  # pragma: no cover
             print(f"  fed {y}: fetch failed ({exc})")
             continue

@@ -112,9 +112,11 @@ def save_fixture(source: str, text: str) -> Path | None:
     return p
 
 
-def fetch_text(url: str, source: str) -> str:
-    """``html_to_text(fetch(url))``, saved as fixture ``source`` when capturing."""
-    text = html_to_text(fetch(url))
+def fetch_text(url: str, source: str, prepare=None) -> str:
+    """``html_to_text(fetch(url))``, saved as fixture ``source`` when capturing.
+    ``prepare`` (html -> html) runs first, e.g. to keep a date that lives in an href."""
+    html = fetch(url)
+    text = html_to_text(prepare(html) if prepare else html)
     save_fixture(source, text)
     return text
 

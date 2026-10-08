@@ -83,6 +83,11 @@ def update_meetings(bank: str, commit: bool = False, historical_years: range | N
     else:
         raise ValueError(bank)
 
+    if bank == "fed":   # match target changes to the fetched decisions too, not only committed ones
+        lookup.update(published_lookup(bank, refdata_dir, decisions=[d for d, k, _ in fetched if k != "skip"]
+                                       + [m.decision_date for m in load_meetings(bank, True, refdata_dir)]))
+        lookup.update({d: e for d, (e, _) in overrides.items()})
+
     new: dict[dt.date, Meeting] = {}
     for d, kind, url in fetched:
         if kind == "skip":
@@ -133,12 +138,15 @@ def update_meetings(bank: str, commit: bool = False, historical_years: range | N
 
 
 def _near_duplicates(bank: str, meetings: list[Meeting], days: int = 4) -> list[str]:
-    """Two decisions a few days apart are almost always one meeting dated two
-    ways (e.g. meeting day vs announcement day): a question, not an add."""
+    """Two decisions a few days apart from *different* sources are almost always
+    one meeting dated two ways (meeting day vs announcement day): a question,
+    not an add. Entries on one source page are distinct events (e.g. FOMC
+    conference call 13 Sep 2001 and the 17 Sep 2001 call)."""
     ms = sorted(meetings, key=lambda m: m.decision_date)
     return [f"{bank} {a.decision_date} and {b.decision_date} are {(b.decision_date - a.decision_date).days} days apart "
             f"({a.source_url} / {b.source_url}): same decision?"
-            for a, b in zip(ms, ms[1:]) if (b.decision_date - a.decision_date).days <= days]
+            for a, b in zip(ms, ms[1:])
+            if (b.decision_date - a.decision_date).days <= days and a.source_url != b.source_url]
 
 
 def _load_unscheduled(bank: str, refdata_dir: Path) -> list[Meeting]:
@@ -271,6 +279,17 @@ def update_policy_rates(bank: str, commit: bool = False, refdata_dir: Path = REF
             fetched += [PolicyRate(d, "target_lower", r["lower"], "primary", pr_parsers.FED_OPENMARKET_URL, today_iso()),
                         PolicyRate(d, "target_upper", r["upper"], "primary", pr_parsers.FED_OPENMARKET_URL, today_iso()),
                         PolicyRate(d, "target_midpoint", round((r["lower"] + r["upper"]) / 2, 4), "derived", pr_parsers.FED_OPENMARKET_URL, today_iso())]
+        # single target before the open-market table's coverage (it starts 2003): FRED DFEDTAR (1982-2008)
+        first_om = min((r.effective_date for r in fetched), default=dt.date.max)
+        try:
+            for d, v in pr_parsers.fetch_fred("DFEDTAR"):
+                if d < first_om:
+                    src = pr_parsers.FRED_CSV_URL.format(series="DFEDTAR")
+                    fetched += [PolicyRate(d, "target_lower", v, "primary", src, today_iso()),
+                                PolicyRate(d, "target_upper", v, "primary", src, today_iso()),
+                                PolicyRate(d, "target_midpoint", v, "derived", src, today_iso())]
+        except Exception as exc:  # pragma: no cover
+            print(f"  fred DFEDTAR: fetch failed ({exc})")
         for series, anchor in (("IORB", "iorb"), ("IOER", "ioer")):
             try:
                 for d, v in pr_parsers.fetch_fred(series):

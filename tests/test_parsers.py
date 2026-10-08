@@ -181,3 +181,22 @@ def test_boe_live_voting_workbook():
     assert per_year[2001] == 13 and per_year[2016] == 11 and per_year[2020] == 10      # incl. special meetings
     assert all(per_year[y] == 8 for y in range(2017, 2026) if y != 2020)
     assert {dt.date(2001, 9, 18), dt.date(2020, 3, 11), dt.date(2020, 3, 19)} <= set(got)
+
+
+def test_fed_live_conference_calls_and_announcement_dates():
+    def unsched(y):
+        t = (LIVE / f"fed_historical_{y}_20261008.txt").read_text()
+        return [d for d, k in parse_fed_text(f"{y} FOMC Meetings\n" + t) if k == "unscheduled"]
+    # calls announced next day take the statement date (href inlined by fed_inline_statement_dates)
+    assert dt.date(2008, 1, 22) in unsched(2008) and dt.date(2008, 10, 8) in unsched(2008)
+    assert dt.date(2008, 1, 21) not in unsched(2008)
+    assert unsched(2001) == [dt.date(2001, 1, 3), dt.date(2001, 4, 11), dt.date(2001, 4, 18),
+                             dt.date(2001, 9, 13), dt.date(2001, 9, 17)]
+    assert unsched(2013) == [dt.date(2013, 10, 16)]                         # "October 16 (unscheduled) - 2013"
+
+
+def test_fed_published_effective_from_target_changes():
+    from stircurve.refdata.meetings import fed_published_from_rates
+    decisions = [dt.date(2008, 1, 22), dt.date(2008, 1, 30), dt.date(2015, 12, 16)]
+    changes = [dt.date(2008, 1, 22), dt.date(2008, 1, 30), dt.date(2015, 12, 17)]
+    assert fed_published_from_rates(decisions, changes) == dict(zip(decisions, changes))
