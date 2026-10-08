@@ -285,8 +285,8 @@ def update_policy_rates(bank: str, commit: bool = False, refdata_dir: Path = REF
             else:
                 diff.added.append(msg)
                 merged[key] = r
-        elif not old.confidence.startswith("primary"):
-            diff.added.append(f"{bank} {r.anchor} {r.effective_date}: confirmed ({old.confidence} -> primary)")
+        elif not old.confidence.startswith("primary") and old.confidence != r.confidence:
+            diff.added.append(f"{bank} {r.anchor} {r.effective_date}: confirmed ({old.confidence} -> {r.confidence})")
             merged[key] = r
     if commit and not diff.blocking:
         save_policy_rates(bank, list(merged.values()), refdata_dir)

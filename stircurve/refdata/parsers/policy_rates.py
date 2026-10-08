@@ -20,7 +20,7 @@ import datetime as dt
 import io
 import re
 
-from .common import MONTH_RE, fetch, fetch_text, month_number, save_fixture
+from .common import MONTH_RE, fetch, fetch_text, join_table_rows, month_number, save_fixture
 
 FED_OPENMARKET_URL = "https://www.federalreserve.gov/monetarypolicy/openmarket.htm"
 FRED_CSV_URL = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}"
@@ -32,9 +32,14 @@ _FED_ROW = re.compile(rf"^\s*\|?\s*{MONTH_RE}\s+(\d{{1,2}})(?:\*|\[[^\]]*\]\([^)
 
 
 def parse_fed_openmarket_text(text: str) -> list[dict]:
-    """Rows: effective_date, lower, upper (single-target years have lower == upper)."""
+    """Rows: effective_date, lower, upper (single-target years have lower == upper).
+    Accepts one row per line (markdown) or the live page's one cell per line."""
+    return _fed_openmarket_rows(text.splitlines()) or _fed_openmarket_rows(join_table_rows(text))
+
+
+def _fed_openmarket_rows(lines: list[str]) -> list[dict]:
     out, year = [], None
-    for line in text.splitlines():
+    for line in lines:
         ym = _YEAR_HDR.match(line.strip())
         if ym:
             year = int(ym.group(1))
@@ -82,7 +87,54 @@ _NUM = re.compile(r"^-?\d+(?:[.,]\d+)?$")
 
 def parse_ecb_key_rates_text(text: str) -> list[dict]:
     """Rows: effective_date, dfr, mro, mlf. Column order taken from the header
-    line that mentions 'deposit'; defaults to ECB order (DFR, MRO, MLF)."""
+    line that mentions 'deposit'; defaults to ECB order (DFR, MRO, MLF).
+    Falls back to the live ECB page layout (``_ecb_key_rates_cells``)."""
+    return _ecb_key_rates_lines(text) or _ecb_key_rates_cells(text)
+
+
+_ECB_DAYMON = re.compile(rf"^(\d{{1,2}})\s+{MONTH_RE}\.?\s*\d?$", re.I)   # "16 Sep.", "18 Sep.5" (footnote), "4 Jan. 1"
+_ECB_LIVE_START = dt.date(2004, 3, 10)   # before this, MRO changes applied from the next operation (page footnote)
+
+
+def _ecb_key_rates_cells(text: str) -> list[dict]:
+    """Live ECB page: one cell per line, the year cell spans all rows of that
+    year, then '16 Sep.' | DFR | MRO fixed rate | MRO minimum bid rate | MLF,
+    '-' where not applicable and U+2212 for minus. MRO is the fixed rate, else
+    the minimum bid rate; when both are '-' (8-9 Oct 2008) the row has no MRO.
+    Rows before 10 March 2004 are dropped (different MRO effective-date convention)."""
+    start = text.find("with effect from")
+    if start < 0:
+        return []
+    cells = [c.strip().replace("\u2212", "-") for line in text[start:].splitlines() for c in line.split("|")]
+    cells = [c for c in cells if c]
+    out, year, i = [], None, 0
+    while i < len(cells):
+        c = cells[i]
+        if re.fullmatch(r"(19|20)\d\d", c):
+            year = int(c)
+            i += 1
+            continue
+        m = _ECB_DAYMON.match(c)
+        if not (m and year) or i + 4 >= len(cells):
+            i += 1
+            continue
+        vals = cells[i + 1:i + 5]
+        num = [float(v) if _NUM.match(v) else None for v in vals]
+        if num[0] is None or num[3] is None:
+            i += 1
+            continue
+        d = dt.date(year, month_number(m.group(2)[:3]), int(m.group(1)))
+        if d >= _ECB_LIVE_START:
+            row = {"effective_date": d, "dfr": num[0], "mlf": num[3]}
+            mro = num[1] if num[1] is not None else num[2]
+            if mro is not None:
+                row["mro"] = mro
+            out.append(row)
+        i += 5
+    return sorted(out, key=lambda r: r["effective_date"])
+
+
+def _ecb_key_rates_lines(text: str) -> list[dict]:
     order = ["dfr", "mro", "mlf"]
     out = []
     for line in text.splitlines():
@@ -123,8 +175,13 @@ _BOE_ROW = re.compile(rf"^\s*\|?\s*(\d{{1,2}})\s+{MONTH_RE}\s+(\d{{2,4}})\s*\|\s
 
 
 def parse_boe_bank_rate_text(text: str) -> list[tuple[dt.date, float]]:
+    """'18 Dec 25 | 3.75' rows, one per line or one cell per line (live page)."""
+    return _boe_rows(text.splitlines()) or _boe_rows(join_table_rows(text))
+
+
+def _boe_rows(lines: list[str]) -> list[tuple[dt.date, float]]:
     out = []
-    for line in text.splitlines():
+    for line in lines:
         m = _BOE_ROW.match(line)
         if not m:
             continue

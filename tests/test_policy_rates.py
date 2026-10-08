@@ -51,3 +51,24 @@ def test_rate_in_effect_all_banks():
     assert rate_in_effect(boj, "ioer", dt.date(2026, 6, 16)) == 0.75 and rate_in_effect(boj, "ioer", dt.date(2026, 6, 17)) == 1.00
     assert rate_in_effect(boj, "policy_rate_balance_rate", dt.date(2020, 1, 1)) == -0.10
     assert all(r.confidence for r in fed + ecb + boe + boj)
+
+
+LIVE = Path(__file__).parent / "fixtures" / "live"
+
+
+def test_policy_rate_live_pages():
+    fed = parse_fed_openmarket_text((LIVE / "fed_openmarket_20261008.txt").read_text())
+    assert len(fed) == 60
+    assert {"effective_date": dt.date(2020, 3, 4), "lower": 1.0, "upper": 1.25} in fed      # corrected from 3 Mar (footnote)
+    assert {"effective_date": dt.date(2008, 12, 16), "lower": 0.0, "upper": 0.25} in fed    # "0-0.25"
+    ecb = parse_ecb_key_rates_text((LIVE / "ecb_key_rates_20261008.txt").read_text())
+    assert len(ecb) == 50 and ecb[0]["effective_date"] == dt.date(2005, 12, 6)
+    by = {r["effective_date"]: r for r in ecb}
+    assert by[dt.date(2019, 9, 18)] == {"effective_date": dt.date(2019, 9, 18), "dfr": -0.5, "mro": 0.0, "mlf": 0.25}  # U+2212
+    assert by[dt.date(2024, 9, 18)]["mro"] == 3.65                                    # "18 Sep.5" footnote
+    assert "mro" not in by[dt.date(2008, 10, 8)] and by[dt.date(2008, 10, 15)]["mro"] == 3.75
+    assert by[dt.date(2007, 6, 13)]["mro"] == 4.0                                     # minimum bid rate era
+    boe = parse_boe_bank_rate_text((LIVE / "boe_bank_rate_20261008.txt").read_text())
+    assert len(boe) == 258 and boe[-1] == (dt.date(2025, 12, 18), 3.75) and (dt.date(2020, 3, 19), 0.1) in boe
+    assert len(parse_fred_csv((LIVE / "fred_iorb_20261008.txt").read_text())) == 19
+    assert len(parse_fred_csv((LIVE / "fred_ioer_20261008.txt").read_text())) == 22
