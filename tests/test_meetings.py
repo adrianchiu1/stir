@@ -23,7 +23,7 @@ def test_effective_rules():
 
 def test_maintenance_periods_contiguous():
     mps = load_maintenance_periods()
-    assert len(mps) == 5 * 12 + 13 * 8          # monthly 2010-14, eight a year 2015-27 (live run 8 Oct 2026)
+    assert len(mps) == 11 + 10 * 12 + 13 * 8 + 7   # 2004 (from 24 Jan), monthly 2005-14, eight a year 2015-27, 1-7/2028
     assert validate_maintenance_periods(mps) == []
     by = {m.label: m for m in mps}
     assert by["8/2026"].length_days == 49 and by["1/2027"].length_days == 42 and by["1/2010"].length_days == 21

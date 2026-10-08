@@ -228,8 +228,6 @@ def ecb_index_links(text_or_html: str) -> dict[int, str]:
     return out
 
 
-_ORDINALS = {w: i for i, w in enumerate(["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth",
-                                         "ninth", "tenth", "eleventh", "twelfth"], start=1)}
 _ECB_EXTEND_RE = re.compile(
     r"\b(\d{1,2})(?:st|nd|rd|th)?\s+(?:reserve\s+)?maintenance period of (\d{4}) will be extended\b[^.]*?\bend on "
     rf"(\d{{1,2}}\s+{MONTH_RE}\w*\s+\d{{4}})", re.I)
@@ -257,7 +255,7 @@ def parse_ecb_mp_amendments(text: str) -> dict[str | dt.date, dt.date]:
     return out
 
 
-def fetch_ecb_maintenance(years: range | None = None) -> list[tuple[dict, str]]:
+def fetch_ecb_maintenance(years: range | None = None, include_open: bool = False) -> list[tuple[dict, str]]:
     """Maintenance-period rows (with source URL) for the requested years,
     discovered from the index page; 2027 added from the known release.
 
@@ -268,7 +266,9 @@ def fetch_ecb_maintenance(years: range | None = None) -> list[tuple[dict, str]]:
       holds a monthly 2015 calendar, 12 MPs, superseded by the 2015 release's 8);
     * prose amendments apply last (MP 12/2014 extended to 27 Jan 2015 in the
       2015 release; MP 11/2004 shortened to 18 Jan 2005 in the 2005 release).
-    Rows still lacking an end are dropped. Kept: label year or end year requested.
+    Rows still lacking an end ("tbd": the last MP of the newest release) are
+    dropped unless ``include_open``; their meeting and start date are published,
+    so the meeting updater uses them. Kept: label year or end year requested.
     """
     index_html = fetch(ECB_RESERVE_INDEX_URL)
     save_fixture("ecb_reserve_index", index_html)
@@ -308,7 +308,11 @@ def fetch_ecb_maintenance(years: range | None = None) -> list[tuple[dict, str]]:
         label_year = int(label.split("/")[1])
         if label_year in own_labels and label not in own_labels[label_year]:
             continue
-        if row["end"] is None or not (label_year in wanted or row["end"].year in wanted):
+        if row["end"] is None:
+            if include_open and label_year in wanted:
+                out.append((row, url))
+            continue
+        if not (label_year in wanted or row["end"].year in wanted):
             continue
         out.append((row, url))
     return sorted(out, key=lambda ru: ru[0]["start"])

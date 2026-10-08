@@ -75,9 +75,11 @@ def update_meetings(bank: str, commit: bool = False, historical_years: range | N
         fetched = bank_parsers.fetch_boj()
     elif bank == "ecb":
         # ECB meetings come from the maintenance-period tables (relevant GC meeting column)
-        fetched = [(row["meeting"], "scheduled", url)
-                   for row, url in bank_parsers.fetch_ecb_maintenance(historical_years)
-                   if row.get("meeting")]
+        # (an open last MP, end "tbd", still publishes its meeting and start date)
+        rows = [(row, url) for row, url in bank_parsers.fetch_ecb_maintenance(historical_years, include_open=True)
+                if row.get("meeting")]
+        fetched = [(row["meeting"], "scheduled", url) for row, url in rows]
+        lookup.update({row["meeting"]: row["start"] for row, _ in rows if row["end"] is None})
     else:
         raise ValueError(bank)
 
