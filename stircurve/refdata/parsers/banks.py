@@ -178,7 +178,14 @@ def _ecb_mp_rows(lines: list[str], year_hint: int | None) -> list[dict]:
         if "|" not in line:
             continue
         cells = [c.strip() for c in line.split("|")]
-        if len(cells) < 3 or not _ECB_MP_LABEL_RE.match(cells[0]):
+        if len(cells) < 3:
+            continue
+        if not _ECB_MP_LABEL_RE.match(cells[0]):
+            # 2004-2006 releases: no MP column; meeting ("-" for the transitional
+            # MP of 24 Jan 2004) | start | end. Numbered by start date below.
+            meeting, start, end = (_ecb_date(c) for c in cells[:3])
+            if start and end and (meeting or cells[0] == "-"):
+                rows.append({"label": None, "meeting": meeting, "start": start, "end": end})
             continue
         first3 = [_ecb_date(c) for c in cells[1:4]]
         if len(cells) >= 4 and first3[0] and first3[1] and _ECB_TBD_RE.match(cells[3]):
@@ -203,6 +210,10 @@ def _ecb_mp_rows(lines: list[str], year_hint: int | None) -> list[dict]:
         if "/" not in label and year:
             label = f"{label}/{year}"
         rows.append({"label": label, "meeting": meeting, "start": start, "end": end})
+    counter: dict[int, int] = {}
+    for r in sorted((r for r in rows if r["label"] is None), key=lambda r: r["start"]):
+        counter[r["start"].year] = counter.get(r["start"].year, 0) + 1
+        r["label"] = f"{counter[r['start'].year]}/{r['start'].year}"
     return rows
 
 
@@ -224,14 +235,25 @@ _ECB_EXTEND_RE = re.compile(
     rf"(\d{{1,2}}\s+{MONTH_RE}\w*\s+\d{{4}})", re.I)
 
 
-def parse_ecb_mp_amendments(text: str) -> dict[str, dt.date]:
-    """Changes announced in the prose of a release rather than its table:
+_ECB_NEW_END_RE = re.compile(
+    rf"\blast day of the [^.]*?maintenance period is now (\d{{1,2}}\s+{MONTH_RE}\w*\s+\d{{4}}),?\s+instead of "
+    rf"(\d{{1,2}}\s+{MONTH_RE}\w*\s+\d{{4}})", re.I)
+
+
+def parse_ecb_mp_amendments(text: str) -> dict[str | dt.date, dt.date]:
+    """Changes announced in the prose of a release rather than its table, as
+    {MP label or old end date: new end date}:
     'The 12th reserve maintenance period of 2014 will be extended by 14 days
-    and end on 27 January 2015' -> {'12/2014': 2015-01-27}."""
-    out = {}
-    for m in _ECB_EXTEND_RE.finditer(" ".join(text.split())):
+    and end on 27 January 2015' -> {'12/2014': 2015-01-27};
+    'the last day of the last maintenance period is now 18 January 2005,
+    instead of 19 January 2005' -> {2005-01-19: 2005-01-18}."""
+    flat = " ".join(text.split())
+    out: dict[str | dt.date, dt.date] = {}
+    for m in _ECB_EXTEND_RE.finditer(flat):
         n, y, d = m.groups()[:3]
         out[f"{int(n)}/{y}"] = _ecb_date(d)
+    for m in _ECB_NEW_END_RE.finditer(flat):
+        out[_ecb_date(m.group(3))] = _ecb_date(m.group(1))
     return out
 
 
@@ -245,7 +267,7 @@ def fetch_ecb_maintenance(years: range | None = None) -> list[tuple[dict, str]]:
     * a year's own release defines which MPs that year has (the 2014 release
       holds a monthly 2015 calendar, 12 MPs, superseded by the 2015 release's 8);
     * prose amendments apply last (MP 12/2014 extended to 27 Jan 2015 in the
-      2015 release).
+      2015 release; MP 11/2004 shortened to 18 Jan 2005 in the 2005 release).
     Rows still lacking an end are dropped. Kept: label year or end year requested.
     """
     index_html = fetch(ECB_RESERVE_INDEX_URL)
@@ -256,7 +278,7 @@ def fetch_ecb_maintenance(years: range | None = None) -> list[tuple[dict, str]]:
     fetch_years = sorted(wanted | {y + 1 for y in wanted if y + 1 in links})
     merged: dict[str, tuple[dict, str]] = {}
     own_labels: dict[int, set[str]] = {}
-    amendments: list[tuple[str, dt.date, str]] = []
+    amendments: list[tuple[str | dt.date, dt.date, str]] = []
     seen_urls: set[str] = set()
     for y in fetch_years:
         url = links.get(y)
@@ -276,7 +298,9 @@ def fetch_ecb_maintenance(years: range | None = None) -> list[tuple[dict, str]]:
                 continue
             merged[row["label"]] = (row, url)
         amendments += [(label, end, url) for label, end in parse_ecb_mp_amendments(t).items()]
-    for label, end, url in amendments:
+    for key, end, url in amendments:
+        label = key if isinstance(key, str) else next(
+            (lb for lb, (r, _) in merged.items() if r["end"] == key), None)     # matched by its old end date
         if label in merged:
             merged[label] = (dict(merged[label][0], end=end), url)
     out = []

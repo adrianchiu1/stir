@@ -125,6 +125,10 @@ def test_ecb_live_two_year_release_and_tbd_rows():
     rows = parse_ecb_mp_table((LIVE / "ecb_mp_2025_20261008.txt").read_text(), year_hint=2025)
     assert rows[0]["label"] == "8/2024" and rows[0]["end"] == dt.date(2025, 2, 4)          # "4 February2025"
     assert parse_ecb_mp_amendments((LIVE / "ecb_mp_2015_20261008.txt").read_text()) == {"12/2014": dt.date(2015, 1, 27)}
+    assert parse_ecb_mp_amendments((LIVE / "ecb_mp_2005_20261008.txt").read_text()) == {dt.date(2005, 1, 19): dt.date(2005, 1, 18)}
+    rows = parse_ecb_mp_table((LIVE / "ecb_mp_2004_20261008.txt").read_text(), year_hint=2004)   # no MP column
+    assert rows[0] == {"label": "1/2004", "meeting": None, "start": dt.date(2004, 1, 24), "end": dt.date(2004, 3, 9)}
+    assert rows[1] == {"label": "2/2004", "meeting": dt.date(2004, 3, 4), "start": dt.date(2004, 3, 10), "end": dt.date(2004, 4, 6)}
 
 
 def test_ecb_live_replay_merges_releases_without_gaps():

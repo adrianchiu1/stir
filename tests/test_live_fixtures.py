@@ -25,13 +25,24 @@ PARSERS = {
 }
 
 # parser output rows per fixture (Fed: notation votes / cancelled meetings come back
-# as kind "skip")
+# as kind "skip"; ECB 1999-2003 releases carry no maintenance table, only PDF annexes)
 EXPECTED = {
     "boe_bank_rate_20261008.txt": 258,
     "boe_upcoming_mpc_dates_20261008.txt": 16,
     "boj_mpm_past_20261008.txt": 168,
     "boj_mpm_schedule_20261008.txt": 16,
     "ecb_key_rates_20261008.txt": 50,
+    "ecb_mp_1999_20261008.txt": 0,
+    "ecb_mp_2000_20261008.txt": 0,
+    "ecb_mp_2001_20261008.txt": 0,
+    "ecb_mp_2002_20261008.txt": 0,
+    "ecb_mp_2003_20261008.txt": 0,
+    "ecb_mp_2004_20261008.txt": 11,
+    "ecb_mp_2005_20261008.txt": 12,
+    "ecb_mp_2006_20261008.txt": 12,
+    "ecb_mp_2007_20261008.txt": 12,
+    "ecb_mp_2008_20261008.txt": 12,
+    "ecb_mp_2009_20261008.txt": 12,
     "ecb_mp_2010_20261008.txt": 24,
     "ecb_mp_2011_20261008.txt": 24,
     "ecb_mp_2012_20261008.txt": 24,
