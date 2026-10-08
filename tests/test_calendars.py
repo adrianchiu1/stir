@@ -84,3 +84,27 @@ def test_jp_rules_before_happy_monday_match_cabinet_office():
     rules = {d for d, n in Calendar.from_rules("jp", range(1994, 2028)).holidays.items()
              if d.weekday() < 5 and n != "Bank Holiday"}
     assert rules == official
+
+
+def test_us_sifma_and_us_sofr_against_sources():
+    """us_sofr: no SOFR on Good Friday even when SIFMA recommends only an early close;
+    the rules reproduce every NY Fed non-publication weekday since April 2018."""
+    import datetime as dt
+    from pathlib import Path
+    from stircurve.refdata.calendars import Calendar
+    from stircurve.refdata.parsers.holidays import parse_sifma_text, parse_sofr_json, sofr_non_publication_days
+    live = Path(__file__).parent / "fixtures" / "live"
+    sifma, sofr = Calendar.from_rules("us_sifma", range(2015, 2027)), Calendar.from_rules("us_sofr", range(2018, 2027))
+    for gf in (dt.date(2015, 4, 3), dt.date(2021, 4, 2), dt.date(2023, 4, 7), dt.date(2026, 4, 3)):
+        assert sifma.is_business_day(gf) and (gf.year < 2018 or not sofr.is_business_day(gf))
+    assert not sifma.is_business_day(dt.date(2025, 4, 18))                  # an ordinary Good Friday
+    assert sifma.is_business_day(dt.date(2021, 12, 31)) and sifma.is_business_day(dt.date(2023, 11, 10))
+    assert not sifma.is_business_day(dt.date(2018, 12, 5))                   # day of mourning (SIFMA)
+    published = parse_sofr_json((live / "nyfed_sofr_20261008.txt").read_text())
+    nopub = set(sofr_non_publication_days(published))
+    lo, hi = min(published), max(published)
+    assert nopub == {d for d in sofr.holidays if lo <= d <= hi and d.weekday() < 5}
+    archive = parse_sifma_text((live / "sifma_us_archive_20261008.txt").read_text())
+    assert dt.date(2015, 4, 3) not in archive and dt.date(2025, 4, 18) in archive    # 2015: early close only
+    assert {d for d in sifma.holidays if 2017 <= d.year <= 2025 and d.weekday() < 5} - {dt.date(2018, 12, 5)} \
+        == {d for d in archive if 2017 <= d.year <= 2025}

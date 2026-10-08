@@ -14,7 +14,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from .. import REFDATA_DIR
-from .calendars import CALENDAR_NAMES, HOLIDAY_YEARS, Calendar
+from .calendars import CALENDAR_NAMES, HOLIDAY_YEARS, SIFMA_UNSCHEDULED_CLOSES, Calendar
+
+# rule dates sourced individually (not in the annual schedules the updater reads)
+SOURCED_ONE_OFFS = set(SIFMA_UNSCHEDULED_CLOSES)
 from .maintenance import (MaintenancePeriod, PolicyRate, load_maintenance_periods, load_policy_rates,
                           save_maintenance_periods, save_policy_rates, validate_maintenance_periods)
 from .meetings import (BANK_CALENDAR, Meeting, effective_date, load_meetings, load_published_effective,
@@ -232,12 +235,19 @@ def update_holidays(name: str, commit: bool = False, years: range = HOLIDAY_YEAR
         raise ValueError(name)
     official: dict[dt.date, str] = {}
     source = "rule"
+    covered_range = None      # dates the official source speaks for; default: years it lists 3+ dates in
+    undated: set[tuple[int, str]] = set()
     if name == "uk":
         official, source = holiday_parsers.fetch_uk(), holiday_parsers.UK_JSON_URL
     elif name == "jp":
         official, source = holiday_parsers.fetch_jp(), holiday_parsers.JP_CSV_URL
     elif name == "us_sifma":
-        official, source = holiday_parsers.fetch_sifma(), holiday_parsers.SIFMA_URL
+        (official, undated), source = holiday_parsers.fetch_sifma(), holiday_parsers.SIFMA_URL
+    elif name == "us_sofr":
+        published = holiday_parsers.fetch_sofr_publication_days()
+        official = holiday_parsers.sofr_non_publication_days(published)
+        source = holiday_parsers.NYFED_SOFR_URL.format(end=max(published).isoformat())
+        covered_range = (min(published), max(published))
     cal = Calendar.from_rules(name, years)
     existing = Calendar.load(name, years, refdata_dir)
     official = {d: n for d, n in official.items() if d.year in years}   # e.g. the CAO CSV starts in 1955
@@ -254,16 +264,33 @@ def update_holidays(name: str, commit: bool = False, years: range = HOLIDAY_YEAR
         per_year[d.year] = per_year.get(d.year, 0) + 1
     covered = {y for y, n in per_year.items() if n >= 3}
     for d, n in cal.holidays.items():
-        if d.year in covered and d not in official and n != "Bank Holiday" and not n.endswith("(observed)"):
+        in_cover = covered_range[0] <= d <= covered_range[1] if covered_range else d.year in covered
+        if (in_cover and d not in official and n != "Bank Holiday" and not n.endswith("(observed)")
+                and d not in SOURCED_ONE_OFFS and d.weekday() < 5
+                and (d.year, holiday_parsers.holiday_key(n)) not in undated):
             diff.problems.append(f"{name} {d} {n}: in rules but not in official source")
+    # rule-generated rows follow the rules; only a row that came from a source blocks when it disappears
+    existing_source = _holiday_sources(refdata_dir / "holidays" / f"{name}.csv")
     for d in existing.holidays:
         if d not in merged:
-            diff.removed.append(f"{name} {d} {existing.holidays[d]}")
+            msg = f"{name} {d} {existing.holidays[d]}"
+            if existing_source.get(d, "rule") == "rule":
+                diff.added.append(f"{msg}: dropped by the current rules")
+            else:
+                diff.removed.append(msg)
     if commit and not diff.blocking:
         out = Calendar(name, merged)
         out.write_csv(refdata_dir / "holidays" / f"{name}.csv",
                       source={d: source for d in official} if official else source)
     return diff
+
+
+def _holiday_sources(path: Path) -> dict[dt.date, str]:
+    import csv
+    if not path.exists():
+        return {}
+    with path.open(newline="", encoding="utf-8") as fh:
+        return {dt.date.fromisoformat(r["date"]): r.get("source", "rule") for r in csv.DictReader(fh)}
 
 
 def write_rule_holidays(refdata_dir: Path = REFDATA_DIR, years: range = HOLIDAY_YEARS) -> None:

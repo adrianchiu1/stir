@@ -25,6 +25,8 @@ PARSERS = {
     "uk_bank_holidays": holidays.parse_uk_json,
     "jp_cao_holidays": holidays.parse_jp_csv,
     "sifma_holidays": holidays.parse_sifma_text,
+    "sifma_us_archive": holidays.parse_sifma_text,
+    "nyfed_sofr": lambda t: holidays.sofr_non_publication_days(holidays.parse_sofr_json(t)),
 }
 
 # parser output rows per fixture (Fed: notation votes / cancelled meetings come back
@@ -130,7 +132,9 @@ EXPECTED = {
     "fred_ioer_20261008.txt": 22,
     "fred_iorb_20261008.txt": 19,
     "jp_cao_holidays_20261008.txt": 1067,
+    "nyfed_sofr_20261008.txt": 95,
     "sifma_holidays_20261008.txt": 12,
+    "sifma_us_archive_20261008.txt": 118,
     "uk_bank_holidays_20261008.txt": 83,
 }
 

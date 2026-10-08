@@ -30,7 +30,7 @@ from .. import REFDATA_DIR
 
 MON, TUE, WED, THU, FRI, SAT, SUN = range(7)
 
-CALENDAR_NAMES = ("us_fed", "us_sifma", "target", "uk", "jp")
+CALENDAR_NAMES = ("us_fed", "us_sifma", "us_sofr", "target", "uk", "jp")
 # years covered by the committed holiday files: the earliest published meeting
 # history needing a calendar (FOMC announcements from 1994) to as-of + ~10y
 HOLIDAY_YEARS = range(1994, 2036)
@@ -106,26 +106,51 @@ def rules_us_fed(year: int) -> dict[dt.date, str]:
     return out
 
 
-def rules_us_sifma(year: int) -> dict[dt.date, str]:
-    """SIFMA recommended full-close days (US Treasury / repo market; SOFR).
+# SIFMA recommended an early close only (no full close) on these Good Fridays,
+# when the BLS employment report was released that day. Source: SIFMA U.S.
+# holiday archive (2015, 2021, 2023) and holiday schedule (2026),
+# https://www.sifma.org/resources/guides-playbooks/us-holiday-archive.
+# Earlier coincidences (e.g. 2007, 2010, 2012) are not in the archive.
+SIFMA_GOOD_FRIDAY_EARLY_CLOSE = {2015, 2021, 2023, 2026}
+# Unscheduled full closes recommended by SIFMA.
+SIFMA_UNSCHEDULED_CLOSES = {
+    dt.date(2012, 10, 30): "Hurricane Sandy",   # https://www.sifma.org/news/blog/closing-time
+    dt.date(2018, 12, 5): "National Day of Mourning (President G. H. W. Bush)",
+    # https://www.sifma.org/news/press-releases/sifma-recommends-full-market-close-wednesday-december-5-in-honor-of-former-president-george-h-w-bush
+}
 
-    Federal holidays plus Good Friday. SIFMA has at times recommended an
-    early close rather than a full close on Good Friday (e.g. when it
-    coincides with a payroll release); the official SIFMA CSV written by the
-    updater overrides this rule for those years.
+
+def rules_us_sifma(year: int) -> dict[dt.date, str]:
+    """SIFMA recommended full-close days for US fixed income: U.S. Government
+    Securities Business Days in ISDA terms (SOFR swap accrual).
+
+    Federal holidays plus Good Friday, except Good Fridays with an early close
+    only (``SIFMA_GOOD_FRIDAY_EARLY_CLOSE``), plus unscheduled closes. A
+    Saturday Independence Day, Juneteenth or Christmas closes the Friday before;
+    a Saturday New Year's Day or Veterans Day does not (early close only on
+    31 Dec 2021; no close on 10 Nov 2023).
     """
     out = dict(rules_us_fed(year))
-    out[easter_sunday(year) - dt.timedelta(days=2)] = "Good Friday"
-    # Saturday holidays: SIFMA generally recommends the preceding Friday
-    # (e.g. 3 Jul 2026). Encoded here; override via CSV if SIFMA differs.
-    for m, d, name in ((1, 1, "New Year's Day (observed)"), (7, 4, "Independence Day (observed)"),
-                       (11, 11, "Veterans Day (observed)"), (12, 25, "Christmas Day (observed)"),
+    if year not in SIFMA_GOOD_FRIDAY_EARLY_CLOSE:
+        out[easter_sunday(year) - dt.timedelta(days=2)] = "Good Friday"
+    for m, d, name in ((7, 4, "Independence Day (observed)"), (12, 25, "Christmas Day (observed)"),
                        (6, 19, "Juneteenth (observed)")):
         if (m, d) == (6, 19) and year < 2022:
             continue
         day = dt.date(year, m, d)
         if day.weekday() == SAT:
             out[day - dt.timedelta(days=1)] = name
+    out.update({d: n for d, n in SIFMA_UNSCHEDULED_CLOSES.items() if d.year == year})
+    return out
+
+
+def rules_us_sofr(year: int) -> dict[dt.date, str]:
+    """Days without a SOFR publication: the SIFMA calendar plus every Good
+    Friday. The NY Fed publishes no SOFR on Good Friday even when SIFMA
+    recommends only an early close (2021, 2023, 2026; NY Fed API). SOFR starts
+    2 Apr 2018; earlier years follow the same rules for continuity."""
+    out = rules_us_sifma(year)
+    out[easter_sunday(year) - dt.timedelta(days=2)] = "Good Friday"
     return out
 
 
@@ -277,6 +302,7 @@ def rules_jp(year: int) -> dict[dt.date, str]:
 RULES = {
     "us_fed": rules_us_fed,
     "us_sifma": rules_us_sifma,
+    "us_sofr": rules_us_sofr,
     "target": rules_target,
     "uk": rules_uk,
     "jp": rules_jp,

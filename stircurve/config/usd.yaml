@@ -3,7 +3,7 @@ bank: fed
 calendar: us_fed                    # policy-rate / EFFR days
 fixing_calendars:
   EFFR: us_fed
-  SOFR: us_sifma
+  SOFR: us_sofr                     # SOFR publication days; us_sifma = SIFMA closes (ISDA USGS business days)
 meetings:
   expected_per_year: 8
   effective_rule: next_business_day
