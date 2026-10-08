@@ -1,0 +1,719 @@
+EXHIBIT A 
+CME Rulebook and CBOT Rulebook 
+ 
+CME Rulebook 
+(additions underlined; deletions struck through) 
+ 
+Chapter 452 
+Three-Month Eurodollar Futures 
+ 
+ 
+45200. SCOPE OF CHAPTER 
+This chapter is limited in application to Three -Month Eurodollar futures (“futures” or “contract”). In addition 
+to this chapter, Three-Month Eurodollar futures shall be subject to the general rules and regulations 
+of the Exchange insofar as applicable. 
+ 
+For purposes of this chapter, u Unless otherwise specified, times referred referenced herein shall refer to 
+and indicate Chicago time. 
+ 
+ 
+45201. CONTRACT SPECIFICATIONS 
+Each futures contract shall be for a Eurodollar Interbank Time Deposit having a principal value of 
+$1,000,000 with a three-month term to maturity.  Each contract is valued at $2,500 times the contract-grade 
+IMM Index (Rule 45202.C.). 
+ 
+ 
+45202. TRADING SPECIFICATIONS 
+  
+45202.A. Trading Schedule 
+Futures cContracts shall be scheduled for trading during such hours and for delivery in such months 
+as may be determined by the Exchange. 
+ 
+45202.B. Trading Unit 
+The size of the unit of trading shall be based upon the interest rate per annum on a three-month unsecured 
+wholesale Eurodollar bank deposit having principal value of approximately $1,000,000, for which (i) such 
+interest rate shall accrue on the basis of the actual number of days spanned by the three -month term of 
+such deposit, divided by a 360-day year, and (ii) each basis point per annum of such interest rate shall be 
+worth $25 per futures contract. Eurodollar Interbank Time Deposits in the amount of $1,000,000. 
+ 
+45202.C. Price Basis and Minimum Price Increments 
+Contract pPrices shall be quoted in terms of the IMM Index (“Index”), 100.0000 minus the interest rate per 
+annum corresponding to the  three-month unsecured wholesale Eurodollar interbank time bank deposit 
+specified in Rule 45202.B.  rate on an annual basis for a 360 -day year.  (For example, a n interest rate of 
+2.055 7.20 percent per annum shall be quoted as an Index value of 97.9450 92.8000.) 
+ 
+1. The Nearest Expiring Contract Month 
+Minimum fluctuations of the IMM Index shall be in multiples of The minimum price fluctuation shall 
+be 0.0025 Index points, equal to $6.25 per contract. 
+ 
+2. All Contract Months Excluding the Nearest Expiring Contract Month 
+Minimum fluctuations of the IMM Index shall be in multiples of The minimum price fluctuation shall 
+be 0.005 Index points, equal to $12.50 per contract. 
+ 
+45202.D. Position Limits, Exemptions, Position Accountability and Reportable Levels  
+ 
+2 
+The applicable position limits and/or accountability levels, in addition to the reportable levels, are set forth 
+in the Position Limit, Position Accountability and Reportable Level Table in the Interpretations & Special 
+Notices Section of Chapter 5. 
+ 
+A Person seeking an exemp tion from position limits for bona fide commercial purposes shall apply to the 
+Market Regulation Department on forms provided by the Exchange, and the Market Regulation Department 
+may grant qualified exemptions in its sole discretion. 
+ 
+Refer to Rule 559 for requirements concerning the aggregation of positions and allowable exemptions from 
+the specified position limits. 
+ 
+45202.E. Special Price Fluctuation Limits 
+At the commencement of each trading day, the contract shall be subject to special price fluctuati on limits 
+as set forth in Rule 589 and in the Special Price Fluctuation Limits Table in the Interpretations & Special 
+Notices Section of Chapter 5. 
+ 
+45202.F. [Reserved] 
+ 
+45202.G. Termination of Trading 
+Futures tradingTrading in an expiring contract shall terminate at 11:00 a.m. London time * on the second 
+London bank business day immediately preceding the third Wednesday of the contract’s named month of 
+delivery. 
+*This is 5:00 a.m. Chicago time except when Daylight Savings Time is in effect in either, but n ot both, 
+London or Chicago. 
+ 
+45202.H. [Reserved] 
+ 
+ 
+45203. SETTLEMENT PROCEDURES 
+Delivery shall be by cash settlement. 
+ 
+45203.A. Final Settlement Price 
+The final settlement price of an expiring contract shall be 100 .0000 minus the ICE LIBOR  three-month 
+Eurodollar interbank time  U.S. dollar bank funding deposit rate (“rate”), as determined at the ICE LIBOR 
+setting administered by ICE Benchmark Administration Limited , and as first published released on the 
+second London bank Bbusiness Dday immediately preceding the third Wednesday of the contract’s named 
+month of delivery. The value of such three-month Eurodollar interbank time deposit  rate shall be rounded 
+to the nearest 1/10,000th 0.0001 of a percentage points per annum. Tie values, i.e., any such values ending 
+in 0.00005, shall be rounded up.  (For example, a Three-Month ICE LIBOR fixing value  rate of 8.65625 
+percent would be rounded up to 8.6563 percent, and then subtracted from 100.0000 to determine a contract 
+final settlement price of 91.3437.) 
+ 
+45203.B. Final Settlement 
+Clearing members holding open positions in a contract at the time of termination of trading in that contract 
+shall make payment to or receive payment from the Clearing House in accordance with normal variation 
+performance bond procedures based on a settlement price equal to the final settlement price. 
+ 
+ 
+45204.-35. [RESERVED] 
+ 
+(End Chapter 452) 
+ 
+ 
+INTERPRETATIONS AND SPECIAL NOTICES RELATING TO CHAPTER 452  
+ 
+[ There are no revisions to the Interpretations and Special Notices Relating to Chapter 452. ] 
+ 
+3 
+Clean 
+ 
+ 
+45200. SCOPE OF CHAPTER 
+This chapter is limited in application to Three -Month Eurodollar futures (“futures” or “contract”). In addition 
+to this chapter, futures shall be subject to the general rules and regulations of the Exchange insofar as 
+applicable. 
+ 
+Unless otherwise specified, times referenced herein shall indicate Chicago time.  
+ 
+ 
+45201. CONTRACT SPECIFICATIONS 
+Each contract is valued at $2,500 times the contract-grade IMM Index (Rule 45202.C.). 
+ 
+ 
+45202. TRADING SPECIFICATIONS 
+  
+45202.A. Trading Schedule 
+Contracts shall be scheduled for trading during such hours and for delivery in such months as may be 
+determined by the Exchange. 
+ 
+45202.B. Trading Unit 
+The unit of trading shall be based upon the interest rate per annum on a three-month unsecured wholesale 
+Eurodollar bank deposit having principal value of approximately $1,000,000, for which (i) such interest rate 
+shall accrue on the basis of the actual number of days spanned by the three -month term of such deposit, 
+divided by a 360-day year, and (ii) each basis point per annum of such interest rate shall be worth $25 per 
+futures contract. 
+ 
+45202.C. Price Basis and Minimum Price Increments 
+Contract prices shall be quoted in terms of the IMM Index (“Index”), 100.0000 minus the interest rate per 
+annum corresponding to the three -month unsecured wholesale Eurodollar bank deposit specified in Rule 
+45202.B.  (For example, an interest rate of 2.055 percent per an num shall be quoted as an Index value of 
+97.9450.) 
+ 
+1. The Nearest Expiring Contract Month 
+The minimum price fluctuation shall be 0.0025 Index points, equal to $6.25 per contract.  
+ 
+2. All Contract Months Excluding the Nearest Expiring Contract Month 
+The minimum price fluctuation shall be 0.005 Index points, equal to $12.50 per contract.  
+ 
+45202.D. Position Limits, Exemptions, Position Accountability and Reportable Levels  
+The applicable position limits and/or accountability levels, in addition to the reportable levels, are set forth 
+in the Position Limit, Position Accountability and Reportable Level Table in the Interpretations & Special 
+Notices Section of Chapter 5. 
+ 
+A Person seeking an exemption from position limits for bona fide commercial purposes shall apply to the 
+Market Regulation Department on forms provided by the Exchange, and the Market Regulation Department 
+may grant qualified exemptions in its sole discretion. 
+ 
+Refer to Rule 559 for requirements concerning the aggregation of positions and allowable exemptions from 
+the specified position limits. 
+ 
+45202.E. Special Price Fluctuation Limits 
+At the commencement of each trading day, the contract shall be subject to special price fluctuation limits 
+as set forth in Rule 589 and in the Special Price Fluctuation Limits Table in the Interpretations & Special 
+Notices Section of Chapter 5. 
+ 
+4 
+ 
+45202.F. [Reserved] 
+ 
+45202.G. Termination of Trading 
+Trading in an expiring contract shall terminate at 11:00 a.m. London time on the second London bank 
+business day immediately preceding the third Wednesday of the contract’s named month of delivery.  
+ 
+45202.H. [Reserved] 
+ 
+ 
+45203. SETTLEMENT PROCEDURES 
+Delivery shall be by cash settlement. 
+ 
+45203.A. Final Settlement Price 
+The final settlement price of an expiring contract shall be 100.0000 minus the ICE LIBOR three-month U.S. 
+dollar bank funding rate (“rate”), as determined by ICE Benchmark Administration Limited and as first 
+published on the second London bank business day immediately preceding the third Wednesday of th e 
+contract’s named month of delivery. The value of such rate shall be rounded to the nearest 0.0001 
+percentage points per annum. Tie values, i.e., any such values ending in 0.00005, shall be rounded up.  
+(For example, a rate of 8.65625 percent would be rounded up to 8.6563 percent, and then subtracted from 
+100.0000 to determine a contract final settlement price of 91.3437.) 
+ 
+45203.B. Final Settlement 
+Clearing members holding open positions in a contract at the time of termination of trading in that contract  
+shall make payment to or receive payment from the Clearing House in accordance with normal variation 
+performance bond procedures based on a settlement price equal to the final settlement price.  
+ 
+45204.-35. [RESERVED] 
+ 
+(End Chapter 452) 
+ 
+INTERPRETATIONS AND SPECIAL NOTICES RELATING TO CHAPTER 452 
+ 
+[ There are no revisions to the Interpretations and Special Notices Relating to Chapter 452. ] 
+ 
+ 
+Chapter 452A 
+Options on Three-Month Eurodollar Futures 
+ 
+ 
+452A01.C. Minimum Fluctuations  
+The price of an option shall be quoted in IMM Index points. Each 0.01 IMM Index point shall represent one 
+(1) basis point per annum in terms of the three -month Eurodollar time deposit rate for such option’s 
+Underlying Futures Contract (Rule 452A01.D.), and shall be equal to $25 per option contract. For example, 
+a quote of 0.35 IMM Index points represents an option price of $875 (equal to 35 basis points x $25 per 
+basis point per option contract)…. 
+ 
+The price of an option shall be quoted in IMM Index points corresponding to such o ption’s Underlying 
+Futures Contract (Rule 452A01.D.).  Pursuant to Rules 45202.C., each 0.01 IMM Index point signifies one 
+(1) basis point per annum of interest rate exposure in such Underlying Futures Contract’s Trading Unit 
+(Rule 45202.B.), and is equal to $25 per option contract.  For example, an option contract price of 0.35 IMM 
+Index points represents $875 (equal to 35 basis points x $25 per basis point per option contract) …. 
+ 
+ 
+ 
+ 
+5 
+Clean 
+ 
+452A01.C. Minimum Fluctuations  
+The price of an option shall be quoted in IMM Index points corresponding to such option’s Underlying 
+Futures Contract (Rule 452A01.D.).  Pursuant to Rules 45202.C., each 0.01 IMM Index point signifies one 
+(1) basis point per annum of interest rate exposure in such Underlying Futures Cont ract’s Trading Unit 
+(Rule 45202.B.), and is equal to $25 per option contract.  For example, an option contract price of 0.35 IMM 
+Index points represents $875 (equal to 35 basis points x $25 per basis point per option contract)….  
+ 
+ 
+Chapter 453 
+One-Month Eurodollar Futures 
+ 
+ 
+45300. SCOPE OF CHAPTER 
+This chapter is limited in application to One-Month Eurodollar futures (“futures” or “contract”). In addition to 
+this chapter, One-Month Eurodollar futures shall be subject to the general rules and regulations 
+of the Exchange insofar as applicable. 
+ 
+For purposes of this chapter, u Unless otherwise specified, times referred referenced herein shall refer to 
+and indicate Chicago time. 
+ 
+45301. CONTRACT SPECIFICATIONS 
+Each futures contract shall be for a Eurodollar Int erbank Time Deposit having a principal value of 
+$3,000,000 with a one-month term to maturity.  Each contract is valued at $2,500 times the contract-grade 
+IMM Index (Rule 45302.C.). 
+ 
+45302. TRADING SPECIFICATIONS 
+ 
+45302.A. Trading Schedule 
+Futures cContracts shall be scheduled for trading during such hours and for delivery in such months 
+as may be determined by the Exchange. 
+ 
+45302.B. Trading Unit 
+The size of the unit of trading shall be based upon the interest rate per annum on a one -month unsecured 
+wholesale Eurodollar bank deposit having principal value of approximately $3,000,000, for which (i) such 
+interest rate shall accrue on the basis of the actual number of days spanned by the one-month term of such 
+deposit, divided by a 360-day year, and (ii) each basis point per annum of such interest rate shall be worth 
+$25 per futures contract. Eurodollar Interbank Time Deposits in the amount of $3,000,000. 
+ 
+45302.C. Price Increments 
+Contract pPrices shall be quoted in terms of the IMM Index (“Index”), 100.0000 minus the interest rate per 
+annum corresponding to the  one-month unsecured wholesale Eurodollar interbank time bank deposit 
+specified in Rule 45302.B.  rate on an annual basis for a 360 -day year.  (For example, a n interest rate of 
+2.055 7.20 percent per annum shall be quoted as an Index value of 97.9450 92.8000.) 
+ 
+Minimum fluctuations of the IMM Index shall be in multiples of The minimum price fluctuation shall be 0.0025 
+Index points, equal to $6.25 per contract. 
+ 
+45302.D. Position Limits, Exemptions, Position Accountability and Reportable Levels 
+The applicable position limits and/or accountability levels, in addition to the reportable levels, are set forth 
+in the Position Limit, Position Accountability and Reportable Level Table in the Interpretat ions & Special 
+Notices Section of Chapter 5. 
+ 
+ 
+6 
+A Person seeking an exemption from position limits for bona fide commercial purposes shall apply to the 
+Market Regulation Department on forms provided by the Exchange, and the Market Regulation Department 
+may grant qualified exemptions in its sole discretion. 
+ 
+Refer to Rule 559 for requirements concerning the aggregation of positions and allowable exemptions from 
+the specified position limits. 
+ 
+45302.E. Special Price Fluctuation Limits 
+At the commencement of each trading day, the contract shall be subject to special price fluctuation limits 
+as set forth in Rule 589 and in the Special Price Fluctuation Limits Table in the Interpretations & Special 
+Notices Section of Chapter 5. 
+ 
+45302.F. [Reserved] 
+ 
+45302.G. Termination of Trading 
+Futures tradingTrading in an expiring contract shall terminate at 11:00 a.m. London time * on the second 
+London bank business day immediately preceding the third Wednesday of the contract’s named month of 
+delivery. 
+ 
+*This is 5:00 a.m. Ch icago time except when Daylight Savings Time is in effect in either, but not both, 
+London or Chicago. 
+ 
+45302.H. [Reserved] 
+ 
+45303. SETTLEMENT PROCEDURES 
+Delivery shall be by cash settlement. 
+ 
+45303.A. Final Settlement Price 
+The final settlement price of an  expiring contract shall be 100 .0000 minus the ICE LIBOR  one-month 
+Eurodollar interbank time  U.S. dollar bank funding deposit rate (“rate”), as determined at the ICE LIBOR 
+setting administered by ICE Benchmark Administration Limited , and as first published released on the 
+second London bank Bbusiness Dday immediately preceding the third Wednesday of the contract’s named 
+month of delivery. The value of such three-month Eurodollar interbank time deposit  rate shall be rounded 
+to the nearest 1/10,000th 0.0001 of a percentage points per annum. Tie values, i.e., any such values ending 
+in 0.00005, shall be rounded up.  (For example, a Three-Month ICE LIBOR fixing value  rate of 8.65625 
+percent would be rounded up to 8.6563 percent, and then subtracted from 100.0000 to determine a contract 
+final settlement price of 91.3437.) 
+ 
+45303.B. Final Settlement 
+Clearing members holding open positions in a contract at the time of termination of trading in that contract 
+shall make payment to or receive payment from the Clearing House in accordance with normal variation 
+performance bond procedures based on a settlement price equal to the final settlement price.  
+ 
+45303.C. - I. [Reserved] 
+ 
+45304.-05. [RESERVED] 
+ 
+45306. [RESERVED] 
+ 
+(End Chapter 453) 
+ 
+INTERPRETATIONS AND SPECIAL NOTICES RELATING TO CHAPTER 453 
+ 
+[ There are no revisions to the Interpretations and Special Notices Relating to Chapter 453. ] 
+ 
+ 
+ 
+7 
+Clean 
+ 
+45300. SCOPE OF CHAPTER 
+This chapter is limited in application to One-Month Eurodollar futures (“futures” or “contract”). In addition to 
+this chapter, futures shall be subject to the general rules and regulations of the Exchange insofar as 
+applicable. 
+ 
+Unless otherwise specified, times referenced herein shall indicate Chicago time.  
+ 
+45301. CONTRACT SPECIFICATIONS 
+Each contract is valued at $2,500 times the contract-grade IMM Index (Rule 45302.C.). 
+ 
+45302. TRADING SPECIFICATIONS 
+  
+45302.A. Trading Schedule 
+Contracts shall be scheduled for trading during such hours and for delivery in such months as may be 
+determined by the Exchange. 
+ 
+45302.B. Trading Unit 
+The unit of trading shall be based upon the interest rate per annum on a one -month unsecured wholesale 
+Eurodollar bank deposit having principal value of approximately $3,000,000, for which (i) such interest rate 
+shall accrue on the basis of the actual number of days spanned by the one -month term of such deposit, 
+divided by a 360-day year, and (ii) each basis point per annum of such interest rate shall be worth $25 per 
+futures contract. 
+ 
+45302.C. Price Basis and Minimum Price Increments 
+Contract prices shall be quoted in terms of the IMM Index (“Index”), 100.0000 minus the interest rate per 
+annum corresponding to the one -month unsecured wholesale Eurodollar bank deposit specified in Rule 
+45302.B.  (For example, an interest rat e of 2.055 percent per annum shall be quoted as an Index value of 
+97.9450.) 
+ 
+The minimum price fluctuation shall be 0.0025 Index points, equal to $6.25 per contract.  
+ 
+45302.D. Position Limits, Exemptions, Position Accountability and Reportable Levels  
+The applicable position limits and/or accountability levels, in addition to the reportable levels, are set forth 
+in the Position Limit, Position Accountability and Reportable Level Table in the Interpretations & Special 
+Notices Section of Chapter 5. 
+ 
+A Person seeking an exemption from position limits for bona fide commercial purposes shall apply to the 
+Market Regulation Department on forms provided by the Exchange, and the Market Regulation Department 
+may grant qualified exemptions in its sole discretion. 
+ 
+Refer to Rule 559 for requirements concerning the aggregation of positions and allowable exemptions from 
+the specified position limits. 
+ 
+45302.E. Special Price Fluctuation Limits 
+At the commencement of each trading day, the contract shall be subject to special price fluctuation limits 
+as set forth in Rule 589 and in the Special Price Fluctuation Limits Table in the Interpretations & Special 
+Notices Section of Chapter 5. 
+ 
+45302.F. [Reserved] 
+ 
+45302.G. Termination of Trading 
+Trading in an expiring contract shall t erminate at 11:00 a.m. London time on the second London bank 
+business day immediately preceding the third Wednesday of the contract’s named month of delivery.  
+ 
+ 
+8 
+45302.H. [Reserved] 
+ 
+45303. SETTLEMENT PROCEDURES 
+Delivery shall be by cash settlement. 
+ 
+45303.A. Final Settlement Price 
+The final settlement price of an expiring contract shall be 100.0000 minus the ICE LIBOR one -month U.S. 
+dollar bank funding rate (“rate”), as determined by ICE Benchmark Administration Limited and as first 
+published on the s econd London bank business day immediately preceding the third Wednesday of the 
+contract’s named month of delivery. The value of such rate shall be rounded to the nearest 0.0001 
+percentage points per annum. Tie values, i.e., any such values ending in 0.000 05, shall be rounded up.  
+(For example, a rate of 8.65625 percent would be rounded up to 8.6563 percent, and then subtracted from 
+100.0000 to determine a contract final settlement price of 91.3437.) 
+ 
+45303.B. Final Settlement 
+Clearing members holding open positions in a contract at the time of termination of trading in that contract 
+shall make payment to or receive payment from the Clearing House in accordance with normal variation 
+performance bond procedures based on a settlement price equal to the final s ettlement price. 
+ 
+45303.C. - I. [Reserved] 
+ 
+45304.-35. [RESERVED] 
+ 
+(End Chapter 453) 
+ 
+INTERPRETATIONS AND SPECIAL NOTICES RELATING TO CHAPTER 453  
+ 
+[ There are no revisions to the Interpretations and Special Notices Relating to Chapter 453. ] 
+ 
+Chapter 453A 
+Options on Three-Month Eurodollar Futures 
+ 
+ 
+453A01.C. Minimum Fluctuations  
+The price of an option shall be quoted in IMM Index points. Each 0.01 Index point (1 basis point) shall 
+represent $25. For example, a quote of 0.35 index points represents an option price of $875 (35 basis 
+points x 25 dollars). The minimum fluctuation shall be 0.0025 Index points, equal to $6.25 per contract.  
+The price of any option contract shall be quoted in IMM Index points corresponding to the futures contract 
+into which such option contract is exercisable.  Pursuant to Rules 45302.C., each 0.01 IMM In dex point 
+signifies one (1) basis point per annum of interest rate exposure in such futures contract’s Trading Unit 
+(Rule 45302.B.), and is equal to $25 per option contract.  For example, an option contract price of 0.35 IMM 
+Index points represents $875 (equal to 35 basis points x $25 per basis point per option contract).   
+ 
+The minimum fluctuation shall be 0.0025 Index points, equal to $6.25 per contract.  
+ 
+Clean 
+ 
+453A01.C. Minimum Fluctuations  
+The price of any option contract shall be quoted in IMM Index points corresponding to the futures contract 
+into which such option contract is exercisable.  Pursuant to Rules 45302.C., each 0.01 IMM Index point 
+signifies one (1) basis point per annum of int erest rate exposure in such futures contract’s Trading Unit 
+(Rule 45302.B.), and is equal to $25 per option contract.  For example, an option contract price of 0.35 IMM 
+Index points represents $875 (equal to 35 basis points x $25 per basis point per option  contract).   
+ 
+The minimum fluctuation shall be 0.0025 Index points, equal to $6.25 per contract.  
+ 
+9 
+CBOT Rulebook 
+ (additions underlined; deletions struck through) 
+Chapter 22 
+30-Day Federal Funds Futures 
+ 
+ 
+22100. SCOPE OF CHAPTER 
+This chapter is limited in application to trading of 30-Day Federal Funds futures (“futures” or “contract”). 
+The procedures for trading, clearing, delivery and settlement, and any other matters not specifically 
+covered herein or in Chapter 7 shall be governed by the general rules of the Exchange. 
+ 
+22101. CONTRACT SPECIFICATIONS 
+The contract grade shall be 100 minus the arithmetic average of the daily effective federal funds rate 
+during the contract delivery month. Such arithmetic average shall be rounded to  the nearest one tenth of 
+one basis point per annum, and shall be rounded up in the case of a tie. The daily effective federal funds 
+rate shall be as published by the Federal Reserve Bank of New York. 
+ 
+For any day during the contract delivery month for which the Federal Reserve Bank of New York does not 
+publish a rate (e.g., weekends and holidays), the rate shall be the rate for the last day for which a rate 
+was published. Each contract is valued at $4,167 times the contract-grade Index (Rule 22102.C.). 
+ 
+ 
+22102. TRADING SPECIFICATIONS 
+Trading in futures is regularly conducted in all calendar months. The number of delivery months open for 
+trading at a given time shall be determined by the Exchange. 
+ 
+22102.A. Trading Schedule 
+The hours of trading shall be determined by the Exchange. Contracts shall be scheduled for trading during 
+such hours and for delivery in such months as may be determined by the Exchange.  
+ 
+22102.B. Trading Unit 
+For a contract for a given delivery month, the Trading Unit shall be a US domestic interbank deposit in the 
+amount of $5,000,000 that pays interest at a rate equal to the arithmetic average of the daily effective 
+federal funds rate during such contract’s delivery month. the unit of trading shall be based upon the interest 
+rate per ann um on an unsecured one -month US domestic interbank deposit having principal value of 
+approximately of $5,000,000, for which (i) such interest rate shall accrue on the basis of the actual number 
+of days spanned by the one -month term of such deposit, divided  by a 360 -day year, and (ii) each basis 
+point per annum of such interest rate shall be worth $41.67 per futures contract, and (iii) such interest rate 
+shall be the arithmetic average of the daily effective federal funds rate during such contract’s delivery month, 
+subject to Rule 22103.  The daily effective federal funds rate shall be as published by the Federal Reserve 
+Bank of New York.    
+ 
+22102.C. Price Basis and Minimum Price Increments1 
+For a contract for a given delivery month, the price shall be quoted in terms of the contract-grade index 
+(“Index”)price points, as 100.0000 price points minus the average daily effective federal funds rate during 
+such contract’s delivery month. (For examp le, an average daily effective federal funds rate of 4.3275 
+percent per annum shall be quoted as an Index value of 95.6725 price points.) 
+ 
+ 
+ 
+1Revised January 2009, and February 2016, and December 2017 
+ 
+The minimum price fluctuation shall be 0.005 price Index points, equal to $20.835 per contract, subject to 
+the following exceptions: 
+ 
+ 
+10 
+Where the first day of a contract’s delivery month is a Saturday, a Sunday, or a Monday, the 
+minimum price fluctuation for such contract shall be 0.0025 price Index points, equal to $10.4175 
+per contract, as of the first Trading Day of such contract delivery month.  
+ 
+Where the first day of a contract’s delivery month is a Tuesday, a Wednesday, a Thursday, or a 
+Friday, the minimum price fluctuation for such contract shall be 0.0025 price Index points, equal to 
+$10.4175 per contract, as of the Trading Day immediately following the last Sunday of the month 
+preceding such contract delivery month. 
+ 
+22102.D. Position Limits, Exemptions, Position Accountability and Reportable Levels  
+The applicable position limits and/or accountability levels, in addition to the reportable levels, are set forth 
+in the Position Limit, Position Accountability and Reportable Level Table in the Interpretations & Special 
+Notices Section of Chapter 5. 
+ 
+A Person seeking an exemption from position limits for bona fide commercial purposes shall apply to the 
+Market Regulation Department on forms provided by the Exchange, and the Market Regulation Department 
+may grant qualified exemptions in its sole discretion. 
+ 
+Refer to Rule 559 for requirements concerning the aggregation of positions and allowable exemptions from 
+the specified position limits. 
+ 
+22102.E. Special Price Fluctuation Limits 
+At the commencement of each trading day, the contract shall be subject to spe cial price fluctuation limits 
+as set forth in Rule 589 and in the Special Price Fluctuation Limits Table in the Interpretations & Special 
+Notices Section of Chapter 5. 
+ 
+22102.F. Termination of Trading 
+The last day of tradingTrading in an expiring futures contract shall terminate at the close of trading on be 
+the last Business Day of such contract’s delivery month. Trading in expiring futures shall terminate at the 
+close of the Trading Day on the last day of trading.  Contracts that remain outstanding follow ing 
+termination of trade shall be liquidated by cash settlement pursuant to Rule 22103.  
+ 
+ 
+22103. DELIVERY ON FUTURES CONTRACTS 
+On its last day of trading, an expiring contract shall be marked to market by reference to the Exchange daily 
+settlement price for such contract. 
+ 
+Delivery on expiring contracts that remain outstanding following termination of trading  shall be made by 
+cash settlement through the Clearing House following normal variation margin procedures.  The final mark 
+to market on any such expirin g contract shall be made on the day the contract final settlement price is 
+determined, by reference to the contract final settlement price. 
+ 
+Such final settlement price shall be calculated by the Exchange on the business day on which the Federal 
+Reserve Bank of New York publishes the daily effective federal funds rate (“rate”) for the last day of such 
+expiring contract’s delivery month. The rate for the last day of such expiring contract’s delivery month shall 
+be as first published by the Federal Reserve Ba nk of New York.  The final settlement price of an expiring 
+contract shall be calculated on the business day on which the Federal Reserve Bank of New York publishes 
+the daily effective federal funds rate for the last day of such contract’s delivery month. Such final settlement 
+price shall be 100 minus the arithmetic average of the daily effective federal funds rate during the contract 
+delivery month. On their last day of trading, open contracts shall be marked to market by reference to the 
+Exchange daily settlement price. The final mark to market on such contracts shall be made on the day the 
+final settlement price is determined. 
+ 
+Such contract final settlement price shall be 100 minus the arithmetic average of the daily effective federal 
+funds rate during the contract delivery month.  For any day during the contract delivery month for which the 
+Federal Reserve Bank of New York does  not publish a rate (e.g., a weekend day or a US bank holiday), 
+ 
+11 
+the rate for such day shall be the rate for the last preceding day for which a rate was published.  Such 
+arithmetic average value shall be rounded to the nearest one tenth of one basis point p er annum.  Tie 
+values, i.e., any such arithmetic average value ending in 0.0005, shall be rounded up.  (For example, an 
+arithmetic average value of 2.5915 percent per annum would be rounded up to 2.592 percent per annum, 
+and then subtracted from 100.000 to determine a contract final settlement price of 97.408.) 
+ 
+Clean 
+ 
+22100. SCOPE OF CHAPTER 
+This chapter is limited in application to trading of 30 -Day Federal Funds futures (“futures” or “contract”). 
+The procedures for trading, clearing, delivery and settlement, and any other matters not specifically covered 
+herein or in Chapter 7 shall be governed by the general rules of the Exchange.  
+ 
+ 
+22101. CONTRACT SPECIFICATIONS 
+Each contract is valued at $4,167 times the contract-grade Index (Rule 22102.C.). 
+ 
+ 
+22102. TRADING SPECIFICATIONS 
+ 
+22102.A. Trading Schedule 
+Contracts shall be scheduled for trading during such hours and for delivery in such months as may be 
+determined by the Exchange. 
+ 
+22102.B. Trading Unit 
+For a contract for a given delivery month, the unit of trading shall be based upon the interest rate per annum 
+on an unsecured one -month US domestic interbank deposit having principal value of approximately of 
+$5,000,000, for which (i) such interest rate shall accrue on the basis of the actual number of days spanned 
+by the one-month term of such deposit, divided by a 360 -day year, and (ii) each basis point per annum of 
+such interest rate shall be worth $41.67 per futures contract, and (iii) such interest rate shall be the 
+arithmetic average of the daily effective federal funds rate during such contract’s delivery month, subject to 
+Rule 22103.  The daily effective federal funds rate shall be as published by the Federal Reserve Bank of 
+New York.    
+ 
+22102.C. Price Basis and Minimum Price Increments 1 
+For a contract  for a given delivery month, the price shall be quoted in terms of the contract -grade index 
+(“Index”), as 100.0000 minus the average daily effective federal funds rate during such contract’s delivery 
+month. (For example, an average daily effective federal funds rate of 4.3275 percent per annum shall be 
+quoted as an Index value of 95.6725.) 
+ 
+The minimum price fluctuation shall be 0.005 Index points, equal to $20.835 per contract, subject to the 
+following exceptions: 
+ 
+Where the first day of a contract’s delivery month is a Saturday, a Sunday, or a Monday, the 
+minimum price fluctuation for such contract shall be 0.0025 Index points, equal to $10.4175 per 
+contract, as of the first Trading Day of such contract delivery month. 
+ 
+Where the first day of a contra ct’s delivery month is a Tuesday, a Wednesday, a Thursday, or a 
+Friday, the minimum price fluctuation for such contract shall be 0.0025 Index points, equal to 
+$10.4175 per contract, as of the Trading Day immediately following the last Sunday of the month 
+preceding such contract delivery month. 
+ 
+22102.D. Position Limits, Exemptions, Position Accountability and Reportable Levels  
+The applicable position limits and/or accountability levels, in addition to the reportable levels, are set forth 
+in the Position Lim it, Position Accountability and Reportable Level Table in the Interpretations & Special 
+Notices Section of Chapter 5. 
+ 
+12 
+ 
+ 
+ 
+1Revised January 2009, and February 2016, and December 2017 
+ 
+A Person seeking an exemption from position limits for bona fide commercial purposes shall apply to the 
+Market Regulation Department on forms provided by the Exchange, and the Market Regulation Department 
+may grant qualified exemptions in its sole discretion. 
+ 
+Refer to Rule 559 for requirements concerning the aggregation of positions and allowable exemptions from 
+the specified position limits. 
+ 
+22102.E. Special Price Fluctuation Limits 
+At the commencement of each trading day, the contract shall be subject to special price fluctuation limits 
+as set forth in Rule 589 and i n the Special Price Fluctuation Limits Table in the Interpretations & Special 
+Notices Section of Chapter 5. 
+ 
+22102.F. Termination of Trading 
+Trading in an expiring contract shall terminate at the close of trading on the last Business Day of such 
+contract’s delivery month. 
+ 
+ 
+22103. DELIVERY ON FUTURES CONTRACTS 
+On its last day of trading, an expiring contract shall be marked to market by reference to the Exchange daily 
+settlement price for such contract. 
+ 
+Delivery on expiring contracts that remain outstanding following termination of trading shall be made by 
+cash settlement through the Clearing House following normal variation margin procedures. The final mark 
+to market on any such expiring contract shall be made on the day the contract final settle ment price is 
+determined, by reference to the contract final settlement price. 
+ 
+Such final settlement price shall be calculated by the Exchange on the business day on which the Federal 
+Reserve Bank of New York publishes the daily effective federal funds ra te (“rate”) for the last day of such 
+expiring contract’s delivery month.  The rate for the last day of such expiring contract’s delivery month shall 
+be as first published by the Federal Reserve Bank of New York.  
+ 
+Such contract final settlement price shall be 100 minus the arithmetic average of the daily effective federal 
+funds rate during the contract delivery month.  For any day during the contract delivery month for which the 
+Federal Reserve Bank of New York does not publish a rate (e.g., a weekend day o r a US bank holiday), 
+the rate for such day shall be the rate for the last preceding day for which a rate was published.  Such 
+arithmetic average value shall be rounded to the nearest one tenth of one basis point per annum.  Tie 
+values, i.e., any such arit hmetic average value ending in 0.0005, shall be rounded up.  (For example, an 
+arithmetic average value of 2.5915 percent per annum would be rounded up to 2.592 percent per annum, 
+and then subtracted from 100.000 to determine a contract final settlement price of 97.408.) 
+ 
+ 
+Chapter 22A 
+Options on 30-Day Federal Funds Futures 
+ 
+ 
+22A01.C. Minimum Fluctuations  
+The premium for 30-Day Fed Fund futures options shall be in multiples of one-quarter of one basis point or 
+ten dollars and forty-one and three-quarters cents ($10.4175) per quarter basis point per contract. One full 
+basis point shall equal forty-one dollars and sixty-seven cents ($41.67) per contract. 
+ 
+ 
+13 
+The price of an option contract shall be quoted in contract -grade index (“Index”) points corresponding t o 
+the 30-Day Federal Funds futures contract into which such option contract is exercisable.  Pursuant to Rule 
+22102.C., each 0.01 Index point signifies one (1) basis point per annum of interest rate exposure in such 
+futures contract’s Trading Unit (Rule 22 102.B.), and is equal to $41.67 per option contract.  For example, 
+an option contract price of 0.1100 Index points represents $458.37 (equal to 11 basis points x $41.67 per 
+basis point per option contract).  The minimum price fluctuation shall be 0.0025 In dex points, equal to 
+$10.4175 per contract.  
+ 
+However, a position may be initiated or liquidated in 30-Day Fed Fund futures options at a premium equal 
+to any integer multiple of $1.00  ranging from $1.00 to $10.00 per option contract, in $1.00 increments pe r 
+option contract. 
+ 
+ 
+Clean 
+ 
+22A01.C. Minimum Fluctuations  
+The price of an option contract shall be quoted in contract -grade index (“Index”) points corresponding to 
+the 30-Day Federal Funds futures contract into which such option contract is exercisable.  Pursuant to Rule 
+22102.C., each 0.01 Index point signifies one (1) basis point per annum of interest rate exposure in such 
+futures contract’s Trading Unit (Rule 22102.B.), and is equal to $41.67 per option contract.  For example, 
+an option contract price of 0.1100 Index points represents $458.37 (equal to 11 basis  points x $41.67 per 
+basis point per option contract).  The minimum price fluctuation shall be 0.0025 Index points, equal to 
+$10.4175 per contract.  
+ 
+However, a position may be initiated or liquidated in options at a premium equal to any integer multiple o f 
+$1.00 ranging from $1.00 to $10.00 per option contract. 
+ 
+ 
+ 
+ 
+ 
+ 

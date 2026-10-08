@@ -1,0 +1,123 @@
+ 
+ 
+SUBMISSION COVER SHEET  
+IMPORTANT:    Check box if Confidential Treatment is requested     
+Registered Entity Identifier Code (optional): 20-321 
+Organization:  The Board of Trade of the City of Chicago, Inc. (“CBOT”) 
+Filing as a:        DCM          SEF          DCO          SDR        
+Please note - only ONE choice allowed.  
+Filing Date (mm/dd/yy ):  08/05/20   Filing Description: Expansion of the Listing Schedule 
+of the 30-Day Federal Funds Futures Contract 
+ 
+SPECIFY FILING TYPE    
+Please note only ONE choice allowed per Submission.  
+Organization Rules and Rule Amendments  
+ Certification        § 40.6(a) 
+ Approval       § 40.5(a) 
+ Notification       § 40.6(d) 
+ Advance Notice of SIDCO Rule Change    § 40.10(a) 
+ SIDCO Emergency Rule Change     § 40.10(h) 
+Rule Numbers:    
+New Product    Please note only ONE product per Submission.  
+ Certification       § 40.2(a)  
+ Certification Security Futures     § 41.23(a) 
+ Certification  Swap Class     § 40.2(d) 
+ Approval      § 40.3(a) 
+ Approval Security Futures     § 41.23(b) 
+ Novel Derivative Product Notification    § 40.12(a) 
+ Swap Submission      § 39.5 
+Product Terms and Conditions (product related Rules and Rule Amendments)  
+ Certification       § 40.6(a)  
+ Certification  Made Available to Trade Determination  § 40.6(a) 
+ Certification Security Futures     § 41.24(a) 
+ Delisting (No Open Interest)     § 40.6(a)  
+ Approval       § 40.5(a) 
+ Approval Made Available to Trade Determination   § 40.5(a) 
+ Approval Security Futures     § 41.24(c) 
+ Approval Amendments to enumerated agricultural products  § 40.4(a), § 40.5(a) 
+ “Non-Material Agricultural Rule Change”    § 40.4(b)(5) 
+ Notification       § 40.6(d) 
+ 
+Official Name(s) of Product(s) Affected : See filing. 
+ 
+Rule Numbers:    See filing.
+300 Vesey Street     New York, NY 10282   T 212 299 2200  F 212 301 4645   christopher.bowen@cmegroup.com   cmegroup.com 
+1 
+  
+Christopher Bowen  
+Managing Director and Chief Regulatory Counsel 
+Legal Department 
+ 
+August 5, 2020 
+VIA ELECTRONIC PORTAL 
+ 
+Mr. Christopher J. Kirkpatrick 
+Office of the Secretariat 
+Commodity Future Trading Commission 
+Three Lafayette Centre 
+1155 21st Street, N.W. 
+Washington, DC  20581 
+ 
+Re:   CFTC Regulation 40.6(a) Certification. Notification Regarding the Expansion of the  
+Listing Schedule of the 30-Day Federal Funds Futures Contract. 
+CBOT Submission No. 20-321 
+Dear Mr. Kirkpatrick: 
+The Board of Trade of the City of Chicago, Inc. (“CBOT” or “Exchange”) is  certifying to t he Commodity 
+Futures Trading Commission (“CFTC” or “Commission”) the expansion of the listing schedule of the 30 -
+Day Federal Funds Futures contract (Rulebook Chapter 22; CME Globex Code: ZQ; CME ClearPort and 
+Clearing Code: 41) (the “Contract”) from 36 consecutive calendar months to 60 consecutive calendar 
+months effective Sunday, September, 20, 2020, for trade date Monday, September 21, 2020 as more 
+specifically described in the table below.  
+ 
+ 
+Contract Title 
+CME Globex / 
+CME ClearPort 
+Code 
+CBOT 
+Rulebook 
+Chapter 
+Current Listing 
+Schedule 
+Expanded Listing 
+Schedule Effective on 
+September 20, 2020 
+30-Day Federal Funds 
+Futures ZQ / 41 22 
+Monthly contracts 
+listed for 36 
+consecutive 
+months. 
+Monthly contracts listed 
+for 60 consecutive 
+months. 
+ 
+The Exchange reviewed the designated contract market core principles (“Core Principles”) as set forth in 
+the Commodity Exchange Act (“CEA”) and identified that the  expansion of the listing schedule of the 
+Contracts may have some bearing on the following Core Principles: 
+• Compliance with Rules : The Exchange shall continue its normal practice to establish, monitor 
+and enforce compliance with the rule of the Contracts.  
+• Availability of General Information: The Exchange will publish a Special Executive Report 
+(“SER”) to advise the marketplace of the expansion of  the listing schedule. The SER will also be 
+posted on the CME Group website. 
+• Execution of Transactions: This change will not impede the Exchange’s ability as a designated 
+contract market to provide a competitive, open, and efficient market mechanism for ex ecuting 
+transactions of the Contracts. 
+
+ 
+300 Vesey Street    New York, NY 10282   T 212 299 2200  F 212 301 4645   christopher.bowen@cmegroup.com   cmegroup.com 
+2 
+Pursuant to Section 5c(c) of the Act and CFTC Regulation 40.6(a), the Exchange hereby certifies that the 
+expansion of the listing schedule of the Contrac t comply with the Act, including regulations under the Act. 
+There were no substantive opposing views to this proposal. 
+The Exchange certifies that this submission has been concurrently posted on the Exchange’s website at 
+http://www.cmegroup.com/market-regulation/rule-filings.html.   
+Should you have any questions concerning the above, please contact the undersigned at (212) 299 -2200 
+or e-mail CMEGSubmissionInquiry@cmegroup.com. 
+ 
+      Sincerely, 
+ 
+       /s/Christopher Bowen 
+      Managing Director and Chief Regulatory Counsel 
+ 
+ 

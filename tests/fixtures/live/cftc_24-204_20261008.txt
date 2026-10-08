@@ -1,0 +1,1175 @@
+ 
+ 
+SUBMISSION COVER SHEET  
+IMPORTANT:    Check box if Confidential Treatment is requested     
+Registered Entity Identifier Code (optional): 24-204 (2 of 8) 
+Organization: Chicago Mercantile Exchange Inc. (“CME”) 
+Filing as a:        DCM          SEF          DCO          SDR        
+Please note - only ONE choice allowed.  
+Filing Date (mm/dd/yy):  05/29/24   Filing Description: Initial Listing of Four (4) Nearby and 
+Four (4) Deferred Monthly Options on Three-Month SOFR Futures Contracts  
+SPECIFY FILING TYPE    
+Please note only ONE choice allowed per Submi ssion. 
+Organization Rules and Rule Amendments  
+ Certification        § 40.6(a) 
+ Approval       § 40.5(a) 
+ Notification       § 40.6(d) 
+ Advance Notice of SIDCO Rule Change    § 40.10(a) 
+ SIDCO Emergency Rule Change     § 40.10(h) 
+Rule Numbers:    
+New Product    Please note only ONE product per Submission.  
+ Certification       § 40.2(a)  
+ Certification Security Futures     § 41.23(a) 
+ Certification  Swap Class     § 40.2(d) 
+ Approval      § 40.3(a) 
+ Approval Security Futures     § 41.23(b) 
+ Novel Derivative Product Notification    § 40.12(a) 
+ Swap Submission      § 39.5 
+Official Product Name: See filing. 
+Product Terms and Conditions (product related Rules and Rule Amendments)  
+ Certification       § 40.6(a)  
+ Certification  Made Available to Trade Determination  § 40.6(a) 
+ Certification Security Futures     § 41.24(a) 
+ Delisting (No Open Interest)     § 40.6(a)  
+ Approval        § 40.5(a) 
+ Approval Made Available to Trade Determination   § 40.5(a) 
+ Approval Security Futures     § 41.24(c) 
+ Approval Amendments to enumerated agricultural products  § 40.4(a), § 40.5(a) 
+ “Non-Material Agricultural Rule Change”    § 40.4(b)(5) 
+ Notification       § 40.6(d) 
+Official Name(s) of Product(s) Affected :   
+Rule Numbers:    
+ 
+20 S Wacker Dr   Chicago, IL 60606    T 312 466 7478    tim.elliott@cmegroup.com    cmegroup.com 
+ 
+1 
+ 
+  
+Timothy Elliott 
+Managing Director and Chief Regulatory Counsel 
+Legal Department 
+ 
+May 29, 2024 
+VIA ELECTRONIC PORTAL 
+Mr. Christopher J. Kirkpatrick 
+Office of the Secretariat 
+Commodity Futures Trading Commission 
+3 Lafayette Center 
+1155 21st Street NW 
+Washington, DC   20581 
+ 
+Re:  CFTC Regulation 40.2(a) Certification. Initial Listing of Four (4) Nearby and Four (4) 
+Deferred Monthly Options on Three-Month SOFR Futures Contracts. 
+ CME Submission No. 24-204 (2 of 8)  
+ 
+Dear Mr. Kirkpatrick: 
+Chicago Mercantile Exchange Inc. (“CME” or “Exchange”) is certifying to the Commodity Futures Trading 
+Commission (“CFTC” or “Commission”) the initial listing of Monthly Options on Three-Month SOFR Futures 
+for trading on the CME Globex electronic trading platform (“CME Globex”), for submission for clearing on 
+CME ClearPort, and for open outcry trading on the CME trading floor effective on Sunday, June 16, 2024, 
+for trade date Monday, June 17, 2024.  
+Section 1 – Contract Specifications 
+CONTRACT 
+TITLE 
+Monthly 
+Options 
+on Three-
+Month 
+SOFR 
+Futures – 
+Nearby 
+March  
+Monthly 
+Options on 
+Three-
+Month 
+SOFR 
+Futures – 
+Nearby 
+June 
+Monthly 
+Options on 
+Three-
+Month 
+SOFR 
+Futures – 
+Nearby 
+September  
+Monthly 
+Options on 
+Three-
+Month 
+SOFR 
+Futures – 
+Nearby 
+December 
+Monthly 
+Options on 
+Three-
+Month 
+SOFR 
+Futures – 
+Deferred 
+March 
+Monthly 
+Options on 
+Three-
+Month 
+SOFR 
+Futures – 
+Deferred 
+June 
+Monthly 
+Options on 
+Three-
+Month 
+SOFR 
+Futures – 
+Deferred 
+September  
+Monthly 
+Options on 
+Three-
+Month 
+SOFR 
+Futures – 
+Deferred 
+December 
+CONTRACT 
+UNIT 1 Three-Month SOFR Futures contract 
+MINIMUM 
+PRICE 
+FLUCTUATION 
+ 
+     1/4 of 0.01 IMM index points (0.0025 = $6.25) 
+for option premium ≤ 0.05 IMM index points 
+1/2 of 0.01 IMM index points (0.005 = $12.50) 
+for option premium > 0.05 IMM index points 
+PRICE 
+QUOTATION Quoted in Underlying Instrument price points, at $2,500 per point per Option contract 
+TRADING AND 
+CLEARING 
+HOURS 
+CME Globex Pre-open: Sunday 4:00 p.m. - 5:00 p.m. CT Monday – Thursday 4:45 p.m. - 5:00 p.m. CT 
+CME Globex: Sunday 5:00 p.m. - Friday - 4:00 p.m. CT with a daily maintenance period from 4:00 p.m. - 5:00 p.m. CT 
+CME ClearPort: Sunday 5:00 p.m. - Friday 5:45 p.m. CT with no reporting Monday - Thursday from 5:45 p.m. - 6:00 p.m. CT 
+Open Outcry: Monday - Friday: 7:20 a.m. - 2:00 p.m. CT 
+COMMODITY 
+CODE 1YH 1YM 1YU 1YZ 2YH 2YM 2YU 2YZ 
+LISTING 
+SCHEDULE 
+Two nearest option months will be listed at any time. 
+Nearby contracts will reference the second, third and 
+fourth nearest quarterly contracts 
+Two nearest option months will be listed at any time. Deferred 
+contracts will reference the sixth, seventh, and eighth nearest 
+quarterly contracts 
+
+ 
+20 S Wacker Dr   Chicago, IL 60606    T 312 466 7478    tim.elliott@cmegroup.com    cmegroup.com 
+ 
+2 
+ 
+INITIAL 
+LISTING 1YZN4, 1YHN4, 1YMN4, 1YZQ4, 1YHQ4, 1YMQ4, 2YZN4, 2YHN4, 2YMN4, 2YZQ4, 2YHQ4, 2YMQ4 
+TERMINATION 
+OF TRADING Trading terminates on the Friday prior to the 3rd Wednesday of the contract month. 
+ RULEBOOK 
+CHAPTER CME 460A 
+CME GLOBEX 
+MATCHING 
+ALGORITHM 
+Q - Threshold Pro Rata with LMM 
+MINIMUM 
+BLOCK LEVEL 
+RTH - 5000 
+ETH – 2500 
+ATH – 1250 
+REPORTING 
+WINDOW 
+RTH – 5 minutes 
+ETH/ATH – 15 minutes 
+STRIKE PRICE 
+LISTING 
+SCHEDULE 
+Strike prices will be listed in intervals of 6.25 basis points (0.0625 price points) in a range of 150 basis points above and 150 
+basis points below the strike price closest to the previous daily settlement price for the underlying futures contract and of 25 
+basis points (0.25 price points) in a range of 550 basis points above and 550 basis points below the strike price closest to the 
+previous daily settlement price for the underlying futures contract. 
+EXERCISE 
+STYLE 
+Options are American Style and are exercised by notifying the Clearing House by 5:30 p.m. CT on the day of exercise. 
+Unexercised options shall expire at 5:30 p.m. CT on the last trading day. In-the-money options that have not been exercised 
+shall be automatically exercised following expiration in absence of contrary instructions 
+SETTLEMENT 
+METHOD Deliverable into underlying futures contract 
+UNDERLYING 
+FUTURES 
+CONTRACT / 
+COMMODITY 
+CODE 
+Three-Month SOFR Futures / SR3 
+ 
+ 
+Section 1 – Overview of Cash Market  
+The Contracts are exercisable into the Three-Month SOFR Futures contract, for which the final settlement 
+price is based upon the rate per annum of daily compounded SOFR interest during the futures contract’s 
+Reference Quarter,1 a brief review of the origin, structure, and properties of the SOFR benchmark is in 
+order. 
+In November 2014 , the Federal Reserve System convened the Alternative Reference Rates Committee 
+(“ARRC”) to : (i) identify a set of alternative interest rate benchmarks that would be firmly based on 
+transactions in an active underlying market and tha t would comply with emerging standards for financial 
+benchmarks, such as the IOSCO Principles for Financial Benchmarks, and (ii) to identify an adoption plan 
+with means to facilitate broad acceptance and use of such alternative reference rate benchmarks. The 
+ARRC also was asked to consider the best practices related to financial contract design that would ensure 
+that financial contracts are resilient to possible cessation or material alterat ion of existing or new 
+benchmarks.2  In June 2017, the ARRC identified SOFR as the interest rate benchmark that, in its 
+consensus view, would represent best practice for use as the underlying reference in new US dollar interest 
+rate derivatives and other US dollar-denominated financial contracts. 3  Since April 2, 2018, the Federal 
+Reserve Bank of New York (“FRBNY”), in cooperation with the U .S. Office of Financial Research, has 
+computed and published a SOFR benchmark value for each U .S. government securities market business 
+day.4 
+ 
+1 Although the length of the futures contract Reference Quarter may range from 12 to 14 weeks (i.e., from approximately 58 business 
+days to approximately 68 business days), it typically spans 13 weeks (approximately 63 business days). 
+2 See Alternative Reference Rates Committee at:  https://www.newyorkfed.org/arrc/index.html  
+3 See ARRC Agenda, Minutes, and Presentation for June 16, 2017, and ARR C Agenda, Minutes, and Press Release for June 22, 
+2017, at:  https://www.newyorkfed.org/arrc/meetings-events  
+4 The SOFR value for any US government securities market business day is published at approximately 7:00am Chicago time on the 
+next following such business day. 
+ 
+20 S Wacker Dr   Chicago, IL 60606    T 312 466 7478    tim.elliott@cmegroup.com    cmegroup.com 
+ 
+3 
+ 
+SOFR is a fully transactions-based interest rate benchmark incorporating data on transactions in overnight 
+Treasury collateral repurchase agreements (“repo”) drawn from three sources: 5 
+• all tri-party Treasury general collateral repo transactions settled on the books of Bank of New York 
+Mellon.  The FRBNY collects such trade -by-trade data directly from Bank of New York Mellon, 
+pursuant to the supervisory authority of the Board of Governors of the Federal Reserve System.  
+ 
+• all tri-party Treasury general collateral repo transactions mediated through the General Collateral 
+Finance (“GCF”) repo market of the Fixed Income Clearing Corporation ( “FICC”).  FRBNY has 
+entered into an agreement with DTCC Solutions LLC, an affiliate of the Depository Trust & Clearing 
+Corporation (“DTCC”), to obtain these transaction data.  
+ 
+• bilateral Treasury repo transactions cleared through the FICC Delivery -versus-Payment (“DVP”) 
+service.  Here too, FRBNY has entered into an agreement with DTCC Solutions LLC to obtain these 
+transaction data. 
+ 
+On any given day, prior to pooling transaction data from these three sources, the FRBNY ranks the day’s 
+FICC DVP bilateral repo transaction volumes by their transaction rates, from lowest to highest, and then 
+filters out 25 percent of trading volume corresponding to the lowest transaction rates.  The object of such 
+filtering is to remove repo transactions in which Treasury collateral is likeliest to be trading “special”, so as 
+to achieve a residual set of bilateral re po data that largely (if not purely) reflects general collateral 
+transactions. 
+After filtering the FICC DVP bilateral repo transaction  data, the FRBNY pools the data from all three 
+sources, ranks all repo transaction volumes by their transaction rates, fro m lowest to highest,  and then 
+computes the transaction -weighted median repo rate, i .e., the repo trade rate for which half of the day’s 
+repo transaction volume is made at transaction rates that are equal to it or less than it, and for which the 
+other half of the day’s repo transaction volume is made at transaction rates that are equal to it or greater 
+than it.  The transaction-weighted median repo rate becomes the day’s SOFR benchmark value.  
+SOFR closely mirrors the Effective Federal Funds Rate (“EFFR”), which measures the domestic unsecured 
+borrowings in U.S. dollars by depository institutions from other depository institutions , as demonstrated in 
+Figure 3 bellow. The correlation between these two rates over the trailing 3-year period is 0.999.  
+  
+ 
+5 See Federal Reserve System, Request for Information Relating to Production of Rates, 82 FR 41259, August 30, 2017, available at:  
+https://www.federalregister.gov/documents/2017/08/30/2017-18402/request-for-information-relating-to-production-of-rates, and  
+Federal Reserve System , Production of Rates Based on Data for Repurchase Agreements,  82 FR 58397, December 12, 2017, 
+available at: https://www.federalregister.gov/documents/2017/12/12/2017-26761/production-of-rates-based-on-data-for-repurchase-
+agreements 
+ 
+ 
+ 
+20 S Wacker Dr   Chicago, IL 60606    T 312 466 7478    tim.elliott@cmegroup.com    cmegroup.com 
+ 
+4 
+ 
+Figure 3: SOFR and EFFR Rate History  
+ 
+ 
+ 
+Figure 4: Transaction Volumes for the Secured Overnight Financing Rate (SOFR ) 
+ 
+Source:  FRBNY 
+ 
+0
+1
+2
+3
+4
+5
+604/17/2024
+03/25/2024
+03/01/2024
+02/07/2024
+01/16/2024
+12/20/2023
+11/28/2023
+11/03/2023
+10/12/2023
+09/19/2023
+08/25/2023
+08/03/2023
+07/12/2023
+06/16/2023
+05/24/2023
+05/02/2023
+04/10/2023
+03/16/2023
+02/22/2023
+01/30/2023
+01/05/2023
+12/12/2022
+11/17/2022
+10/25/2022
+09/30/2022
+09/08/2022
+08/16/2022
+07/25/2022
+06/30/2022
+06/07/2022
+05/13/2022
+04/21/2022
+03/29/2022
+03/07/2022
+02/10/2022
+01/19/2022
+12/27/2021
+12/02/2021
+11/08/2021
+10/15/2021
+09/22/2021
+08/30/2021
+08/06/2021
+07/15/2021
+06/22/2021
+05/28/2021
+05/06/2021
+SOFR and EFFR Daily Rates (%), Trailing 3-Years
+SOFR (%) EFFR  (%)
+0
+500
+1000
+1500
+2000
+2500
+04/08/2024
+04/01/2024
+03/22/2024
+03/15/2024
+03/08/2024
+03/01/2024
+02/23/2024
+02/15/2024
+02/08/2024
+02/01/2024
+01/25/2024
+01/18/2024
+01/10/2024
+01/03/2024
+12/26/2023
+12/18/2023
+12/11/2023
+12/04/2023
+11/27/2023
+11/17/2023
+11/10/2023
+11/03/2023
+10/27/2023
+10/20/2023
+10/13/2023
+10/05/2023
+09/28/2023
+09/21/2023
+09/14/2023
+09/07/2023
+08/30/2023
+08/23/2023
+08/16/2023
+08/09/2023
+08/02/2023
+07/26/2023
+07/19/2023
+07/12/2023
+07/05/2023
+06/27/2023
+06/20/2023
+06/12/2023
+06/05/2023
+05/26/2023
+05/19/2023
+05/12/2023
+05/05/2023
+04/28/2023
+04/21/2023
+04/14/2023
+04/06/2023
+SOFR Daily Volume ($Billions), April 2023 to April 2024
+ 
+20 S Wacker Dr   Chicago, IL 60606    T 312 466 7478    tim.elliott@cmegroup.com    cmegroup.com 
+ 
+5 
+ 
+ 
+The one-year history of aggregate daily transaction volumes that have entered into daily SOFR settings is 
+depicted in Figure 4.  Critical from the standpoint of benchmark reliability and robustness is the magnitude 
+of minimum daily transa ction volume.  In the latest approximate year months (April 19, 2021 to April 17, 
+2024) the average daily SOFR transaction volume as been $1,178B.  Minimum and maximum numbers for 
+the same period are $2,023B and $834B respectively. 6 
+Section 3 – Compliance with Core Principles   
+The Exchange reviewed the designated contract market core principles (“Core Principles”) as set forth in 
+the Commodity Exchange Act (“CEA” or “Act”) and identified that the following Core Principles may be 
+impacted by this initiative as follows: 
+Core Principle 2 – Compliance with Rules 
+Trading in the Contracts will be subject to all CME Rules, including prohibitions against fraudulent, 
+noncompetitive, unfair and abusive practices as outlined in CME Rule Chapter 4, the Exchange’s trade 
+practice rules, the majority of which are contained i n Chapter 5 and Chapter 8 of the CME Rulebook, and 
+the dispute resolution and arbitration procedures of CME Rule Chapter 6.  As with all products listed for 
+trading on one of CME Group’s designated contract markets, trading activity in the Contract will be subject 
+to monitoring and surveillance by CME Group’s Market Regulation Department. The Market Regulation 
+Department has the authority to exercise its investigatory and enforcement power where potential rule 
+violations are identified. 
+Core Principle 3 – Contracts Not Readily Subject to Manipulation  
+As noted in Section 2  above, the SOFR benchmark is supported by a demonstrably massive pool of 
+transaction data, drawn from multiple reliable sources.  The statistical measure employed to produce the 
+ 
+6 For further information on the SOFR benchmark, see Logan, Lorie K, The Role of the New York Fed as Administrator and Producer 
+of Reference Rates , Remarks at the Annual Primary Dealer Meeting, FRBNY, New York, January 9, 2018, available at:  
+https://www.newyorkfed.org/newsevents/speeches/2018/log180109 
+ 
+0
+500
+1000
+1500
+2000
+250004/17/2024
+03/25/2024
+03/01/2024
+02/07/2024
+01/16/2024
+12/20/2023
+11/28/2023
+11/03/2023
+10/12/2023
+09/19/2023
+08/25/2023
+08/03/2023
+07/12/2023
+06/16/2023
+05/24/2023
+05/02/2023
+04/10/2023
+03/16/2023
+02/22/2023
+01/30/2023
+01/05/2023
+12/12/2022
+11/17/2022
+10/25/2022
+09/30/2022
+09/08/2022
+08/16/2022
+07/25/2022
+06/30/2022
+06/07/2022
+05/13/2022
+04/21/2022
+03/29/2022
+03/07/2022
+02/10/2022
+01/19/2022
+12/27/2021
+12/02/2021
+11/08/2021
+10/15/2021
+09/22/2021
+08/30/2021
+08/06/2021
+07/15/2021
+06/22/2021
+05/28/2021
+05/06/2021
+Daily SOFR Volume ($Billions), Trailing 3-Years
+ 
+20 S Wacker Dr   Chicago, IL 60606    T 312 466 7478    tim.elliott@cmegroup.com    cmegroup.com 
+ 
+6 
+ 
+benchmark value on any given day – the transaction-volume-weighted median repo rate -- is highly robust.  
+The final settlement price of the Three -Month SOFR Futures contract into which the Contracts are 
+exercisable, moreover, provides an additional layer of robustne ss against day -to-day volatility in SOFR 
+values, through time aggregation of daily SOFR values throughout the futures contract Reference Quarter. 
+The Exchange believes that the SOFR benchmark, and its application in connection with both Three-Month 
+SOFR Futures contracts and its linkage to the Contracts, possess more than sufficient integrity to deflect 
+attempted cornering, manipulation, crowding, or exertion of undue influence upon the Contracts’  final 
+settlements of the corresponding underlying futures contracts. 
+Core Principle 4 – Prevention of Market Disruption 
+Trading in the Contracts will be subject to CME Rulebook Chapters 4 and 7, which include prohibitions on 
+manipulation, price distortion, and disruption to the expiration process.  As with any product listed for trading 
+on a CME Group designated contract market, trading activity in the Contracts shall be subject to monitoring 
+and surveillance by CME Group’s Market Regulation Department. 
+Core Principle 5 – Position Limits or Accountability 
+The Contracts will be subject to a Position Reporting Level of 25 contracts.  The Contracts will be subject 
+to a Single-Month Position Accountability Level of 10,000 net futures contract equivalents, and an All-Month 
+Position Accountability Level of 10,000 net futures contract equivalents. 
+To appreciate the proportions of the Position Accountability standards, assume that the representative level 
+of traffic in the market for overnight Treasury general collateral repurchase agreements, which supports the 
+SOFR benchmark, is around $1,178 billion per day (equal to the average dai ly value from April 19, 2021, 
+to April 17, 2024).  Relative to this trading flow, the hypothetical Three -Month SOFR futures holdings 
+reflected in the Position Accountability Levels for Options signify a share of approximately 0.84 percent. 7 
+The speculative position limits for the Contracts as demonstrated in this submission are consistent with the 
+Commission’s guidance. 
+Core Principle 7 – Availability of General Information 
+The Exchange will publish on its website information regard to contract specificati ons, terms, and 
+conditions, as well as daily trading volume, open interest, and price information for the Contracts. The 
+Exchange will issue a Special Executive Report (“SER”) regarding the launch of the Contracts.  The SER 
+will also be posted on the CME Group website. 
+Core Principle 8 – Daily Publication of Trading Information 
+The Exchange will publish contract trading volumes, open interest levels, and price information daily on its 
+website and through quote vendors. 
+Core Principle 9 – Execution of Transactions  
+The Contracts will be listed for trading on the CME Globex and for submission of clearing through the CME 
+ClearPort platform. The CME Globex trading venue provides for competitive and open execution of 
+ 
+7 For Three-Month SOFR Futures, each basis point per annum of contract interest is specified to be worth $25 per contract.  The 
+SOFR interest exposure that is impounded in the contract final settlement price accumulates during the contract Reference Quarter, 
+which typically spans 13 weeks, or 91 days.  Thus, the implied size of the hypothetical generic open overnight Treasury gener al 
+collateral RP transaction that underlies each contract is approximately $989,011.  Accordingly, for the purpose of comparison, the 
+10,000-contract position signified by the Position Accountability Level may be interpreted as having a size of approximately $9.89011 
+billion (equal to 10,000 contracts x ($25 per basis point per contract / 0.0001 per year) x (360 days per year / 91 days)). 
+  
+ 
+20 S Wacker Dr   Chicago, IL 60606    T 312 466 7478    tim.elliott@cmegroup.com    cmegroup.com 
+ 
+7 
+ 
+transactions and affords the benefits of relia bility and global connectivity.  The Contracts will also be 
+available for open outcry trading on the CME trading floor. 
+ Core Principle 10 – Trade Information 
+All requisite trade information shall be included in the audit trail and will suffice for the Market Regulation 
+Department to monitor for market abuse. 
+Core Principle 11 – Financial Integrity of Contracts 
+The Contracts will be cleared by CME Clearing, which is registered with the Commission as a derivatives 
+clearing organization and subject to all CFTC regulations related thereto. 
+Core Principle 12 – Protection of Markets and Market Participants  
+CME Rulebook Chapters 4 and 5 set forth multiple strictures that preclude intermediaries from 
+disadvantaging their customers.  These Rules apply to trading in all of the Exchange’s trading and clearing 
+venues. 
+Core Principle 13 – Disciplinary Procedures  
+CME Rulebook Chapter 4 provides for the Exchange to discipline, suspend, or expel members or market 
+participants who violate the rules of the Exchange.  Tr ading in the Contracts shall be subject to these 
+provisions.  The Exchange’s Market Regulation Department has the authority to exercise its powers of 
+enforcement, in the event that rule violations in the Contracts are identified. 
+Core Principle 14 – Dispute Resolution 
+Disputes with regard to trading of the Contracts will be subject to the arbitration provisions set forth in CME 
+Rulebook Chapter 6, which allow all nonmembers to submit to arbitration claims for financial loss resulting 
+from transactions on the Exchange.  Pursuant to these provisions, any member named as a respondent in 
+any such claim submitted by a nonmember is required to participate in arbitration proceedings.  Additionally, 
+the Exchange requires that members resolve all disputes concerning transactions on the Exchange  via 
+arbitration. 
+Appendix A provides amendments to CME Rulebook Chapter 460A,  It should be noted that the Exchange 
+previously delisted the Three-, Six-,and Nine-Month Mid-Curve Options on Three-Month SOFR Futures 
+Contracts (see CME Submission 24-211 dated May 13, 2024). The Contracts intended to replace these 
+contracts most recently delisted.  Appendix B provides the Position Limit, Position Accountability, and 
+Reportable Level Table.  Appendix C provides the CME Rule 588.H. (“Globex Non -Reviewable Trading 
+Ranges”) Table.  Appendix D provides the CME Rule 589. - Special Price Fluctuation Limits and Daily Price 
+Limits Table.  Appendix E provides the Exchange fees.  
+Pursuant to Section 5c(c) of the Act and CFTC Regulation 40.2(a), the Exchange hereby cert ifies that the 
+Contracts comply with the Act and rules thereunder. There were no substantive opposing views to this 
+proposal. 
+The Exchange certifies that this submission has been concurrently posted on CME Group’s website at 
+http://www.cmegroup.com/market-regulation/rule-filings.html. 
+  
+ 
+20 S Wacker Dr   Chicago, IL 60606    T 312 466 7478    tim.elliott@cmegroup.com    cmegroup.com 
+ 
+8 
+ 
+Should you have any questions concerning the above, please contact the undersigned at (312) 466-7478 
+or via e-mail at CMEGSubmissionInquiry@cmegroup.com. 
+Sincerely,  
+ 
+/s/ Timothy Elliott  
+Managing Director and Chief Regulatory Counsel 
+ 
+Attachments:     Appendix A CME Rulebook Chapter 460A 
+Appendix B Position Limit, Position Accountability, and Reportable Level Table in 
+Chapter 5 of the CME Rulebook (attached under separate cover) 
+Appendix C CME Rule 588.H. – (“Globex Non-Reviewable Trading Ranges”) Table 
+Appendix D CME Rule 589. – Special Price Fluctuation Limits and Daily Price Limits 
+Table 
+Appendix E Exchange Fees
+ 
+ 
+ 
+ 
+  
+ 
+ 
+ 
+9 
+ 
+Appendix A 
+ 
+CME Rulebook 
+(additions underscored; deletions struck through) 
+Chapter 460A 
+Options on Three-Month SOFR Futures 
+ 
+460A00.   SCOPE OF CHAPTER 
+This chapter is limited in application to options on Three-Month SOFR futures (“options”). In addition 
+to this chapter, options shall be subject to the general rules and regulations of the Exchange insofar 
+as applicable. 
+Unless otherwise specified, times referenced herein shall refer to and indicate Chicago time. 
+460A01.   OPTION CHARACTERISTICS 
+460A01.A. Contract Months and Trading Hours 
+Options shall be listed for expiration on such dates and shall be scheduled for trading during such 
+hours as may be determined by the Exchange. 
+460A01.B. Trading Unit 
+The trading unit shall be an option to buy in the case of the call, or to sell in the case of the put, one 
+Three-Month SOFR futures contract (Chapter 460) (“futures” or “futures contract”). 
+460A01.C. Minimum Fluctuations 
+The price of an option shall be quoted in IMM Index points corresponding to such option’s underlying 
+futures contract (Rule 460A01.D.).  Pursuant to Rules 46002.C., each 0.01 IMM Index point signifies 
+one (1) basis point per annum of interest rate exposure in such underlying futures contract’s Trading 
+Unit (Rule 46002.B.) and is equal to $25 per option contract.  Accordingly, for example, an option 
+contract price of 0.35 IM M Index points represents $875 (equal to 35 basis points x $25 per basis 
+point per option contract). 
+Minimum price fluctuations shall be as follows – 
+1. Quarterly Standard Options (Rule 460A01.D.1.) Expiring in the Nearest March Quarterly 
+Month 
+Where such options are for the next nearest monthly option expiration date, the minimum price 
+fluctuation shall be 0.0025 IMM Index points (equal to $6.25 per option contract). 
+Where such options are not for the next nearest monthly option expiration date, then: 
+Where any such option trades outright at a premium not greater than 0.05 IMM Index points, 
+the minimum price fluctuation shall be 0.0025 IMM Index points (equal to $6.25 per option 
+contract). 
+Where any such option trades outright at a premium greater than 0.05  IMM Index points, 
+the minimum price fluctuation shall be 0.005 IMM Index points (equal to $12.50 per option 
+contract). 
+ 
+  
+ 
+ 
+ 
+10 
+ 
+2. Quarterly Standard Options (Rule 460A01.D.1.) Expiring in the Second -Nearest March 
+Quarterly Month, Serial Standard Options (Rule 460A01.D.2.), and Monthly Options (Rules 
+460A01.D.8 and 460A01.D.9)  
+Where any such option trades outright at a premium not greater than 0.05 IMM Index points, the 
+minimum price fluctuation shall be 0.0025 IMM Index points (equal to $6.25 per option contra ct).  
+Where any such option trades outright at a premium greater than 0.05 IMM Index points, the minimum 
+price fluctuation shall be 0.005 IMM Index points (equal to $12.50 per option contract). 
+3. All Other Quarterly Standard Options (Rule 460A01.D.1.) and  All Other Mid-Curve Options 
+(Rules 460A01.D.3. through 460A01.D.7.) 
+For all Quarterly Standard options other than those that expire in the nearest March Quarterly month 
+or the second -nearest March Quarterly month, and for all Mid -Curve options, the minimum price 
+fluctuation shall be 0.005 IMM Index points (equal to $12.50 per option contract), provided that trade 
+may occur at a price level of 0.0025 IMM Index point (equal to $6.25 per option contract), whether or 
+not such trade results in liquidation of positions for both parties to such trade. 
+4. Option Spreads and Combinations 
+All option spreads and combinations shall trade in minimum price increments of 0.005 IMM Index 
+points, subject to the following exceptions: 
+(a) An option spread or combination may trade in minimum price increments of 0.0025 
+IMM Index points if (i) such option spread or combination comprises only Quarterly 
+Standard Options Expiring in the Nearest March Quarterly Month (Rule 460A01.C.1.), 
+and (ii) all option contracts that are components of such spread or combination are for 
+the nearest monthly option expiration date. 
+(b) An option spread or combination may trade in minimum price increments of 0.0025 
+IMM Index points if such option spread or combination (i) trades at a net premium not 
+greater than 0.05 IMM Index points and not less than -0.05 IMM Index points and (ii) 
+comprises only such options as are specified in Rule 460A01.C.1. and/or Rule 
+460A01.C.2. 
+For the avoidance of doubt, any option spread or combination that comp rises one or more options 
+specified in Rule 460A01.C.3. shall trade in minimum price increments of 0.005 IMM Index points. 
+For the purpose of Rule 813 for Settlement Prices, the minimum price fluctuation for all options shall 
+be 0.0025 IMM Index point (equal to $6.25 per option contract). 
+Where the price of an option is quoted in volatility terms, the minimum fluctuation shall be 0.05 
+percent. 
+460A01.D. Underlying Futures Contracts 
+1. Options in the March Quarterly Cycle (“Quarterly Standard Options”) 
+For options that expire in any month in the March quarterly cycle (i.e., March, June, September, and 
+December), excluding those Mid-Curve or Monthly options specified in Paragraphs 3, 4, 5, 6, 7, 8, or 
+9 of this Rule, the underlying futures contract is the futures contract for which the contract Reference 
+Quarter (Rule 46003.A.1.) begins on the third Wednesday of the month in which such options expire. 
+Example:  For a given year, the underlying futures contract for an option that expires in 
+March is the futures contract for which the contract Reference Quarter begins on (and 
+includes) the third Wednesday of March and ends on (and does not include) the third 
+Wednesday of June. 
+2. Options Not in the March Quarterly Cycle (“Serial Standard Options”) 
+ 
+ 
+ 
+11 
+ 
+For options that expire in any month not in the March quarterly cycle, (i.e., January, February, April, 
+May, July, August, October, and November), excluding those Mid-Curve or Monthly options specified 
+in Paragraphs 3, 4, 5, 6, 7, 8, or 9 of this Rule, the underlying futures contract is the futures contract 
+for which the contract Reference Quarter (Rule 46003.A.1.) begins on the third Wednesday of the 
+next month in the March quarterly cycle that is nearest the expiration of such options. 
+Example:  For a given year,  the underlying futures contract for an option that expires in 
+either January or February is the futures contract for which the contract Reference Quarter 
+begins on (and includes) the third Wednesday of March and ends on (and does not include) 
+the third Wednesday of June. 
+ 3. One-Year Mid-Curve Options 
+One-Year Mid -Curve Options in the March Quarterly Cycle (“Quarterly One -Year Mid -Curve 
+Options”) 
+For One-Year Mid-Curve options that expire in any month in the March quarterly cycle, the underlying 
+futures contract is the futures contract  for which the contract Reference Quarter (Rule 46003.A.1.) 
+begins on the third Wednesday of the 12th calendar month following the month in which such options 
+expire. 
+Example:  The underlying futures contract for the Quarterly One -Year Mid-Curve options 
+that expire in September of a given year is the futures contract for which the contract 
+Reference Quarter begins on (and includes) the third Wednesday of September one (1) 
+year hence and ends on (and does not include) the third Wednesday of December one (1) 
+year hence. 
+One-Year Mid -Curve Options Not in the March Quarterly Cycle (“Serial One -Year Mid -Curve 
+Options”) 
+For One-Year Mid-Curve Options that expire in any month other tha n those in the March quarterly 
+cycle, the underlying futures contract is the futures contract for which the contract Reference Quarter 
+(Rule 46003.A.1.) begins on the third Wednesday of the 12th calendar month following the next March 
+quarterly month that is nearest to the expiration of such options. 
+Example:  The underlying futures contract for the Serial One -Year Mid-Curve options that 
+expire in April or May of a given year is the futures contract for which the contract Reference 
+Quarter begins on (and includes) the third Wednesday of June one (1) year hence and ends 
+on (and does not include) the third Wednesday of September one (1) year hence. 
+Weekly One-Year Mid-Curve Options 
+For Weekly One-Year Mid-Curve Options, the underlying futures contract is the futures contract for 
+which the contract Reference Quarter (Rule 46003.A.1.) begins on the third Wednesday of the 12 th 
+calendar month following the next March quarterly month that is nearest to the expiration of such 
+options. 
+4. Two-Year Mid-Curve Options 
+Two-Year Mid -Curve Options in the March Quarterly Cycle (“Quarterly Two -Year Mid -Curve 
+Options”) 
+For Two-Year Mid-Curve options that expire in any month in the March quarterly cycle, the underlying 
+futures contract is the futures contract  for which the contract Reference Quarter (Rule 46003.A.1.) 
+begins on the third Wednesday of the 24th calendar month following the month in which such options 
+expire. 
+Example:  The underlying futures contract for the Quarterly Two -Year Mid-Curve options 
+that expire in Se ptember of a given year is the futures contract for which the contract 
+Reference Quarter begins on (and includes) the third Wednesday of September two (2) 
+ 
+ 
+ 
+12 
+ 
+years hence and ends on (and does not include) the third Wednesday of December two (2) 
+years hence. 
+Two-Year Mid -Curve Options Not in the March Quarterly Cycle (“Serial Two -Year Mid -Curve 
+Options”) 
+For Two-Year Mid-Curve Options that expire in any month other than those in the March quarterly 
+cycle, the underlying futures contract is the futures contract for which the contract Reference Quarter 
+(Rule 46003.A.1.) begins on the third Wednesday of the 24th calendar month following the next March 
+quarterly month that is nearest to the expiration of such options. 
+Example:  The underlying futures contract for t he Serial Two-Year Mid-Curve options that 
+expire in April or May of a given year is the futures contract for which the contract Reference 
+Quarter begins on (and includes) the third Wednesday of June two (2) years hence and 
+ends on (and does not include) the third Wednesday of September two (2) year hence. 
+Weekly Two-Year Mid-Curve Options 
+For Weekly Two-Year Mid-Curve Options, the underlying futures contract is the futures contract for 
+which the contract Reference Quarter (Rule 46003.A.1.) begins on the thi rd Wednesday of the 24 th 
+calendar month following the next March quarterly month that is nearest to the expiration of such 
+options. 
+5. Three-Year Mid-Curve Options 
+Three-Year Mid -Curve Options in the March Quarterly Cycle (“Quarterly Three -Year Mid -Curve 
+Options”) 
+For Three -Year Mid -Curve options that expire in any month in the March quarterly cycle, the 
+underlying futures contract is the futures contract  for which the contract Reference Quarter (Rule 
+46003.A.1.) begins on the third Wednesday of the 36th calendar month following the month in which 
+such options expire. 
+Example:  The underlying futures contract for the Quarterly Three -Year Mid-Curve options 
+that expire in September of a given year is the futures contract for which the contract 
+Reference Quarter begins on (and includes) the third Wednesday of September three (3) 
+years hence and ends on (and does not include) the third Wednesday of December three 
+(3) years hence. 
+Three-Year Mid -Curve Options Not in the March Quarterly Cycle (“Serial Three -Year Mi d-Curve 
+Options”) 
+For Three-Year Mid-Curve Options that expire in any month other than those in the March quarterly 
+cycle, the underlying futures contract is the futures contract for which the contract Reference Quarter 
+(Rule 46003.A.1.) begins on the third Wednesday of the 36th calendar month following the next March 
+quarterly month that is nearest to the expiration of such options. 
+Example:  The underlying futures contract for the Serial Three-Year Mid-Curve options that 
+expire in April or May of a given year is the futures contract for which the contract Reference 
+Quarter begins on (and includes) the third Wednesday of June three (3) years hence and 
+ends on (and does not include) the third Wednesday of September three (3) year hence. 
+Weekly Three-Year Mid-Curve Options 
+For Weekly Three-Year Mid-Curve Options, the underlying futures contract is the futures contract for 
+which the contract Reference Quarter (Rule 46003.A.1.) begins on the third Wednesday of the 36 th 
+calendar month following the next March quarterly month that is nearest to the expiration of such 
+options. 
+6. Four-Year Mid-Curve Options 
+ 
+ 
+ 
+13 
+ 
+Four-Year Mid -Curve Options in the March Qua rterly Cycle (“Quarterly Four -Year Mid -Curve 
+Options”) 
+For Four-Year Mid-Curve options that expire in any month in the March quarterly cycle, the underlying 
+futures contract is the futures contract  for which the contract Reference Quarter (Rule 46003.A.1.)  
+begins on the third Wednesday of the 48th calendar month following the month in which such options 
+expire. 
+Example:  The underlying futures contract for the Quarterly Four -Year Mid-Curve options 
+that expire in September of a given year is the futures cont ract for which the contract 
+Reference Quarter begins on (and includes) the third Wednesday of September four (4) 
+years hence and ends on (and does not include) the third Wednesday of December four (4) 
+years hence. 
+Four-Year Mid -Curve Options Not in the March Quarterly Cycle (“Serial Four -Year Mid -Curve 
+Options”) 
+For Four-Year Mid-Curve Options that expire in any month other than those in the March quarterly 
+cycle, the underlying futures contract is the futures contract for which the contract Reference Quarter 
+(Rule 46003.A.1.) begins on the third Wednesday of the 48th calendar month following the next March 
+quarterly month that is nearest to the expiration of such options. 
+Example:  The underlying futures contract for the Serial Four -Year Mid-Curve options that 
+expire in April or May of a given year is the futures contract for which the contract Reference 
+Quarter begins on (and includes) the third Wednesday of June four (4) years hence and 
+ends on (and does not include) the third Wednesday of September four (4) year hence. 
+7. Five-Year Mid-Curve Options 
+Five-Year Mid -Curve Options in the March Quarterly Cycle (“Quarterly Five -Year Mid -Curve 
+Options”) 
+For Five-Year Mid-Curve options that expire in any month in the March quarterly cycle, the underlying 
+futures contract is the futures contract  for which the contract Reference Quarter (Rule 46003.A.1.) 
+begins on the third Wednesday of the 60th calendar month following the month in which such options 
+expire. 
+Example:  The underlying futures contr act for the Quarterly Five -Year Mid-Curve options 
+that expire in September of a given year is the futures contract for which the contract 
+Reference Quarter begins on (and includes) the third Wednesday of September five (5) 
+years hence and ends on (and does not include) the third Wednesday of December five (5) 
+years hence. 
+Five-Year Mid -Curve Options Not in the March Quarterly Cycle (“Serial Five -Year Mid -Curve 
+Options”) 
+For Five-Year Mid-Curve Options that expire in any month other than those in the March q uarterly 
+cycle, the underlying futures contract is the futures contract for which the contract Reference Quarter 
+(Rule 46003.A.1.) begins on the third Wednesday of the 60th calendar month following the next March 
+quarterly month that is nearest to the expiration of such options. 
+Example:  The underlying futures contract for the Serial Five -Year Mid-Curve options that 
+expire in April or May of a given year is the futures contract for which the contract Reference 
+Quarter begins on (and includes) the third Wed nesday of June five (5) years hence and 
+ends on (and does not include) the third Wednesday of September five (5) year hence. 
+8. Monthly Options - Nearby Quarterly 
+For Monthly Options - Nearby Quarterly, each options contract has three underlying futures contracts.  
+The first of three underlying futures contracts is the futures for which the contract Reference Quarter 
+(Rule 46003.A.1) begins on the third Wednesday of the third calendar month following the quarterly 
+ 
+ 
+ 
+14 
+ 
+month whose reference quarter begins on the third Wednesday of the quarterly month immediately 
+after the expiration of such options.  
+The second of three underlying futures contracts is the futures for which the contr act Reference 
+Quarter (Rule 46003.A.1) begins on the third Wednesday of the sixth calendar month following the 
+quarterly month whose reference quarter begins on the third Wednesday of the quarterly month 
+immediately after the expiration of such options. 
+The third of three underlying futures contracts is the futures for which the contract Reference Quarter 
+(Rule 46003.A.1) begins on the third Wednesday of the ninth calendar month following the quarterly 
+month whose reference quarter begins on the third Wedne sday of the quarterly month immediately 
+after the expiration of such options. 
+Example:  The first of three underlying futures contracts for the Monthly Options - Nearby 
+Quarterly that expire in March of a given year is the futures contract futures for whic h the 
+contract Reference Quarter begins on (and includes) the third Wednesday of the following 
+June and ends on (and does not include) the third Wednesday of the following September.   
+The second of three underlying futures contracts for the Monthly Options - Nearby Quarterly 
+that expire in March of a given year is the futures contract futures for which the contract 
+Reference Quarter begins on (and includes) the third Wednesday of the following 
+September and ends on (and does not include) the third Wednesda y of the following 
+December.   
+The third of three underlying futures contracts for the Monthly Options - Nearby Quarterly 
+that expire in March of a given year is the futures contract futures for which the contract 
+Reference Quarter begins on (and includes) the third Wednesday of the following December 
+and ends on (and does not include) the third Wednesday of the following March.   
+9. Monthly Options - Deferred Quarterly 
+For Monthly Options - Deferred Quarterly, each options contract has three underlying futures 
+contracts.  
+The first of three underlying futures contracts is the futures for which the contract Reference Quarter 
+(Rule 46003.A.1) begins on the third Wednesday of the fifteenth calendar mont h following the 
+quarterly month whose reference quarter begins on the third Wednesday of the quarterly month 
+immediately after the expiration of such options.  
+The second of three underlying futures contracts is the futures for which the contract Reference  
+Quarter (Rule 46003.A.1) begins on the third Wednesday of the eighteenth calendar month following 
+the quarterly month whose reference quarter begins on the third Wednesday of the quarterly month 
+immediately after the expiration of such options. 
+The third of three underlying futures contracts is the futures for which the contract Reference Quarter 
+(Rule 46003.A.1) begins on the third Wednesday of the twenty-first calendar month following the 
+quarterly month whose reference quarter begins on the third Wednes day of the quarterly month 
+immediately after the expiration of such options. 
+Example:  The first of three underlying futures contracts for the Monthly Options - Deferred 
+Quarterly that expire in March of a given year is the futures contract futures for whi ch the 
+contract Reference Quarter begins on (and includes) the third Wednesday of the following 
+June one year hence and ends on (and does not include) the third Wednesday of the 
+following September one year hence.   
+The second of three underlying futures contracts for the Monthly Options - Deferred 
+Quarterly that expire in March of a given year is the futures contract futures for which the 
+contract Reference Quarter begins on (and includes) the third Wednesday of the following 
+September one year hence and ends on (and does not include) the third Wednesday of the 
+following December one year hence.   
+ 
+ 
+ 
+15 
+ 
+The third of three underlying futures contracts for the Monthly Options - Deferred Quarterly 
+that expire in March of a given year is  the futures contract futures for which the contract 
+Reference Quarter begins on (and includes) the third Wednesday of the following December 
+one year hence and ends on (and does not include) the third Wednesday of the following 
+March one year hence.   
+460A01.E. Exercise Prices 
+1. Twenty-Five Point Exercise Prices 
+For options for a given expiration date that are exercisable into a given underlying futures contract, 
+exercise prices shall be stated in terms of the IMM Index for such underlying futures contrac t and 
+shall be stated in intervals whose last two digits are 00, 25, 50, or 75 ("twenty -five point exercise 
+prices") for all IMM Index levels, e.g., 88.00, 88.25, 88.50, 88.75. 
+The Exchange shall list put and call options for trading at the exercise price that is nearest the 
+previous day's settlement price of such underlying futures contract (“at -the-money exercise  price”) 
+and at all eligible exercise prices in a range from 5.50 IMM Index points above to 5.50 IMM Index 
+points below such at -the-money exerci se price.  Thereafter until termination of trading in such 
+options, the Exchange shall ensure that put and call options are listed for trading on each day at all 
+eligible exercise prices in a range from 5.50 IMM Index points above to 5.50 IMM Index points below 
+the at-the-money exercise price for such underlying futures contract.  New options may be listed for 
+trading up to and including the termination of trading. 
+2. Special Listings of 12.5 Point Exercise Prices 
+For options for a given expiration date tha t are exercisable into a given underlying futures contract, 
+with the exception of certain option expiries with 6.25 Point Exercise Prices (Rule 460A01.E.3.), 
+additional exercise prices shall be stated in intervals whose last three digits are 12.5, 37.5, 62 .5, or 
+87.5 ("12.5 point exercise prices") for all IMM Index levels, e.g., 93.125, 93.375, 93.625, 93.875. 
+The Exchange shall ensure that put and call options are listed for trading on each day at all such 
+12.5 point exercise prices in a range from 1.50 IM M Index points above to 1.50 IMM Index points 
+below the at-the-money exercise price for such underlying futures contract. 
+3. Special Listings of 6.25 Point Exercise Prices 
+From time to time as determined by the Exchange, additional exercise prices for selected expiries 
+will be made available in intervals whose last four digits are 06.25, 12.50, 18.75, 31.25, 37.50, 43.75, 
+56.25, 62.50, 68.75, 81.25, 87.50, or 93.75 ("6.25 point exercise prices") for all IMM Index levels, 
+e.g., 93.0625, 93.1250, 93.1875, 93.3125, 93.3750, 93.4375, 93.5625, 93.6250, 93.6875, 93.8125, 
+93.8750, 93.9375. 
+Until termination of trading in such options, the Exchange shall ensure that put and call options are 
+listed for trading on each day at all such 6.25 point exercise prices in  a range from 1.50 IMM Index 
+points above to 1.50 IMM Index points below the at -the-money exercise price for such underlying 
+futures contract. 
+4. Dynamically-Listed Exercise Prices 
+Upon demand and at the discretion of the Exchange, a new option contract wi th an out-of-current- 
+range exercise price may be added, on an as-soon-as-possible basis, provided that the last two digits 
+of the exercise price of such newly added option contract must be 00, 25, 50, or 75 (e.g., 88.00, 
+88.25, 88.50, 88.75). 
+The Exchange may modify the provisions governing the establishment of exercise prices as it deems 
+appropriate. 
+460A01.F. Position Limits, Exemptions, Position Accountability and Reportable Levels 
+ 
+ 
+ 
+16 
+ 
+The applicable position limits and/or accountability levels, in addition to the reportable levels, are set 
+forth in the Position Limit, Position Accountability and Reportable Level Table in the Interpretations 
+& Special Notices Section of Chapter 5. 
+A Person seeking an exemption from position limits for bona fide commercial pu rposes shall apply 
+to the Market Regulation Department on forms provided by the Exchange, and the Market Regulation 
+Department may grant qualified exemptions in its sole discretion. Refer to Rule 559 for requirements 
+concerning the aggregation of positions and allowable exemptions from the specified position limits. 
+460A01.G.-I. [Reserved] 
+460A01.J. Termination of Trading 
+1. All Options Excluding Weekly Mid-Curve Options 
+Trading in any Quarterly Standard Option, Serial Standard Option, Quarterly Mid -Curve O ption, 
+orSerial Mid-Curve Option, or Monthly Options shall terminate at the close of trading on the Friday 
+preceding the third Wednesday of the month in which such option expires.  If such Friday is a 
+scheduled Exchange holiday, then trading shall terminat e on the immediately preceding Business 
+Day.  In the event that the underlying futures market for such option does not open on the day 
+scheduled for termination of trading in such option, then trading in such option shall be extended to 
+the next day on which the underlying futures market is open for trading. 
+2. Weekly Mid-Curve Options 
+Trading in Weekly Mid-Curve options shall terminate at the close of trading on any Friday that is not 
+also scheduled for termination of trading in Quarterly Mid-Curve Options or Serial Mid-Curve Options.  
+If such Friday is a scheduled Exchange holiday, then trading shall terminate on the immediately 
+preceding Business Day.  In the event that the underlying futures market for such option does not 
+open on the day scheduled for termination of trading in such option, then trading in such option shall 
+be extended to the next day on which the underlying futures market is open for trading. 
+460A01.K. [Reserved] 
+460A02.   EXERCISE AND ASSIGNMENT 
+In addition to the applicable procedures and requirements of Chapter 7, the following shall apply to 
+the exercise of SOFR options. 
+460A02.A. Exercise of Option by Buyer 
+An option may be exercised by the buyer on any Business Day that the option is traded.  To exercise 
+an opt ion, the clearing member representing the buyer shall present an exercise notice to the 
+Clearing House by 5:30 p.m. on the day of exercise. 
+An option that is in the money and has not been liquidated or exercised prior to the termination of 
+trading in such option shall be exercised automatically, in the absence of contrary instructions 
+delivered to the Clearing House no later than 5:30 p.m. on the last day of trading by the clearing 
+member representing the option buyer. An option is in the money if the settl ement price of the 
+underlying futures contract at the termination of trading lies strictly above the exercise price in the 
+case of a call, or lies strictly below the exercise price in the case of a put. 
+460A02.B. Assignment 
+Exercise notices accepted by the  Clearing House shall be assigned through a process of random 
+selection to clearing members with open short positions in the same series. A clearing member to 
+which an exercise notice is assigned shall be notified thereof as soon as practicable after such notice 
+is assigned by the Clearing House, but not later than 45 minutes before the opening of Regular 
+Trading Hours in the underlying futures contract on the following Business Day. 
+The clearing member assigned an exercise notice shall be assigned a short position in the underlying 
+futures contract if a call is exercised or a long position if a put is exercised.  The clearing member 
+ 
+ 
+ 
+17 
+ 
+representing the option buyer shall be assigned a long position in the underlying futures contract if a 
+call is exercised and a short position if a put is exercised.  All such futures positions shall be assigned 
+at a price equal to the exercise price of the option and shall be marked to market in accordance with 
+Rule 814 on the Trading Day of acceptance by the Clearing House of the exercise notice. 
+460A03.  [RESERVED] 
+ 
+ 
+(End Chapter 460A) 
+ 
+ 
+Appendix B 
+CME Rulebook 
+Chapter 5 
+(“Trading Qualifications and Practices”) 
+Position Limit, Position Accountability, and Reportable Level Table 
+(attached under separate cover) 
+ 
+ 
+Appendix C 
+CME Rulebook 
+Chapter 5 
+(“Trading Qualifications and Practices”) 
+Rule 588.H. – (“Globex Non-Reviewable Trading Ranges") Table 
+(additions underscored) 
+ 
+Instrument Globex Symbol Globex Non-Reviewable 
+Ranges (NRR) 
+Monthly Options on Three-Month SOFR Futures - Nearby March 1YH 
+2 Basis Points  Monthly Options on Three-Month SOFR Futures - Nearby June 1YM 
+Monthly Options on Three-Month SOFR Futures - Nearby 
+September 1YU 
+ 
+ 
+ 
+18 
+ 
+Monthly Options on Three-Month SOFR Futures - Nearby 
+December 1YZ 
+Monthly Options on Three-Month SOFR Futures - Deferred 
+March 2YH 
+Monthly Options on Three-Month SOFR Futures - Deferred June 2YM 
+Monthly Options on Three-Month SOFR Futures - Deferred 
+September 2YU 
+Monthly Options on Three-Month SOFR Futures - Deferred 
+December 2YZ 
+ 
+Appendix D 
+CME Rulebook 
+Chapter 5 
+(“Trading Qualifications and Practices”) 
+Rule 589. – Special Price Fluctuation Limits and Daily Price Limits Table 
+(additions underscored) 
+ 
+Product RULEBOOK 
+CHAPTER 
+COMMODITY 
+CODE 
+PRIMARY/ 
+ASSOCIATED 
+ASSOCIATED 
+WITH 
+Dynamically 
+Calculated Variant 
+- All Hours 
+Monthly Options on Three-Month 
+SOFR Futures - Nearby March 480A 1YH Associated SR3  
+Monthly Options on Three-Month 
+SOFR Futures - Nearby June 480A 1YM Associated SR3  
+Monthly Options on Three-Month 
+SOFR Futures - Nearby 
+September 
+480A 1YU Associated SR3  
+Monthly Options on Three-Month 
+SOFR Futures - Nearby 
+December 
+480A 1YZ Associated SR3  
+Monthly Options on Three-Month 
+SOFR Futures - Deferred March 480A 2YH Associated SR3  
+Monthly Options on Three-Month 
+SOFR Futures - Deferred June 480A 2YM Associated SR3  
+Monthly Options on Three-Month 
+SOFR Futures - Deferred 
+September 
+480A 2YU Associated SR3  
+Monthly Options on Three-Month 
+SOFR Futures - Deferred 
+December 
+480A 2YZ Associated SR3  
+ 
+ 
+ 
+19 
+ 
+ 
+Appendix E 
+ 
+Exchange Fees 
+ 
+ 
+Membership Type 
+Venue/Transaction 
+Type Fee 
+Individual Members 
+Clearing Members 
+Rule 106.J Equity Member Firms & Rule 106.J Qualified Subsidiaries 
+Rule 106.I Members & Rule 106.I Qualified Affiliates 
+Rule 106.S Member Approved Funds 
+Open Outcry/Delivery $0.17  
+CME Globex $0.22 
+EFP|EFR|Block $0.34 
+Exe|Asn|Future From $0.14  
+Rule 106.D Lessees 
+Rule 106.F Employees  
+Open Outcry/Delivery $0.30 
+CME Globex $0.42 
+EFP|EFR|Block $0.55 
+Exe|Asn|Future From $0.35 
+Rule 106.R Electronic Corporate Members  
+(For other than CME Globex - Non-Member rates apply) 
+CME Globex $0.49 
+EFP|EFR|Block $0.84 
+Rule 106.H and 106.N Firms  
+Open Outcry/Delivery $0.49  
+CME Globex $0.49 
+EFP|EFR|Block $0.69 
+Exe|Asn|Future From $0.54  
+International Incentive Program (IIP) Participants 
+International Volume Incentive Program (IVIP) Participants  
+(For other than CME Globex - Non-Member rates apply) 
+Open Outcry/Delivery $0.50 
+CME Globex $0.50 
+EFP|EFR|Block $0.99 
+Exe|Asn|Future From $0.69 
+Latin American Fund Manager Incentive Program (FMIP) Participants  
+(For other than CME Globex - Non-Member rates apply) 
+Open Outcry/Delivery $0.62 
+CME Globex $0.64  
+EFP|EFR|Block $0.99 
+Exe|Asn|Future From $0.69 
+Members Trading Outside of Division  
+(For other than CME Globex During ETH - Non-Member rates apply) 
+CME Globex 
+During ETH Only $0.79 
+Non-Members 
+Open Outcry/Delivery $0.75 
+CME Globex $0.89 
+EFP|EFR|Block $0.99 
+Exe|Asn|Future From $0.69 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Processing Fees Fee 
+Position Adjustment/Position Transfer $0.10  
+Give-Up Surcharge  $0.05  
+Facilitation Fee $0.00 
+106.D Lessee/106.F Employee/106.H Brokerage $0.13 
+Floor / “New” Brokerage $0.04 

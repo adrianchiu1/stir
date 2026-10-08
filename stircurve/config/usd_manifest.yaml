@@ -1,0 +1,341 @@
+# USD market-data manifest (M1).
+#
+# Every instrument the usd.yaml families use, the fixings behind them and the
+# policy anchors. Each instrument = window + accrual rule + day count +
+# calendar + quote convention (CLAUDE.md); calendars are named here, never
+# hard-coded in code. Every rule names a source (``sources`` below). A source
+# with ``fixture`` is captured live by ``scripts/capture_exchange_specs.py``
+# into tests/fixtures/live, and each ``quote`` must appear in that capture
+# (tests/test_manifest.py). ``status: pending_capture`` = the page could not
+# be read from the capture machine (cmegroup.com blocks it); the rule stands
+# as written but is open in the PR ("Decisions needed").
+#
+# Column naming in data/market/usd/<YYYY>/<instrument>.csv: "<ticker>|<field>",
+# with futures tickers in their two-digit-year form (FFZ19 Comdty) whatever
+# form the dump requested (see bbg.year_digits).
+
+currency: USD
+config: usd                         # stircurve/config/usd.yaml
+column_format: "{ticker}|{field}"
+month_codes: {F: 1, G: 2, H: 3, J: 4, K: 5, M: 6, N: 7, Q: 8, U: 9, V: 10, X: 11, Z: 12}
+
+sources:
+  cbot_ch22:
+    title: "CBOT Rulebook Chapter 22, 30-Day Federal Funds Futures (CME/CBOT Submission 17-418, Exhibit A, clean text, effective 27 Nov 2017)"
+    url: https://www.cftc.gov/filings/ptc/ptc110917cmedcm002.pdf
+    fixture: cftc_17-418_exhibit_a
+  cme_ch452:
+    title: "CME Rulebook Chapter 452, Three-Month Eurodollar Futures (Submission 17-418, Exhibit A, clean text)"
+    url: https://www.cftc.gov/filings/ptc/ptc110917cmedcm002.pdf
+    fixture: cftc_17-418_exhibit_a
+  cbot_20_321:
+    title: "CBOT Submission 20-321: FF listing schedule 36 -> 60 consecutive months, trade date 21 Sep 2020"
+    url: https://www.cftc.gov/filings/ptc/ptc081020cbotdcm001.pdf
+    fixture: cftc_20-321
+  cme_19_366:
+    title: "CME Submission 19-366 (16 of 24): options on SR3; quotes Rule 46003.A.1 (Reference Quarter) and the SR3 contract-month naming"
+    url: https://www.cftc.gov/filings/ptc/ptc121919cmedcm015.pdf
+    fixture: cftc_19-366
+  cme_22_199:
+    title: "CME Submission 22-199: SR3 listing 39 quarterly -> 41 quarterly + nearest 4 serial, trade date 25 Jul 2022"
+    url: https://www.cftc.gov/filings/ptc/ptc070722cmedcm001.pdf
+    fixture: cftc_22-199
+  cme_23_072:
+    title: "CME Submission 23-072: SR3 listing 41 -> 39 quarterly + nearest 6 serial, trade date 24 Apr 2023"
+    url: https://www.cftc.gov/filings/orgrules/rules03282341.pdf
+    fixture: cftc_23-072
+  cme_24_204:
+    title: "CME Submission 24-204: options on SR3; SOFR published for each US government securities market business day; Reference Quarter 12-14 weeks"
+    url: https://cftc.gov/filings/ptc/ptc0529241538.pdf
+    fixture: cftc_24-204
+  nyfed_refrates:
+    title: "New York Fed, Additional information about reference rates (EFFR/OBFR and SOFR publication and business days)"
+    url: https://www.newyorkfed.org/markets/reference-rates/additional-information-about-reference-rates
+    fixture: nyfed_refrates_info
+    kind: html
+  cme_sr3_specs:
+    title: "CME Three-Month SOFR futures contract specs and calendar (Rule 46002.G termination of trading)"
+    url: https://www.cmegroup.com/markets/interest-rates/stirs/three-month-sofr.contractSpecs.html
+    calendar_url: https://www.cmegroup.com/markets/interest-rates/stirs/three-month-sofr.calendar.html
+    status: pending_capture
+  cme_sr1_specs:
+    title: "CME One-Month SOFR futures contract specs and calendar (Rulebook Chapter 461)"
+    url: https://www.cmegroup.com/markets/interest-rates/stirs/one-month-sofr.contractSpecs.html
+    calendar_url: https://www.cmegroup.com/markets/interest-rates/stirs/one-month-sofr.calendar.html
+    status: pending_capture
+  cme_ff_calendar:
+    title: "CME 30-Day Federal Funds futures calendar"
+    url: https://www.cmegroup.com/markets/interest-rates/stirs/30-day-federal-fund.calendar.html
+    status: pending_capture
+  cme_ed_fallback:
+    title: "CME Eurodollar fallbacks implementation plan (conversion of ED expiring after 30 Jun 2023 to SR3 on 14 Apr 2023, spread 26.161bp)"
+    url: https://www.cmegroup.com/articles/files/2022/eurodollar-fallbacks-implementation-plan.pdf
+    status: pending_capture
+  fca_libor_cessation:
+    title: "FCA announcement on the future cessation of the LIBOR benchmarks, 5 Mar 2021 (USD 3M panel ends after 30 Jun 2023)"
+    url: https://www.fca.org.uk/publication/documents/future-cessation-loss-representativeness-libor-benchmarks.pdf
+    fixture: fca_libor_cessation
+  bbg_des:
+    title: "Bloomberg DES / SWPM on the terminal (tickers, tenor codes, swap conventions)"
+    url: bloomberg://DES
+    status: to_confirm_on_terminal
+
+instruments:
+  # ------------------------------------------------------------------ futures
+  ff_fut:
+    kind: future
+    description: CBOT 30-Day Federal Funds futures (ZQ)
+    family: effr
+    index: EFFR
+    bbg: {root: FF, yellow_key: Comdty, year_digits: {live: 1, expired: 2}, source: bbg_des}
+    fields: [PX_LAST, OPEN_INT, PX_VOLUME]
+    quote: {convention: price, formula: 100 - rate, units: percent, mid: true}
+    cycle: monthly
+    reference_window:
+      rule: calendar_month          # [1st of the contract month, 1st of the next month)
+      source: cbot_ch22
+      quote: "100 minus the arithmetic average of the daily effective federal funds rate during the contract delivery month"
+    accrual:
+      rule: arithmetic_average
+      non_publication_days: previous_published
+      fixing_calendar: us_fed
+      source: cbot_ch22
+      quote: "the rate for such day shall be the rate for the last preceding day for which a rate was published"
+    daycount: {name: ACT/360, source: cbot_ch22, quote: "the actual number of days spanned by the one-month term of such deposit, divided by a 360-day year"}
+    exchange_calendar: us_sifma      # QUESTION (PR): CME business days; us_sifma vs us_fed differ on Good Friday month-ends (2013-03-29, 2018-03-30, 2024-03-29)
+    last_trade:
+      rule: last_business_day_of_month
+      calendar: exchange
+      source: cbot_ch22
+      quote: "Trading in an expiring contract shall terminate at the close of trading on the last Business Day of such contract's delivery month"
+    final_settlement:
+      rule: publication_of_last_day_rate   # the us_fed business day after the month's last us_fed business day
+      calendar: us_fed
+      source: cbot_ch22
+      quote: "calculated by the Exchange on the business day on which the Federal Reserve Bank of New York publishes the daily effective federal funds rate"
+    listing:
+      - {from: "2010-01-01", months: 36, verified: false, note: "36 months in force before Sep 2020 per 20-321; start of that schedule unknown", source: cbot_20_321}
+      - {from: "2020-09-21", months: 60, verified: true, source: cbot_20_321, quote: "from 36 consecutive calendar months to 60 consecutive calendar months"}
+    first_date: "2010-01-01"
+    last_date: null
+    valid_range: [85.0, 101.0]
+    stale_days: 5
+
+  sofr1m_fut:
+    kind: future
+    description: CME One-Month SOFR futures (SR1)
+    family: sofr
+    index: SOFR
+    bbg: {root: SER, yellow_key: Comdty, year_digits: {live: 1, expired: 2}, source: bbg_des}
+    fields: [PX_LAST, OPEN_INT, PX_VOLUME]
+    quote: {convention: price, formula: 100 - rate, units: percent, mid: true}
+    cycle: monthly
+    reference_window: {rule: calendar_month, source: cme_sr1_specs}
+    accrual:
+      rule: arithmetic_average      # QUESTION (PR): confirm against Chapter 461 once captured
+      non_publication_days: previous_published
+      fixing_calendar: us_sofr
+      source: cme_sr1_specs
+    daycount: {name: ACT/360, source: cme_sr1_specs}
+    exchange_calendar: us_sifma
+    last_trade: {rule: last_business_day_of_month, calendar: exchange, source: cme_sr1_specs}
+    final_settlement: {rule: publication_of_last_day_rate, calendar: us_sofr, source: cme_sr1_specs}
+    listing:
+      - {from: "2018-05-07", months: 7, launch: true, verified: false, note: "launch listing per CME spec sheet (secondary); later expansion unknown", source: cme_sr1_specs}
+    first_date: "2018-05-07"
+    last_date: null
+    valid_range: [85.0, 101.0]
+    stale_days: 5
+
+  sofr3m_fut:
+    kind: future
+    description: CME Three-Month SOFR futures (SR3); contract named for the month its Reference Quarter starts
+    family: sofr
+    index: SOFR
+    bbg: {root: SFR, yellow_key: Comdty, year_digits: {live: 1, expired: 2}, source: bbg_des}
+    fields: [PX_LAST, OPEN_INT, PX_VOLUME]
+    quote: {convention: price, formula: 100 - rate, units: percent, mid: true}
+    cycle: quarterly_and_serial
+    serial_listed_until: reference_start   # nearest serials = those whose Reference Quarter has not started (22-199 example)
+    reference_window:
+      rule: imm_to_imm              # [3rd Wed of contract month, 3rd Wed three months later)
+      months: 3
+      source: cme_19_366
+      quote: "the interval that ends on (and does not include) the third Wednesday of the contract delivery month, and that begins on (and includes) the third Wednesday of the third calendar month preceding the contract delivery month"
+    contract_month:
+      rule: reference_start
+      source: cme_19_366
+      quote: "would be referenced as a \"September\" contract (i.e., the month in which its Reference Quarter begins)"
+    accrual:
+      rule: compounded              # daily compounding on us_sofr business days, simple interest over non-business days
+      non_publication_days: previous_published
+      fixing_calendar: us_sofr
+      source: cme_19_366
+      quote: "rate per annum of daily compounded SOFR interest"
+    daycount: {name: ACT/360, source: cme_24_204, quote: "360 days per year / 91 days"}
+    exchange_calendar: us_sifma
+    last_trade:
+      rule: business_days_before_window_end   # business day before the 3rd Wed ending the Reference Quarter
+      n: 1
+      calendar: exchange
+      source: cme_sr3_specs         # QUESTION (PR): Rule 46002.G text not captured (cmegroup.com blocked)
+    final_settlement: {rule: publication_of_last_day_rate, calendar: us_sofr, source: cme_sr3_specs}
+    listing:
+      - {from: "2018-05-07", quarterly: 20, serial: 0, launch: true, verified: false, note: "launch listing per CME spec sheet (secondary)", source: cme_sr3_specs}
+      - {from: "2020-01-01", quarterly: 39, serial: 0, verified: false, note: "39 quarterly in force before Jul 2022 per 22-199; start date unknown", source: cme_22_199}
+      - {from: "2022-07-25", quarterly: 41, serial: 4, verified: true, source: cme_22_199, quote: "listed for 41 consecutive quarters and the nearest 4 serial contract months"}
+      # 22-199 also names the listed set on 25 Jul 2022 (tests/test_contracts.py):
+      # "quarterly contract months June 2022 through June 2032 plus the nearest serial months August 2022 through January 2023"
+      - {from: "2023-03-01", quarterly: 41, serial: 6, verified: false, note: "nearest 6 serial per CME Submission 23-071 (dated 1 Mar 2023, cited in 23-072); effective date not captured", source: cme_23_072}
+      - {from: "2023-04-24", quarterly: 39, serial: 6, verified: true, source: cme_23_072, quote: "listed for 39 consecutive quarters and the nearest 6 serial contract months"}
+    first_date: "2018-05-07"
+    last_date: null
+    valid_range: [85.0, 101.0]
+    stale_days: 5
+
+  ed_fut:
+    kind: future
+    description: CME Three-Month Eurodollar futures (ED/GE), 3M USD LIBOR
+    family: libor3m
+    index: USDLIBOR3M
+    bbg: {root: ED, yellow_key: Comdty, year_digits: {live: 1, expired: 2}, source: bbg_des}
+    fields: [PX_LAST, OPEN_INT, PX_VOLUME]
+    quote: {convention: price, formula: 100 - rate, units: percent, mid: true}
+    cycle: quarterly_and_serial
+    serial_listed_until: last_trade
+    reference_window:
+      rule: imm_plus_tenor          # 3M deposit from the 3rd Wed (spot); end adjusted on the joint calendar
+      tenor: 3M
+      adjust: modified_following
+      calendars: [uk, us_fed]       # QUESTION (PR): ICE LIBOR maturity calendar (London only vs London+NY); or IMM-to-IMM?
+      source: cme_ch452
+      quote: "three-month unsecured wholesale Eurodollar bank deposit"
+    accrual:
+      rule: term_fixing             # single 3M LIBOR fixing on the last trading day
+      fixing_calendar: uk
+      source: cme_ch452
+      quote: "as first published on the second London bank business day immediately preceding the third Wednesday"
+    daycount: {name: ACT/360, source: cme_ch452, quote: "the actual number of days spanned by the three-month term of such deposit, divided by a 360-day year"}
+    exchange_calendar: us_sifma
+    last_trade:
+      rule: business_days_before_imm
+      n: 2
+      calendar: uk
+      source: cme_ch452
+      quote: "Trading in an expiring contract shall terminate at 11:00 a.m. London time on the second London bank business day immediately preceding the third Wednesday of the contract's named month of delivery"
+    final_settlement: {rule: last_trade_day, source: cme_ch452}
+    cessation:                      # QUESTION (PR): conversion date and scope
+      converted_on: "2023-04-14"    # ED expiring after cutoff converted to SR3 (+26.161bp) at this date
+      applies_if_last_trade_after: "2023-06-30"
+      source: cme_ed_fallback
+    listing:
+      - {from: "2010-01-01", quarterly: 40, serial: 4, verified: false, note: "from memory; Chapter 452 says months are 'as may be determined by the Exchange'", source: cme_ch452}
+    first_date: "2010-01-01"
+    last_date: "2023-06-19"         # EDM3 last trade (2nd London business day before 21 Jun 2023)
+    valid_range: [85.0, 101.0]
+    stale_days: 5
+
+  # ------------------------------------------------------------------ swaps (conventions: Bloomberg DES/SWPM; QUESTION in PR)
+  ois_effr:
+    kind: swap
+    description: USD OIS vs compounded EFFR (Bloomberg USSO)
+    family: effr
+    index: EFFR
+    bbg: {pattern: "USSO{code} Curncy", source: bbg_des}
+    fields: [PX_LAST]
+    quote: {convention: rate, units: percent, mid: true}
+    tenors: [1W, 2W, 3W, 1M, 2M, 3M, 4M, 5M, 6M, 7M, 8M, 9M, 10M, 11M, 1Y, 18M, 2Y, 3Y, 4Y, 5Y, 6Y, 7Y, 8Y, 9Y, 10Y, 12Y, 15Y, 20Y, 25Y, 30Y]
+    fixed_leg: {frequency: annual, short_tenor: single_payment_le_1y, daycount: ACT/360}
+    float_leg: {frequency: annual, accrual: compounded, daycount: ACT/360, fixing_calendar: us_fed}
+    spot_lag: {days: 2, calendar: us_fed}
+    payment_lag: {days: 2, calendar: us_fed}
+    roll: modified_following
+    source: bbg_des
+    first_date: "2010-01-01"
+    last_date: null
+    valid_range: [-1.0, 25.0]
+    stale_days: 5
+
+  ois_sofr:
+    kind: swap
+    description: USD OIS vs compounded SOFR (Bloomberg USOSFR)
+    family: sofr
+    index: SOFR
+    bbg: {pattern: "USOSFR{code} Curncy", source: bbg_des}
+    fields: [PX_LAST]
+    quote: {convention: rate, units: percent, mid: true}
+    tenors: [1W, 2W, 3W, 1M, 2M, 3M, 4M, 5M, 6M, 7M, 8M, 9M, 10M, 11M, 1Y, 18M, 2Y, 3Y, 4Y, 5Y, 6Y, 7Y, 8Y, 9Y, 10Y, 12Y, 15Y, 20Y, 25Y, 30Y]
+    fixed_leg: {frequency: annual, short_tenor: single_payment_le_1y, daycount: ACT/360}
+    float_leg: {frequency: annual, accrual: compounded, daycount: ACT/360, fixing_calendar: us_sofr}
+    spot_lag: {days: 2, calendar: us_sifma}      # QUESTION (PR): us_sifma vs us_sofr for SOFR OIS accrual/payment
+    payment_lag: {days: 2, calendar: us_sifma}
+    roll: modified_following
+    source: bbg_des
+    first_date: "2018-07-01"        # QUESTION (PR): first usable USOSFR history
+    last_date: null
+    valid_range: [-1.0, 25.0]
+    stale_days: 5
+
+  swap_libor3m:
+    kind: swap
+    description: USD swaps vs 3M LIBOR, semi-annual 30/360 fixed (Bloomberg USSW)
+    family: libor3m
+    index: USDLIBOR3M
+    bbg: {pattern: "USSW{code} Curncy", source: bbg_des}
+    fields: [PX_LAST]
+    quote: {convention: rate, units: percent, mid: true}
+    tenors: [1Y, 2Y, 3Y, 4Y, 5Y, 6Y, 7Y, 8Y, 9Y, 10Y, 12Y, 15Y, 20Y, 25Y, 30Y]
+    fixed_leg: {frequency: semiannual, daycount: 30/360}
+    float_leg: {frequency: quarterly, accrual: term_fixing, daycount: ACT/360, fixing_calendar: uk}
+    spot_lag: {days: 2, calendar: uk}
+    payment_lag: {days: 0, calendar: us_fed}
+    roll: modified_following
+    calendars: [uk, us_fed]
+    source: bbg_des
+    first_date: "2010-01-01"
+    last_date: "2023-06-30"
+    valid_range: [-1.0, 25.0]
+    stale_days: 5
+
+# tenor -> Bloomberg code in USSO/USOSFR/USSW tickers (QUESTION in PR: confirm with DES)
+tenor_codes: {1W: 1Z, 2W: 2Z, 3W: 3Z, 1M: A, 2M: B, 3M: C, 4M: D, 5M: E, 6M: F, 7M: G, 8M: H, 9M: I, 10M: J, 11M: K,
+              1Y: "1", 18M: 1F, 2Y: "2", 3Y: "3", 4Y: "4", 5Y: "5", 6Y: "6", 7Y: "7", 8Y: "8", 9Y: "9", 10Y: "10",
+              12Y: "12", 15Y: "15", 20Y: "20", 25Y: "25", 30Y: "30"}
+
+fixings:
+  EFFR:
+    ticker: FEDL01 Index
+    fields: [PX_LAST]
+    calendar: us_fed
+    publication: {lag_days: 1, source: nyfed_refrates, quote: "The EFFR and the OBFR will be published at approximately 9:00 a.m. ET each business day that is not included in the Federal Reserve Bank of New York's Holiday Schedule"}
+    dated_by: rate_date             # QUESTION (PR): Bloomberg stamps FEDL01 on the rate date (not the publication date)
+    first_date: "2010-01-01"
+    last_date: null
+    valid_range: [-1.0, 25.0]
+    stale_days: null                # EFFR is legitimately flat for weeks
+  SOFR:
+    ticker: SOFRRATE Index
+    fields: [PX_LAST]
+    calendar: us_sofr
+    publication: {lag_days: 1, source: nyfed_refrates, quote: "are not published on, or for, days for which SIFMA recommends a full closure"}
+    dated_by: rate_date
+    first_date: "2018-04-02"
+    first_date_source: {source: nyfed_refrates, quote: "The first SOFR was published on 4/3/2018 for the value date of 4/2/2018"}
+    last_date: null
+    valid_range: [-1.0, 25.0]
+    stale_days: null
+  USDLIBOR3M:
+    ticker: US0003M Index
+    fields: [PX_LAST]
+    calendar: uk
+    dated_by: fixing_date
+    first_date: "2010-01-01"
+    last_date: "2023-06-30"         # panel LIBOR; synthetic USD LIBOR (Jul 2023 - Sep 2024) is not used
+    last_date_source: {source: fca_libor_cessation, quote: "immediately after 30 June 2023, the 1-month, 3-month and 6-month US dollar LIBOR settings"}
+    valid_range: [-1.0, 25.0]
+    stale_days: 10
+
+policy_anchors:                     # primary values: data/refdata/policy_rates/fed.csv (M0); Bloomberg is a cross-check only
+  target_upper: {refdata_anchor: target_upper, ticker: FDTR Index, fields: [PX_LAST], first_date: "2010-01-01", valid_range: [0.0, 25.0], stale_days: null, source: bbg_des}
+  target_lower: {refdata_anchor: target_lower, ticker: FDTRFTRL Index, fields: [PX_LAST], first_date: "2010-01-01", valid_range: [0.0, 25.0], stale_days: null, source: bbg_des}
+  iorb:         {refdata_anchor: iorb, ticker: IORB Index, fields: [PX_LAST], first_date: "2021-07-29", valid_range: [0.0, 25.0], stale_days: null, source: bbg_des}
