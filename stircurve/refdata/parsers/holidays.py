@@ -61,26 +61,31 @@ def fetch_jp() -> dict[dt.date, str]:
     return parse_jp_csv(payload)
 
 
-_SIFMA_RE = re.compile(rf"{MONTH_RE}\s+(\d{{1,2}}),?\s+(20\d\d)", re.I)
+_SIFMA_DATE_RE = re.compile(rf"(?:Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day,\s+{MONTH_RE}\s+(\d{{1,2}}),\s+(20\d\d)", re.I)
 
 
 def parse_sifma_text(text: str) -> dict[dt.date, str]:
-    """Lines that mention a full market close. Early closes are ignored."""
-    out = {}
-    name = None
-    for line in text.splitlines():
-        s = line.strip()
-        if not s:
+    """US full-close recommendations: within the 'U.S. Holiday Recommendations'
+    section (the page also carries U.K. and Japan sections), a holiday-name
+    line followed by 'Thursday, January 1, 2026'. 'Early Close' lines are
+    ignored, so a holiday with only an early close (Good Friday 2026) is not a
+    full close."""
+    lines = [l.strip() for l in text.splitlines() if l.strip()]
+    start = next((i for i, l in enumerate(lines) if re.match(r"U\.?S\.? Holiday Recommendations", l, re.I)), None)
+    if start is not None:
+        end = next((i for i in range(start + 1, len(lines)) if re.search(r"Holiday Recommendations", lines[i], re.I)),
+                   len(lines))
+        lines = lines[start + 1:end]
+    out, name = {}, None
+    for s in lines:
+        m = _SIFMA_DATE_RE.search(s)
+        if not m:
+            name = s
             continue
-        if re.search(r"early close", s, re.I):
+        if re.match(r"early close", s, re.I) or m.start() > 0:
             continue
-        m = _SIFMA_RE.search(s)
-        if m and re.search(r"close|closed|holiday", s, re.I) or (m and name):
-            mon, d, y = m.groups()
-            out[dt.date(int(y), month_number(mon), int(d))] = name or s[:60]
-            name = None
-        elif not m and len(s) < 60 and not s[0].isdigit():
-            name = s  # a holiday heading line preceding the date lines
+        mon, d, y = m.groups()
+        out[dt.date(int(y), month_number(mon), int(d))] = name or "SIFMA close"
     return out
 
 

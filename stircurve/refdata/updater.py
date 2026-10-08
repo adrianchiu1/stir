@@ -205,18 +205,22 @@ def update_holidays(name: str, commit: bool = False, years: range = range(2005, 
         official, source = holiday_parsers.fetch_sifma(), holiday_parsers.SIFMA_URL
     cal = Calendar.from_rules(name, years)
     existing = Calendar.load(name, years, refdata_dir)
+    official = {d: n for d, n in official.items() if d.year in years}   # e.g. the CAO CSV starts in 1955
     diff = Diff()
     merged = dict(cal.holidays)
     for d, n in official.items():
         if d not in merged:
             diff.added.append(f"{name} {d} {n} (official, not in rules)")
         merged[d] = n
-    # official source covers these years: rule-only dates inside them that the source lacks are suspicious
-    if official:
-        lo, hi = min(official).year, max(official).year
-        for d, n in cal.holidays.items():
-            if lo <= d.year <= hi and d not in official and n != "Bank Holiday" and not n.endswith("(observed)"):
-                diff.problems.append(f"{name} {d} {n}: in rules but not in official source")
+    # years the official source covers (several dates, not just next year's 1 January):
+    # rule-only dates inside them that the source lacks are suspicious
+    per_year: dict[int, int] = {}
+    for d in official:
+        per_year[d.year] = per_year.get(d.year, 0) + 1
+    covered = {y for y, n in per_year.items() if n >= 3}
+    for d, n in cal.holidays.items():
+        if d.year in covered and d not in official and n != "Bank Holiday" and not n.endswith("(observed)"):
+            diff.problems.append(f"{name} {d} {n}: in rules but not in official source")
     for d in existing.holidays:
         if d not in merged:
             diff.removed.append(f"{name} {d} {existing.holidays[d]}")

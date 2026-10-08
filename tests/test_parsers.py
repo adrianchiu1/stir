@@ -149,3 +149,15 @@ def test_ecb_live_replay_merges_releases_without_gaps():
     assert validate_maintenance_periods(mps) == []
     ends = {r["label"]: r["end"] for r, _ in got}
     assert ends["12/2014"] == dt.date(2015, 1, 27) and ends["8/2023"] == dt.date(2024, 1, 30)
+
+
+def test_holiday_live_sources():
+    from stircurve.refdata.parsers.holidays import parse_sifma_text
+    sifma = parse_sifma_text((LIVE / "sifma_holidays_20261008.txt").read_text())
+    assert len(sifma) == 12 and min(sifma) == dt.date(2026, 1, 1) and max(sifma) == dt.date(2027, 1, 1)
+    assert dt.date(2026, 4, 3) not in sifma          # Good Friday 2026: early close only
+    assert dt.date(2026, 4, 6) not in sifma          # Easter Monday is in the U.K. section
+    uk = parse_uk_json((LIVE / "uk_bank_holidays_20261008.txt").read_text())
+    assert len(uk) == 83 and uk[dt.date(2026, 12, 28)] == "Boxing Day"
+    jp = parse_jp_csv((LIVE / "jp_cao_holidays_20261008.txt").read_text())
+    assert len(jp) == 1067 and jp[dt.date(2026, 9, 22)] == "休日"
