@@ -32,7 +32,7 @@ from __future__ import annotations
 import datetime as dt
 import re
 
-from .common import MONTH_RE, fetch, html_to_text, month_number
+from .common import MONTH_RE, fetch, fetch_text, month_number, save_fixture
 
 FED_CALENDAR_URL = "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
 FED_HISTORICAL_URL = "https://www.federalreserve.gov/monetarypolicy/fomchistorical{year}.htm"
@@ -107,12 +107,12 @@ def fetch_fed(years_historical: range | None = None) -> list[tuple[dt.date, str,
     """Current calendar page plus historical pages for ``years_historical``.
     Returns (decision_date, kind, source_url)."""
     out = []
-    text = html_to_text(fetch(FED_CALENDAR_URL))
+    text = fetch_text(FED_CALENDAR_URL, "fed_calendar")
     out += [(d, k, FED_CALENDAR_URL) for d, k in parse_fed_text(text)]
     for y in years_historical or []:
         url = FED_HISTORICAL_URL.format(year=y)
         try:
-            t = html_to_text(fetch(url))
+            t = fetch_text(url, f"fed_historical_{y}")
         except Exception as exc:  # pragma: no cover
             print(f"  fed {y}: fetch failed ({exc})")
             continue
@@ -186,6 +186,7 @@ def fetch_ecb_maintenance(years: range | None = None) -> list[tuple[dict, str]]:
     """Maintenance-period rows (with source URL) for the requested years,
     discovered from the index page; 2027 added from the known release."""
     index_html = fetch(ECB_RESERVE_INDEX_URL)
+    save_fixture("ecb_reserve_index", index_html)
     links = ecb_index_links(index_html)
     links.setdefault(2027, ECB_MP_2027_URL)
     out = []
@@ -194,7 +195,7 @@ def fetch_ecb_maintenance(years: range | None = None) -> list[tuple[dict, str]]:
         if not url:
             continue
         try:
-            t = html_to_text(fetch(url))
+            t = fetch_text(url, f"ecb_mp_{y}")
         except Exception as exc:  # pragma: no cover
             print(f"  ecb {y}: fetch failed ({exc})")
             continue
@@ -231,7 +232,7 @@ def parse_boe_text(text: str) -> list[tuple[dt.date, str]]:
 
 
 def fetch_boe() -> list[tuple[dt.date, str, str]]:
-    text = html_to_text(fetch(BOE_UPCOMING_URL))
+    text = fetch_text(BOE_UPCOMING_URL, "boe_upcoming_mpc_dates")
     return [(d, k, BOE_UPCOMING_URL) for d, k in parse_boe_text(text)]
 
 
@@ -260,5 +261,5 @@ def parse_boj_text(text: str) -> list[tuple[dt.date, str]]:
 
 
 def fetch_boj() -> list[tuple[dt.date, str, str]]:
-    text = html_to_text(fetch(BOJ_SCHEDULE_URL))
+    text = fetch_text(BOJ_SCHEDULE_URL, "boj_mpm_schedule")
     return [(d, k, BOJ_SCHEDULE_URL) for d, k in parse_boj_text(text)]

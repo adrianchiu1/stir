@@ -16,7 +16,7 @@ import io
 import json
 import re
 
-from .common import MONTH_RE, fetch, html_to_text, month_number
+from .common import MONTH_RE, fetch, fetch_text, month_number, save_fixture
 
 UK_JSON_URL = "https://www.gov.uk/bank-holidays.json"
 JP_CSV_URL = "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"
@@ -32,7 +32,9 @@ def parse_uk_json(payload: str) -> dict[dt.date, str]:
 
 
 def fetch_uk() -> dict[dt.date, str]:
-    return parse_uk_json(fetch(UK_JSON_URL))
+    payload = fetch(UK_JSON_URL)
+    save_fixture("uk_bank_holidays", payload)
+    return parse_uk_json(payload)
 
 
 def parse_jp_csv(payload: str) -> dict[dt.date, str]:
@@ -54,7 +56,9 @@ def fetch_jp() -> dict[dt.date, str]:
     import requests
     r = requests.get(JP_CSV_URL, timeout=30)
     r.raise_for_status()
-    return parse_jp_csv(r.content.decode("cp932", errors="replace"))
+    payload = r.content.decode("cp932", errors="replace")
+    save_fixture("jp_cao_holidays", payload)
+    return parse_jp_csv(payload)
 
 
 _SIFMA_RE = re.compile(rf"{MONTH_RE}\s+(\d{{1,2}}),?\s+(20\d\d)", re.I)
@@ -81,4 +85,4 @@ def parse_sifma_text(text: str) -> dict[dt.date, str]:
 
 
 def fetch_sifma() -> dict[dt.date, str]:
-    return parse_sifma_text(html_to_text(fetch(SIFMA_URL)))
+    return parse_sifma_text(fetch_text(SIFMA_URL, "sifma_holidays"))

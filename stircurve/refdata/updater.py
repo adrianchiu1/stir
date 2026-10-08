@@ -9,6 +9,7 @@ build time), and a published row always replaces a synthetic one.
 from __future__ import annotations
 
 import datetime as dt
+import functools
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -20,7 +21,17 @@ from .meetings import BANK_CALENDAR, Meeting, effective_date, load_meetings, sav
 from .parsers import banks as bank_parsers
 from .parsers import holidays as holiday_parsers
 from .parsers import policy_rates as pr_parsers
-from .parsers.common import today_iso
+from .parsers.common import saving_fixtures, today_iso
+
+
+def _fixture_capture(fn):
+    """Add a ``save_fixtures`` keyword: a directory that receives the text of
+    every page fetched during the call (``<source>_<YYYYMMDD>.txt``)."""
+    @functools.wraps(fn)
+    def wrapper(*args, save_fixtures: Path | str | None = None, **kwargs):
+        with saving_fixtures(save_fixtures):
+            return fn(*args, **kwargs)
+    return wrapper
 
 
 @dataclass
@@ -47,6 +58,7 @@ class Diff:
 # ---------------------------------------------------------------------------
 # meetings
 # ---------------------------------------------------------------------------
+@_fixture_capture
 def update_meetings(bank: str, commit: bool = False, historical_years: range | None = None,
                     refdata_dir: Path = REFDATA_DIR, today: dt.date | None = None) -> Diff:
     today = today or dt.date.today()
@@ -135,6 +147,7 @@ def _regime(bank: str, d: dt.date) -> str:
 # ---------------------------------------------------------------------------
 # ECB maintenance periods
 # ---------------------------------------------------------------------------
+@_fixture_capture
 def update_ecb_maintenance(commit: bool = False, years: range | None = None,
                            refdata_dir: Path = REFDATA_DIR, today: dt.date | None = None) -> Diff:
     today = today or dt.date.today()
@@ -163,6 +176,7 @@ def update_ecb_maintenance(commit: bool = False, years: range | None = None,
 # ---------------------------------------------------------------------------
 # holidays
 # ---------------------------------------------------------------------------
+@_fixture_capture
 def update_holidays(name: str, commit: bool = False, years: range = range(2005, 2036),
                     refdata_dir: Path = REFDATA_DIR) -> Diff:
     """Write the merged rule+official holiday file for one calendar."""
@@ -209,6 +223,7 @@ def write_rule_holidays(refdata_dir: Path = REFDATA_DIR, years: range = range(20
 # ---------------------------------------------------------------------------
 # policy rates
 # ---------------------------------------------------------------------------
+@_fixture_capture
 def update_policy_rates(bank: str, commit: bool = False, refdata_dir: Path = REFDATA_DIR,
                         today: dt.date | None = None) -> Diff:
     """Fed: target range from the open-market table, IORB/IOER from FRED.

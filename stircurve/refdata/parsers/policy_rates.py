@@ -20,7 +20,7 @@ import datetime as dt
 import io
 import re
 
-from .common import MONTH_RE, fetch, html_to_text, month_number
+from .common import MONTH_RE, fetch, fetch_text, month_number, save_fixture
 
 FED_OPENMARKET_URL = "https://www.federalreserve.gov/monetarypolicy/openmarket.htm"
 FRED_CSV_URL = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}"
@@ -52,7 +52,7 @@ def parse_fed_openmarket_text(text: str) -> list[dict]:
 
 
 def fetch_fed_openmarket() -> list[dict]:
-    return parse_fed_openmarket_text(html_to_text(fetch(FED_OPENMARKET_URL)))
+    return parse_fed_openmarket_text(fetch_text(FED_OPENMARKET_URL, "fed_openmarket"))
 
 
 def parse_fred_csv(payload: str) -> list[tuple[dt.date, float]]:
@@ -71,7 +71,9 @@ def parse_fred_csv(payload: str) -> list[tuple[dt.date, float]]:
 
 
 def fetch_fred(series: str) -> list[tuple[dt.date, float]]:
-    return parse_fred_csv(fetch(FRED_CSV_URL.format(series=series)))
+    payload = fetch(FRED_CSV_URL.format(series=series))
+    save_fixture(f"fred_{series.lower()}", payload)
+    return parse_fred_csv(payload)
 
 
 _ECB_DATE = re.compile(rf"(\d{{1,2}})(?:st|nd|rd|th)?\s+{MONTH_RE}\w*\s+(20\d\d|19\d\d)", re.I)
@@ -114,7 +116,7 @@ def parse_ecb_key_rates_text(text: str) -> list[dict]:
 
 
 def fetch_ecb_key_rates() -> list[dict]:
-    return parse_ecb_key_rates_text(html_to_text(fetch(ECB_KEY_RATES_URL)))
+    return parse_ecb_key_rates_text(fetch_text(ECB_KEY_RATES_URL, "ecb_key_rates"))
 
 
 _BOE_ROW = re.compile(rf"^\s*\|?\s*(\d{{1,2}})\s+{MONTH_RE}\s+(\d{{2,4}})\s*\|\s*(-?[\d.]+)\s*\|?\s*$", re.I)
@@ -135,4 +137,4 @@ def parse_boe_bank_rate_text(text: str) -> list[tuple[dt.date, float]]:
 
 
 def fetch_boe_bank_rate() -> list[tuple[dt.date, float]]:
-    return parse_boe_bank_rate_text(html_to_text(fetch(BOE_BANK_RATE_URL)))
+    return parse_boe_bank_rate_text(fetch_text(BOE_BANK_RATE_URL, "boe_bank_rate"))

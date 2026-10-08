@@ -9,9 +9,11 @@ against fixtures) and ``fetch_*()`` (network).
 """
 from __future__ import annotations
 
+import contextlib
 import datetime as dt
 import re
-from typing import Iterable
+from pathlib import Path
+from typing import Iterable, Iterator
 
 import requests
 
@@ -58,6 +60,44 @@ def html_to_text(html: str) -> str:
     text = re.sub(r"[ \t\xa0]+", " ", text)
     text = re.sub(r"\n\s*\n+", "\n", text)
     return text.strip()
+
+
+# ---------------------------------------------------------------------------
+# fixture capture (``update_refdata.py --save-fixtures DIR``)
+# ---------------------------------------------------------------------------
+_FIXTURE_DIR: Path | None = None
+
+
+@contextlib.contextmanager
+def saving_fixtures(directory: Path | str | None) -> Iterator[None]:
+    """While active, every page a parser reads is also written to
+    ``directory/<source>_<YYYYMMDD>.txt`` (see ``save_fixture``)."""
+    global _FIXTURE_DIR
+    prev = _FIXTURE_DIR
+    _FIXTURE_DIR = Path(directory) if directory else None
+    try:
+        yield
+    finally:
+        _FIXTURE_DIR = prev
+
+
+def save_fixture(source: str, text: str) -> Path | None:
+    """Write the exact text a parser consumes: the ``html_to_text`` output for
+    HTML pages, the raw payload for JSON/CSV sources and for the ECB index
+    (whose parser reads hrefs). No-op unless ``saving_fixtures`` is active."""
+    if _FIXTURE_DIR is None:
+        return None
+    _FIXTURE_DIR.mkdir(parents=True, exist_ok=True)
+    p = _FIXTURE_DIR / f"{source}_{dt.date.today():%Y%m%d}.txt"
+    p.write_text(text, encoding="utf-8")
+    return p
+
+
+def fetch_text(url: str, source: str) -> str:
+    """``html_to_text(fetch(url))``, saved as fixture ``source`` when capturing."""
+    text = html_to_text(fetch(url))
+    save_fixture(source, text)
+    return text
 
 
 def today_iso() -> str:
