@@ -90,6 +90,12 @@ def update_meetings(bank: str, commit: bool = False, historical_years: range | N
         new[d] = Meeting(bank, d, effective_date(bank, d, cal, lookup), scheduled=(kind == "scheduled"),
                          regime=_regime(bank, d), synthetic=False, source_url=url, retrieved_at=today_iso())
 
+    # a decision already filed as unscheduled stays there (the BoE workbook and the
+    # BoJ tables do not mark special meetings; boe_unscheduled.csv does, with sources)
+    for d in {m.decision_date for m in _load_unscheduled(bank, refdata_dir)} & set(new):
+        new[d] = Meeting(bank, d, new[d].effective_date, scheduled=False, regime=new[d].regime,
+                         source_url=new[d].source_url, retrieved_at=new[d].retrieved_at)
+
     diff = Diff()
     merged_by_kind: dict[bool, dict[dt.date, Meeting]] = {}
     for unsched in (False, True):

@@ -12,6 +12,7 @@ PARSERS = {
     "fed_calendar": banks.parse_fed_text,
     "ecb_reserve_index": banks.ecb_index_links,
     "boe_upcoming_mpc_dates": banks.parse_boe_text,
+    "boe_mpc_voting": banks.parse_boe_voting_text,
     "boj_mpm_schedule": banks.parse_boj_text,
     "boj_mpm_past": banks.parse_boj_text,
     "fed_openmarket": policy_rates.parse_fed_openmarket_text,
@@ -28,6 +29,7 @@ PARSERS = {
 # as kind "skip"; ECB 1999-2003 releases carry no maintenance table, only PDF annexes)
 EXPECTED = {
     "boe_bank_rate_20261008.txt": 258,
+    "boe_mpc_voting_20261008.txt": 315,
     "boe_upcoming_mpc_dates_20261008.txt": 16,
     "boj_mpm_past_20261008.txt": 168,
     "boj_mpm_schedule_20261008.txt": 16,

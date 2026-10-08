@@ -20,7 +20,8 @@ Sources
   | End of MP | ... with cells like "Thu, 17-Dec-26".
 * BoE: https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates
   lists "Thursday 5 February" lines under "2026 confirmed dates" headings
-  (current and next year only; no historical page).
+  (current and next year only); every past decision since June 1997 is in the
+  MPC voting-history workbook (mpcvoting.xlsx, sheet "Bank Rate Decisions").
 * BoJ: https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm (current and next
   year) and .../past.htm (2010+): one table per year whose first column is
   "Jan. 22 (Thurs.), 23 (Fri.)" (decision on the last day; one-day meetings
@@ -41,6 +42,7 @@ FED_HISTORICAL_URL = "https://www.federalreserve.gov/monetarypolicy/fomchistoric
 ECB_RESERVE_INDEX_URL = "https://www.ecb.europa.eu/press/calendars/reserve/html/index.en.html"
 ECB_MP_2027_URL = "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.pr260630~9f54a0a4fb.en.html"
 BOE_UPCOMING_URL = "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates"
+BOE_VOTING_XLSX_URL = "https://www.bankofengland.co.uk/-/media/boe/files/monetary-policy-summary-and-minutes/mpcvoting.xlsx"
 BOJ_SCHEDULE_URL = "https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm"
 BOJ_PAST_URL = "https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm"
 
@@ -350,9 +352,46 @@ def parse_boe_text(text: str) -> list[tuple[dt.date, str]]:
     return [(d, "scheduled") for d in sorted(found)]
 
 
+def boe_voting_xlsx_to_text(content: bytes) -> str:
+    """The 'Bank Rate Decisions' sheet as text, one decision per line:
+    '2020-03-11 | 0.25' (decision date | Bank Rate decided, percent). This text
+    is what the parser reads and what --save-fixtures stores."""
+    import io
+
+    import openpyxl
+    wb = openpyxl.load_workbook(io.BytesIO(content), read_only=True, data_only=True)
+    ws = wb["Bank Rate Decisions"]
+    lines = ["MPC voting history - Bank Rate decisions", "Decision date | Bank Rate (%)"]
+    for row in ws.iter_rows(values_only=True):
+        d, rate = (row[1], row[2]) if len(row) > 2 else (None, None)
+        if isinstance(d, dt.datetime) and isinstance(rate, (int, float)):
+            lines.append(f"{d.date().isoformat()} | {round(rate * 100, 4):g}")
+    return "\n".join(lines) + "\n"
+
+
+_BOE_VOTE_RE = re.compile(r"^(\d{4}-\d{2}-\d{2}) \| (-?[\d.]+)$")
+
+
+def parse_boe_voting_text(text: str) -> list[tuple[dt.date, str]]:
+    """Every MPC Bank Rate decision in the workbook. The workbook does not mark
+    special (unscheduled) meetings; those are kept in boe_unscheduled.csv and
+    the updater leaves them there."""
+    return [(dt.date.fromisoformat(m.group(1)), "scheduled")
+            for m in map(_BOE_VOTE_RE.match, text.splitlines()) if m]
+
+
 def fetch_boe() -> list[tuple[dt.date, str, str]]:
+    """Upcoming-dates page (this year and next) plus the voting-history workbook (1997+)."""
+    import requests
+    from .common import TIMEOUT, USER_AGENT
     text = fetch_text(BOE_UPCOMING_URL, "boe_upcoming_mpc_dates")
-    return [(d, k, BOE_UPCOMING_URL) for d, k in parse_boe_text(text)]
+    out = [(d, k, BOE_UPCOMING_URL) for d, k in parse_boe_text(text)]
+    r = requests.get(BOE_VOTING_XLSX_URL, headers={"User-Agent": USER_AGENT}, timeout=TIMEOUT)
+    r.raise_for_status()
+    vtext = boe_voting_xlsx_to_text(r.content)
+    save_fixture("boe_mpc_voting", vtext)
+    out += [(d, k, BOE_VOTING_XLSX_URL) for d, k in parse_boe_voting_text(vtext)]
+    return out
 
 
 # ---------------------------------------------------------------------------

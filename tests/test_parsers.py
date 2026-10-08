@@ -169,3 +169,15 @@ def test_holiday_live_sources():
     assert len(uk) == 83 and uk[dt.date(2026, 12, 28)] == "Boxing Day"
     jp = parse_jp_csv((LIVE / "jp_cao_holidays_20261008.txt").read_text())
     assert len(jp) == 1067 and jp[dt.date(2026, 9, 22)] == "休日"
+
+
+def test_boe_live_voting_workbook():
+    from stircurve.refdata.parsers.banks import parse_boe_voting_text
+    got = [d for d, _ in parse_boe_voting_text((LIVE / "boe_mpc_voting_20261008.txt").read_text())]
+    assert got[0] == dt.date(1997, 6, 6) and got[-1] == dt.date(2026, 9, 17) and len(got) == 315
+    per_year = {}
+    for d in got:
+        per_year[d.year] = per_year.get(d.year, 0) + 1
+    assert per_year[2001] == 13 and per_year[2016] == 11 and per_year[2020] == 10      # incl. special meetings
+    assert all(per_year[y] == 8 for y in range(2017, 2026) if y != 2020)
+    assert {dt.date(2001, 9, 18), dt.date(2020, 3, 11), dt.date(2020, 3, 19)} <= set(got)

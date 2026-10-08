@@ -16,6 +16,7 @@ dependencies = [
     "pyyaml>=6",
     "requests>=2.28",
     "lxml>=4.9",
+    "openpyxl>=3.1",   # BoE MPC voting-history workbook (refdata updater)
 ]
 
 [project.optional-dependencies]
