@@ -19,6 +19,7 @@ Full log with rejected alternatives: design spec, "Decision log". Confirmed by A
 | D13 | Store local and git-ignored; analytics exports shared |
 | D14 | Validation: ICVS points (curve IDs SOFR 490, Fed Funds 85, €STR 514, SONIA 141, JPY OIS 195) and WIRP samples |
 | D15 | Effective dates: Fed +1 business day; ECB maintenance-period start (published table wins); BoE same day; BoJ next business day (confirmed on 2024-03-19→21, 2025-12-19→22, 2026-06-16→17) |
+| D16 | Decision date = the day the decision is announced; implementation date is separate. A published implementation date wins over the bank's rule for every bank (ECB maintenance table; `meetings/published_effective.csv`: Fed 2020-03-03→04, BoJ 2016-01-29→02-16). Reference data includes every published date. AC, PR #1 |
 
 ## Build plan and gates
 

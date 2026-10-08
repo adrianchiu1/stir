@@ -60,10 +60,13 @@ Office holiday CSV; SIFMA holiday schedule; TARGET and US federal holidays by ru
 
 | Bank | Rule | Notes |
 | --- | --- | --- |
-| Fed | decision + 1 `us_fed` business day | |
+| Fed | decision + 1 `us_fed` business day | decision = statement date (2020-03-03, meeting 2–3 Mar) |
 | ECB | start of the maintenance period attached to the meeting | published table wins; Wednesday-after rule is the fallback for synthetic meetings |
 | BoE | decision date | |
-| BoJ | next `jp` business day | confirmed: 2024-03-19→21 Mar (20 Mar holiday), 2025-12-19→22 Dec, 2026-06-16→17 Jun |
+| BoJ | next `jp` business day | confirmed: 2024-03-19→21 Mar (20 Mar holiday), 2025-12-19→22 Dec, 2026-06-16→17 Jun; published exception 2016-01-29→16 Feb |
+
+For every bank a published implementation date wins over the rule: the ECB maintenance-period
+table, and `meetings/published_effective.csv` (one row per decision, with `source_url`).
 
 ## Cadence extrapolation
 
@@ -81,13 +84,15 @@ python scripts/run_tests.py      # or: pytest
 
 ## Reference data after the first live run (8 Oct 2026)
 
-* Meetings: Fed 2010–2019 and 2021–2027 (2020 held for a decision: `--historical 2020`
-  dates the emergency cut 2 Mar, the committed row says 3 Mar); ECB 2010–2027 from the
-  maintenance tables; BoJ 2010–2027 (schedule + past-meetings pages); BoE 2026–2027 only
-  (the MPC dates page has no history).
-* `maintenance_periods/ecb.csv`: 1/2010 – 8/2027, contiguous.
+* Meetings: Fed 2010–2027; ECB Mar 2004–2028 (every published maintenance-table release);
+  BoE Jun 1997–2027 (MPC voting-history workbook + upcoming dates; special meetings of
+  18 Sep 2001, 11 and 19 Mar 2020 in `boe_unscheduled.csv`); BoJ 2010–2027.
+* `maintenance_periods/ecb.csv`: 1/2004 (transitional, from 24 Jan 2004) – 7/2028, contiguous.
+* `meetings/published_effective.csv`: implementation dates published for individual decisions
+  (Fed 2020-03-03 → 4 Mar, BoJ 2016-01-29 → 16 Feb). Like the ECB table, a published date
+  wins over the rule.
 * Holidays: rule-generated 2005–2035; `source` names gov.uk / Cabinet Office where they
-  confirm a date. `us_sifma` is still rule-only (Good Friday 2026 question).
+  confirm a date. `us_sifma` is still rule-only (Good Friday question in PR #1).
 * Policy rates: Fed, ECB, BoE from the primary tables and FRED; no `memory` rows left except
   BoJ 2010-10-06 (BoJ is maintained by hand).
 * `docs/m0_gate.md` (`python scripts/m0_gate.py`): effective-date spot checks for the M0 gate.

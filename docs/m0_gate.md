@@ -7,7 +7,7 @@ calendars and maintenance periods), the rule applied, the policy-rate change rec
 that effective date (if any), and the source of the meeting row. AC: please check each
 effective date against the primary source.
 
-ECB maintenance periods: 164 (1/2010 2010-01-20 – 8/2027 2028-02-08); `validate_maintenance_periods`: no gaps, overlaps or implausible lengths.
+ECB maintenance periods: 242 (1/2004 2004-01-24 – 7/2028 2028-12-12); `validate_maintenance_periods`: no gaps, overlaps or implausible lengths.
 
 ## Fed (FOMC)
 
@@ -17,12 +17,16 @@ ECB maintenance periods: 164 (1/2010 2010-01-20 – 8/2027 2028-02-08); `validat
 | Thu 2012-09-13 | Fri 2012-09-14 | +1 `us_fed` business day | — | https://www.federalreserve.gov/monetarypolicy/fomchistorical2012.htm |
 | Wed 2015-12-16 | Thu 2015-12-17 | +1 `us_fed` business day | target_lower 0 → 0.25; target_upper 0.25 → 0.5 | https://www.federalreserve.gov/monetarypolicy/fomchistorical2015.htm |
 | Wed 2017-06-14 | Thu 2017-06-15 | +1 `us_fed` business day | target_lower 0.75 → 1; target_upper 1 → 1.25 | https://www.federalreserve.gov/monetarypolicy/fomchistorical2017.htm |
-| Wed 2019-07-31 | Thu 2019-08-01 | +1 `us_fed` business day | target_lower 2.25 → 2; target_upper 2.5 → 2.25 | https://www.federalreserve.gov/monetarypolicy/fomchistorical2019.htm |
+| Tue 2020-03-03 (unscheduled) | Wed 2020-03-04 | published implementation date (https://www.federalreserve.gov/newsevents/pressreleases/monetary20200303a1.htm); rule would give 2020-03-04 ✱ | target_lower 1.5 → 1; target_upper 1.75 → 1.25 | https://www.federalreserve.gov/newsevents/pressreleases/monetary20200303a.htm |
 | Sun 2020-03-15 (unscheduled) | Mon 2020-03-16 | +1 `us_fed` business day (Sunday decision) | target_lower 1 → 0; target_upper 1.25 → 0.25 | https://www.federalreserve.gov/newsevents/pressreleases/monetary20200315a.htm |
 | Wed 2022-03-16 | Thu 2022-03-17 | +1 `us_fed` business day | target_lower 0 → 0.25; target_upper 0.25 → 0.5 | https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm |
 | Wed 2024-09-18 | Thu 2024-09-19 | +1 `us_fed` business day | target_lower 5.25 → 4.75; target_upper 5.5 → 5 | https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm |
 | Wed 2026-09-16 | Thu 2026-09-17 | +1 `us_fed` business day | target_lower 3.5 → 3.75; target_upper 3.75 → 4 | https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm |
 | Wed 2027-12-08 | Thu 2027-12-09 | +1 `us_fed` business day | — | https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm |
+
+2020-03-03: unscheduled meeting 2–3 Mar (the historical page dates it 2 Mar; the statement was
+released 3 Mar, which is the decision date); implementation 4 Mar per the implementation note,
+recorded in `meetings/published_effective.csv`. ✱ = published date; here it equals the rule.
 
 ## ECB
 
@@ -45,35 +49,19 @@ ECB maintenance periods: 164 (1/2010 2010-01-20 – 8/2027 2028-02-08); `validat
 
 | Decision | Effective (code) | Rule applied | Rate change on effective date | Source |
 | --- | --- | --- | --- | --- |
-| Thu 2026-02-05 | Thu 2026-02-05 | same day | — | https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates |
-| Thu 2026-03-19 | Thu 2026-03-19 | same day | — | https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates |
-| Thu 2026-04-30 | Thu 2026-04-30 | same day | — | https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates |
-| Thu 2026-06-18 | Thu 2026-06-18 | same day | — | https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates |
-| Thu 2026-07-30 | Thu 2026-07-30 | same day | — | https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates |
+| Thu 2010-03-04 | Thu 2010-03-04 | same day | — | https://www.bankofengland.co.uk/-/media/boe/files/monetary-policy-summary-and-minutes/mpcvoting.xlsx |
+| Thu 2013-08-01 | Thu 2013-08-01 | same day | — | https://www.bankofengland.co.uk/-/media/boe/files/monetary-policy-summary-and-minutes/mpcvoting.xlsx |
+| Thu 2016-08-04 | Thu 2016-08-04 | same day | bank_rate 0.5 → 0.25 | https://www.bankofengland.co.uk/-/media/boe/files/monetary-policy-summary-and-minutes/mpcvoting.xlsx |
+| Thu 2017-11-02 | Thu 2017-11-02 | same day | bank_rate 0.25 → 0.5 | https://www.bankofengland.co.uk/-/media/boe/files/monetary-policy-summary-and-minutes/mpcvoting.xlsx |
+| Wed 2020-03-11 (unscheduled) | Wed 2020-03-11 | same day | bank_rate 0.75 → 0.25 | https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2020/13march-2020 |
+| Thu 2020-03-19 (unscheduled) | Thu 2020-03-19 | same day | bank_rate 0.25 → 0.1 | https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2020/monetary-policy-summary-for-the-special-monetary-policy-committee-meeting-on-19-march-2020 |
+| Thu 2022-02-03 | Thu 2022-02-03 | same day | bank_rate 0.25 → 0.5 | https://www.bankofengland.co.uk/-/media/boe/files/monetary-policy-summary-and-minutes/mpcvoting.xlsx |
+| Thu 2024-08-01 | Thu 2024-08-01 | same day | bank_rate 5.25 → 5 | https://www.bankofengland.co.uk/-/media/boe/files/monetary-policy-summary-and-minutes/mpcvoting.xlsx |
 | Thu 2026-09-17 | Thu 2026-09-17 | same day | — | https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates |
-| Thu 2026-11-05 | Thu 2026-11-05 | same day | — | https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates |
-| Thu 2026-12-17 | Thu 2026-12-17 | same day | — | https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates |
-| Thu 2027-02-04 | Thu 2027-02-04 | same day | — | https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates |
 | Thu 2027-12-16 | Thu 2027-12-16 | same day | — | https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates |
 
-BoE meeting rows cover 2026–2027 only: the upcoming-MPC-dates page has no history and the
-Bank's site has no historical dates page (see PR, Decisions needed). The same-day rule
-against Bank Rate changes 2010–2025 (Bank Rate database; decision date = change date):
-
-| Decision (= Bank Rate change) | Effective (code) | Bank Rate | Source |
-| --- | --- | --- | --- |
-| Thu 2016-08-04 | Thu 2016-08-04 | bank_rate 0.5 → 0.25 | https://www.bankofengland.co.uk/boeapps/database/Bank-Rate.asp |
-| Thu 2017-11-02 | Thu 2017-11-02 | bank_rate 0.25 → 0.5 | https://www.bankofengland.co.uk/boeapps/database/Bank-Rate.asp |
-| Thu 2018-08-02 | Thu 2018-08-02 | bank_rate 0.5 → 0.75 | https://www.bankofengland.co.uk/boeapps/database/Bank-Rate.asp |
-| Wed 2020-03-11 | Wed 2020-03-11 | bank_rate 0.75 → 0.25 | https://www.bankofengland.co.uk/boeapps/database/Bank-Rate.asp |
-| Thu 2020-03-19 | Thu 2020-03-19 | bank_rate 0.25 → 0.1 | https://www.bankofengland.co.uk/boeapps/database/Bank-Rate.asp |
-| Thu 2021-12-16 | Thu 2021-12-16 | bank_rate 0.1 → 0.25 | https://www.bankofengland.co.uk/boeapps/database/Bank-Rate.asp |
-| Thu 2022-02-03 | Thu 2022-02-03 | bank_rate 0.25 → 0.5 | https://www.bankofengland.co.uk/boeapps/database/Bank-Rate.asp |
-| Thu 2023-08-03 | Thu 2023-08-03 | bank_rate 5 → 5.25 | https://www.bankofengland.co.uk/boeapps/database/Bank-Rate.asp |
-| Thu 2024-08-01 | Thu 2024-08-01 | bank_rate 5.25 → 5 | https://www.bankofengland.co.uk/boeapps/database/Bank-Rate.asp |
-| Thu 2025-12-18 | Thu 2025-12-18 | bank_rate 4 → 3.75 | https://www.bankofengland.co.uk/boeapps/database/Bank-Rate.asp |
-
-11 and 19 Mar 2020 were unscheduled; `boe_unscheduled.csv` is still empty.
+2020-03-11 and 2020-03-19 are special meetings (`boe_unscheduled.csv`, with 2001-09-18). Every
+Bank Rate change since June 1997 falls on a meeting date (tested).
 
 ## BoJ (MPM)
 
@@ -82,7 +70,7 @@ against Bank Rate changes 2010–2025 (Bank Rate database; decision date = chang
 | Tue 2010-10-05 | Wed 2010-10-06 | next `jp` business day | policy_rate_target 0.05 [memory] | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
 | Thu 2013-04-04 | Fri 2013-04-05 | next `jp` business day | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
 | Fri 2014-10-31 | Tue 2014-11-04 | next `jp` business day (skips Mon 03 Nov Culture Day) | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
-| Fri 2016-01-29 | Mon 2016-02-01 | next `jp` business day | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
+| Fri 2016-01-29 | Tue 2016-02-16 | published implementation date (https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2016/k160129a.pdf); rule would give 2016-02-01 ✱ | policy_rate_balance_rate -0.1 | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
 | Wed 2016-09-21 | Fri 2016-09-23 | next `jp` business day (skips Thu 22 Sep Autumnal Equinox Day) | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
 | Mon 2020-03-16 | Tue 2020-03-17 | next `jp` business day | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
 | Tue 2024-03-19 | Thu 2024-03-21 ✔ confirmed (D15) | next `jp` business day (skips Wed 20 Mar Vernal Equinox Day) | ioer 0.1 | https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm |
@@ -90,6 +78,6 @@ against Bank Rate changes 2010–2025 (Bank Rate database; decision date = chang
 | Tue 2026-06-16 | Wed 2026-06-17 ✔ confirmed (D15) | next `jp` business day | ioer 0.75 → 1 | https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm |
 | Fri 2027-12-17 | Mon 2027-12-20 | next `jp` business day | — | https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm |
 
-The three D15 confirmations (✔) reproduce. 2016-01-29: the code gives Mon 1 Feb 2016, but the
-negative rate on policy-rate balances applied from the reserve maintenance period starting
-16 Feb 2016 (`policy_rates/boj.csv`). That decision is for AC; the rule is unchanged.
+The three D15 confirmations (✔) reproduce. 2016-01-29 (✱): the negative rate applied from the
+reserve maintenance period commencing 16 Feb 2016 (statement k160129a); recorded in
+`meetings/published_effective.csv`, which wins over the next-business-day rule.

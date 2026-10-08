@@ -5,8 +5,9 @@ For each bank, ten decision dates spread over 2010-2027, with the effective
 date the code produces (``meetings.effective_date`` on the committed
 calendars and maintenance periods), the rule applied, any policy-rate change
 recorded on that effective date, and the source URL of the meeting row. The
-dates are chosen by hand (rate changes, regime changes, holiday rolls, rule
-exceptions); everything else is computed. Reads committed CSVs only.
+dates are chosen by hand (rate changes, regime changes, holiday rolls, published
+exceptions); everything else is computed. Published implementation dates (ECB
+maintenance table, meetings/published_effective.csv) win over the rules. Reads committed CSVs only.
 
     python scripts/m0_gate.py            # writes docs/m0_gate.md
 """
@@ -20,25 +21,21 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from stircurve.refdata.calendars import Calendar  # noqa: E402
-from stircurve.refdata.maintenance import (load_maintenance_periods, load_policy_rates, mp_lookup,  # noqa: E402
-                                           validate_maintenance_periods)
-from stircurve.refdata.meetings import BANK_CALENDAR, ecb_rule_effective, effective_date, load_meetings  # noqa: E402
+from stircurve.refdata.maintenance import load_maintenance_periods, load_policy_rates, validate_maintenance_periods  # noqa: E402
+from stircurve.refdata.meetings import (BANK_CALENDAR, ecb_rule_effective, effective_date, load_meetings,  # noqa: E402
+                                        load_published_effective, published_lookup)
 
 D = dt.date.fromisoformat
 PICKS = {
-    "fed": ["2010-08-10", "2012-09-13", "2015-12-16", "2017-06-14", "2019-07-31",
+    "fed": ["2010-08-10", "2012-09-13", "2015-12-16", "2017-06-14", "2020-03-03",
             "2020-03-15", "2022-03-16", "2024-09-18", "2026-09-16", "2027-12-08"],
     "ecb": ["2010-05-06", "2011-04-07", "2012-07-05", "2014-06-05", "2015-01-22",
             "2019-09-12", "2022-07-21", "2023-12-14", "2024-06-06", "2027-04-29"],
-    "boe": ["2026-02-05", "2026-03-19", "2026-04-30", "2026-06-18", "2026-07-30",
-            "2026-09-17", "2026-11-05", "2026-12-17", "2027-02-04", "2027-12-16"],
+    "boe": ["2010-03-04", "2013-08-01", "2016-08-04", "2017-11-02", "2020-03-11",
+            "2020-03-19", "2022-02-03", "2024-08-01", "2026-09-17", "2027-12-16"],
     "boj": ["2010-10-05", "2013-04-04", "2014-10-31", "2016-01-29", "2016-09-21",
             "2020-03-16", "2024-03-19", "2025-12-19", "2026-06-16", "2027-12-17"],
 }
-# BoE meeting rows exist only for 2026-27 (see "Decisions needed" in the PR); the
-# same-day rule is spot-checked against Bank Rate changes 2010-2025 instead.
-BOE_RATE_CHANGES = ["2016-08-04", "2017-11-02", "2018-08-02", "2020-03-11", "2020-03-19",
-                    "2021-12-16", "2022-02-03", "2023-08-03", "2024-08-01", "2025-12-18"]
 BOJ_CONFIRMED = {D("2024-03-19"): D("2024-03-21"), D("2025-12-19"): D("2025-12-22"), D("2026-06-16"): D("2026-06-17")}
 ANCHORS = {"fed": ["target_lower", "target_upper"], "ecb": ["dfr", "mro", "mlf"], "boe": ["bank_rate"],
            "boj": ["policy_rate_target", "policy_rate_balance_rate", "ioer"]}
@@ -50,7 +47,9 @@ def _skipped(cal: Calendar, a: dt.date, b: dt.date) -> str:
     return f" (skips {', '.join(names)})" if names else ""
 
 
-def _rule(bank: str, dec: dt.date, eff: dt.date, cal: Calendar, mps_by_meeting: dict) -> str:
+def _rule(bank: str, dec: dt.date, eff: dt.date, cal: Calendar, mps_by_meeting: dict, overrides: dict) -> str:
+    if dec in overrides:
+        return f"published implementation date ({overrides[dec][1]}); rule would give {effective_date(bank, dec, cal)} ✱"
     if bank == "fed":
         return f"+1 `us_fed` business day{_skipped(cal, dec, eff)}" + (" (Sunday decision)" if dec.weekday() == 6 else "")
     if bank == "boe":
@@ -77,7 +76,6 @@ def _changes(rates, anchors, day: dt.date) -> str:
 
 def main() -> int:
     mps = load_maintenance_periods()
-    lookup = mp_lookup(mps)
     mps_by_meeting = {m.meeting_decision_date: m for m in mps}
     lines = [
         "# M0 gate: effective-date spot checks",
@@ -98,36 +96,33 @@ def main() -> int:
         cal = Calendar.load(BANK_CALENDAR[bank])
         rates = load_policy_rates(bank)
         rows = {m.decision_date: m for m in load_meetings(bank)}
+        lookup, overrides = published_lookup(bank), load_published_effective(bank)
         lines += [f"## {titles[bank]}", "",
                   "| Decision | Effective (code) | Rule applied | Rate change on effective date | Source |",
                   "| --- | --- | --- | --- | --- |"]
         for s in picks:
             dec = D(s)
             m = rows[dec]
-            eff = effective_date(bank, dec, cal, lookup if bank == "ecb" else None)
+            eff = effective_date(bank, dec, cal, lookup)
             assert eff == m.effective_date, (bank, dec, eff, m.effective_date)   # code agrees with the CSV
             kind = "" if m.scheduled else " (unscheduled)"
             conf = " ✔ confirmed (D15)" if BOJ_CONFIRMED.get(dec) == eff else ""
-            lines.append(f"| {dec:%a %Y-%m-%d}{kind} | {eff:%a %Y-%m-%d}{conf} | {_rule(bank, dec, eff, cal, mps_by_meeting)} "
+            lines.append(f"| {dec:%a %Y-%m-%d}{kind} | {eff:%a %Y-%m-%d}{conf} | {_rule(bank, dec, eff, cal, mps_by_meeting, overrides)} "
                          f"| {_changes(rates, ANCHORS[bank], eff)} | {m.source_url} |")
         lines.append("")
         if bank == "ecb":
             lines += ["✱ marks dates where the published table and the rule fallback differ; the table wins (D15).", ""]
+        if bank == "fed":
+            lines += ["2020-03-03: unscheduled meeting 2–3 Mar (the historical page dates it 2 Mar; the statement was",
+                      "released 3 Mar, which is the decision date); implementation 4 Mar per the implementation note,",
+                      "recorded in `meetings/published_effective.csv`. ✱ = published date; here it equals the rule.", ""]
         if bank == "boe":
-            lines += ["BoE meeting rows cover 2026–2027 only: the upcoming-MPC-dates page has no history and the",
-                      "Bank's site has no historical dates page (see PR, Decisions needed). The same-day rule",
-                      "against Bank Rate changes 2010–2025 (Bank Rate database; decision date = change date):", "",
-                      "| Decision (= Bank Rate change) | Effective (code) | Bank Rate | Source |", "| --- | --- | --- | --- |"]
-            for s in BOE_RATE_CHANGES:
-                dec = D(s)
-                eff = effective_date("boe", dec, cal)
-                lines.append(f"| {dec:%a %Y-%m-%d} | {eff:%a %Y-%m-%d} | {_changes(rates, ['bank_rate'], eff)} "
-                             f"| {next(r.source_url for r in rates if r.effective_date == dec)} |")
-            lines += ["", "11 and 19 Mar 2020 were unscheduled; `boe_unscheduled.csv` is still empty.", ""]
+            lines += ["2020-03-11 and 2020-03-19 are special meetings (`boe_unscheduled.csv`, with 2001-09-18). Every",
+                      "Bank Rate change since June 1997 falls on a meeting date (tested).", ""]
         if bank == "boj":
-            lines += ["The three D15 confirmations (✔) reproduce. 2016-01-29: the code gives Mon 1 Feb 2016, but the",
-                      "negative rate on policy-rate balances applied from the reserve maintenance period starting",
-                      "16 Feb 2016 (`policy_rates/boj.csv`). That decision is for AC; the rule is unchanged.", ""]
+            lines += ["The three D15 confirmations (✔) reproduce. 2016-01-29 (✱): the negative rate applied from the",
+                      "reserve maintenance period commencing 16 Feb 2016 (statement k160129a); recorded in",
+                      "`meetings/published_effective.csv`, which wins over the next-business-day rule.", ""]
     out = ROOT / "docs" / "m0_gate.md"
     out.write_text("\n".join(lines), encoding="utf-8")
     print(f"wrote {out}")
