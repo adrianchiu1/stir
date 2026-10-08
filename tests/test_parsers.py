@@ -60,3 +60,40 @@ def test_holiday_sources():
     assert uk == {dt.date(2026, 4, 3): "Good Friday"}
     jp = parse_jp_csv("国民の祝日・休日月日,国民の祝日・休日名\n2026/1/1,元日\n2026/1/12,成人の日\n")
     assert jp[dt.date(2026, 1, 12)] == "成人の日"
+
+
+LIVE = FIX / "live"
+
+
+def test_boe_live_page():
+    got = [d for d, k in parse_boe_text((LIVE / "boe_upcoming_mpc_dates_20261008.txt").read_text())]
+    assert got == [dt.date(2026, 2, 5), dt.date(2026, 3, 19), dt.date(2026, 4, 30), dt.date(2026, 6, 18),
+                   dt.date(2026, 7, 30), dt.date(2026, 9, 17), dt.date(2026, 11, 5), dt.date(2026, 12, 17),
+                   dt.date(2027, 2, 4), dt.date(2027, 3, 18), dt.date(2027, 4, 29), dt.date(2027, 6, 17),
+                   dt.date(2027, 7, 29), dt.date(2027, 9, 16), dt.date(2027, 11, 4), dt.date(2027, 12, 16)]
+    assert all(d.weekday() == 3 for d in got)        # MPC announcements are Thursdays
+
+
+def test_boj_live_schedule_page():
+    got = parse_boj_text((LIVE / "boj_mpm_schedule_20261008.txt").read_text())
+    assert [d for d, _ in got] == [
+        dt.date(2026, 1, 23), dt.date(2026, 3, 19), dt.date(2026, 4, 28), dt.date(2026, 6, 16),
+        dt.date(2026, 7, 31), dt.date(2026, 9, 18), dt.date(2026, 10, 30), dt.date(2026, 12, 18),
+        dt.date(2027, 1, 22), dt.date(2027, 3, 18), dt.date(2027, 4, 28), dt.date(2027, 6, 11),   # "Mar. 17\n(Wed.), 18"
+        dt.date(2027, 7, 22), dt.date(2027, 9, 22), dt.date(2027, 10, 29), dt.date(2027, 12, 17)]
+    assert {k for _, k in got} == {"scheduled"}
+
+
+def test_boj_live_past_page():
+    got = parse_boj_text((LIVE / "boj_mpm_past_20261008.txt").read_text())
+    by_year = {}
+    for d, _ in got:
+        by_year.setdefault(d.year, []).append(d)
+    assert {y: len(v) for y, v in by_year.items()} == {
+        2010: 16, 2011: 15, 2012: 14, 2013: 14, 2014: 14, 2015: 14, 2016: 8, 2017: 8, 2018: 8,
+        2019: 8, 2020: 9, 2021: 8, 2022: 8, 2023: 8, 2024: 8, 2025: 8}
+    dates = {d for d, _ in got}
+    # README / D15 confirmations; one-day and moved meetings
+    assert {dt.date(2024, 3, 19), dt.date(2025, 12, 19), dt.date(2010, 8, 30), dt.date(2020, 3, 16),
+            dt.date(2020, 5, 22), dt.date(2011, 3, 14)} <= dates
+    assert dt.date(2020, 3, 19) not in dates           # brought forward to 16 Mar 2020

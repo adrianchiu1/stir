@@ -17,15 +17,15 @@ Sources
   YYYY") holding a table: MP | Relevant Governing Council meeting | Start of MP
   | End of MP | ... with cells like "Thu, 17-Dec-26".
 * BoE: https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates
-  lists "Thursday 5 February 2026" style lines; past years on the
-  "Monetary Policy Committee dates" pages.
-* BoJ: https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm lists
-  "Jan. 22-23, 2026" (two-day meetings; decision on the second day).
+  lists "Thursday 5 February" lines under "2026 confirmed dates" headings
+  (current and next year only; no historical page).
+* BoJ: https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm (current and next
+  year) and .../past.htm (2010+): one table per year whose first column is
+  "Jan. 22 (Thurs.), 23 (Fri.)" (decision on the last day; one-day meetings
+  occur, e.g. "Apr. 30 (Fri.)").
 
-The Fed and ECB parsers are validated against fixtures captured on
-8 Oct 2026. The BoE and BoJ parsers are written to the documented layouts
-and must be validated on the first live run (``scripts/update_refdata.py
---bank boe --dry-run``).
+All four parsers are validated against live pages captured 8 Oct 2026
+(``tests/fixtures/live``).
 """
 from __future__ import annotations
 
@@ -40,6 +40,7 @@ ECB_RESERVE_INDEX_URL = "https://www.ecb.europa.eu/press/calendars/reserve/html/
 ECB_MP_2027_URL = "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.pr260630~9f54a0a4fb.en.html"
 BOE_UPCOMING_URL = "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates"
 BOJ_SCHEDULE_URL = "https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm"
+BOJ_PAST_URL = "https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm"
 
 
 # ---------------------------------------------------------------------------
@@ -207,27 +208,32 @@ def fetch_ecb_maintenance(years: range | None = None) -> list[tuple[dict, str]]:
 # ---------------------------------------------------------------------------
 # BoE
 # ---------------------------------------------------------------------------
-_BOE_RE = re.compile(rf"\b(?:Thursday|Wednesday|Tuesday|Monday|Friday)\s+(\d{{1,2}})\s+{MONTH_RE}\s+(20\d\d)\b", re.I)
-_BOE_SHORT_RE = re.compile(rf"\b(\d{{1,2}})\s+{MONTH_RE}\s+(20\d\d)\b", re.I)
+# The live page groups dates under "2026 confirmed dates" headings and lists
+# each meeting as "Thursday 5 February" (no year). Other dates on the page
+# ("Next due: 5 November 2026", news items "17 September 2026", "last updated")
+# carry no weekday and are ignored.
+_BOE_YEAR_RE = re.compile(r"^\s*(20\d\d)\s+(?:confirmed|provisional)?\s*(?:MPC\s+)?dates\b", re.I)
+_BOE_RE = re.compile(rf"^\s*(?:Thursday|Wednesday|Tuesday|Monday|Friday)\s+(\d{{1,2}})\s+{MONTH_RE}(?:\s+(20\d\d))?\b", re.I)
 
 
 def parse_boe_text(text: str) -> list[tuple[dt.date, str]]:
-    """Any 'Thursday 5 February 2026' or '5 February 2026' date in the text.
-    Lines mentioning 'Monetary Policy Report' or 'minutes' are not meetings in
-    themselves but share the decision date, so duplicates are collapsed."""
+    """Lines that start with 'Thursday 5 February [2026]'; the year comes from
+    the line itself or the latest '<YYYY> confirmed dates' heading."""
     found: set[dt.date] = set()
+    year = None
     for line in text.splitlines():
-        if re.search(r"\b(speech|conference|working paper)\b", line, re.I):
+        ym = _BOE_YEAR_RE.match(line)
+        if ym:
+            year = int(ym.group(1))
             continue
-        for rx in (_BOE_RE, _BOE_SHORT_RE):
-            for m in rx.finditer(line):
-                d, mon, y = m.groups()
-                try:
-                    found.add(dt.date(int(y), month_number(mon), int(d)))
-                except ValueError:
-                    pass
-            if found and rx is _BOE_RE:
-                break
+        m = _BOE_RE.match(line)
+        if not m:
+            continue
+        d, mon, y = m.groups()
+        y = int(y) if y else year
+        if y is None:
+            continue
+        found.add(dt.date(y, month_number(mon), int(d)))
     return [(d, "scheduled") for d in sorted(found)]
 
 
@@ -239,27 +245,62 @@ def fetch_boe() -> list[tuple[dt.date, str, str]]:
 # ---------------------------------------------------------------------------
 # BoJ
 # ---------------------------------------------------------------------------
-_BOJ_RE = re.compile(rf"\b{MONTH_RE}\.?\s+(\d{{1,2}})(?:\s*[-–]\s*(?:{MONTH_RE}\.?\s+)?(\d{{1,2}}))?,?\s+(20\d\d)\b", re.I)
+# One table per year ("Table : 2026"); the first cell of each row is the
+# meeting: "Jan. 22 (Thurs.), 23 (Fri.) [PDF 171KB]", one-day meetings
+# "Apr. 30 (Fri.)", sometimes broken across lines ("Mar. 17\n(Wed.), 18 (Thurs.)").
+# The other cells are release dates (Outlook Report, minutes, ...).
+_BOJ_YEAR_RE = re.compile(r"^(?:Table\s*:\s*)?(20\d\d)$")
+_WKD = r"(?:\s*\([A-Za-z.]+\))?"
+_BOJ_MEETING_RE = re.compile(
+    rf"^{MONTH_RE}\.?\s+(\d{{1,2}}){_WKD}(?:\s*[,\-–]\s*(?:{MONTH_RE}\.?\s+)?(\d{{1,2}}){_WKD})?(?:,\s*(20\d\d))?", re.I)
+
+
+def _boj_rows(text: str) -> list[str]:
+    """Re-join table rows: a cell ends with '|', the last cell of a row does
+    not; a line followed by '(' or '|' is a cell broken across lines."""
+    lines = [l.strip() for l in text.splitlines() if l.strip()]
+    rows, cur = [], ""
+    for i, line in enumerate(lines):
+        cur = f"{cur} {line}" if cur else line
+        nxt = lines[i + 1] if i + 1 < len(lines) else ""
+        if line.endswith("|") or nxt.startswith(("(", "|")):
+            continue
+        rows.append(cur)
+        cur = ""
+    if cur:
+        rows.append(cur)
+    return rows
 
 
 def parse_boj_text(text: str) -> list[tuple[dt.date, str]]:
-    """'Jan. 22-23, 2026' -> 2026-01-23 (decision on the last day).
-    Lines containing 'unscheduled' are tagged accordingly."""
+    """Decision date = last day of the meeting cell. Rows mentioning
+    'unscheduled' or 'extraordinary' are tagged unscheduled."""
     out = []
-    for line in text.splitlines():
-        for m in _BOJ_RE.finditer(line):
-            ma, d1, mb, d2, y = m.groups()
-            month = month_number(mb) if mb else month_number(ma)
-            day = int(d2 or d1)
-            try:
-                date = dt.date(int(y), month, day)
-            except ValueError:
-                continue
-            kind = "unscheduled" if re.search(r"unscheduled|extraordinary", line, re.I) else "scheduled"
-            out.append((date, kind))
+    year = None
+    for row in _boj_rows(text):
+        ym = _BOJ_YEAR_RE.match(row)
+        if ym:
+            year = int(ym.group(1))
+            continue
+        first = row.split("|")[0].strip()
+        m = _BOJ_MEETING_RE.match(first)
+        if not m:
+            continue
+        ma, d1, mb, d2, y = m.groups()
+        y = int(y) if y else year
+        if y is None:
+            continue
+        month = month_number(mb) if mb else month_number(ma)
+        if mb and month < month_number(ma):
+            y += 1
+        kind = "unscheduled" if re.search(r"unscheduled|extraordinary", row, re.I) else "scheduled"
+        out.append((dt.date(y, month, int(d2 or d1)), kind))
     return out
 
 
 def fetch_boj() -> list[tuple[dt.date, str, str]]:
-    text = fetch_text(BOJ_SCHEDULE_URL, "boj_mpm_schedule")
-    return [(d, k, BOJ_SCHEDULE_URL) for d, k in parse_boj_text(text)]
+    """Current schedule page (this year and next) plus the past-meetings page (2010+)."""
+    out = []
+    for url, source in ((BOJ_SCHEDULE_URL, "boj_mpm_schedule"), (BOJ_PAST_URL, "boj_mpm_past")):
+        out += [(d, k, url) for d, k in parse_boj_text(fetch_text(url, source))]
+    return out
