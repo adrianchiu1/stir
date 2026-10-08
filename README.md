@@ -45,7 +45,7 @@ python scripts/update_refdata.py --bank fed --historical 2010-2020 --commit
 python scripts/update_refdata.py --ecb-maintenance --years 2010-2027 --commit
 python scripts/update_refdata.py --bank ecb --commit                 # ECB meetings come from the MP tables
 python scripts/update_refdata.py --bank boe --bank boj --dry-run     # validate these parsers on first run
-python scripts/update_refdata.py --holidays uk jp us_sifma --commit
+python scripts/update_refdata.py --holidays uk jp us_sifma us_sofr --commit
 ```
 
 A run exits with code 2 and writes nothing if the diff removes a row, changes
@@ -60,10 +60,10 @@ Office holiday CSV; SIFMA holiday schedule; TARGET and US federal holidays by ru
 
 | Bank | Rule | Notes |
 | --- | --- | --- |
-| Fed | decision + 1 `us_fed` business day | decision = statement date (2020-03-03, meeting 2–3 Mar) |
+| Fed | decision + 1 `us_fed` business day | decision = statement date (2020-03-03, meeting 2–3 Mar); published: target changes until 2008 same day |
 | ECB | start of the maintenance period attached to the meeting | published table wins; Wednesday-after rule is the fallback for synthetic meetings |
 | BoE | decision date | |
-| BoJ | next `jp` business day | confirmed: 2024-03-19→21 Mar (20 Mar holiday), 2025-12-19→22 Dec, 2026-06-16→17 Jun; published exception 2016-01-29→16 Feb |
+| BoJ | next `jp` business day | confirmed: 2024-03-19→21 Mar (20 Mar holiday), 2025-12-19→22 Dec, 2026-06-16→17 Jun; published: 2016-01-29→16 Feb, 2006–2010 changes same day |
 
 For every bank a published implementation date wins over the rule: the ECB maintenance-period
 table, and `meetings/published_effective.csv` (one row per decision, with `source_url`).
@@ -84,17 +84,24 @@ python scripts/run_tests.py      # or: pytest
 
 ## Reference data after the first live run (8 Oct 2026)
 
-* Meetings: Fed 2010–2027; ECB Mar 2004–2028 (every published maintenance-table release);
-  BoE Jun 1997–2027 (MPC voting-history workbook + upcoming dates; special meetings of
-  18 Sep 2001, 11 and 19 Mar 2020 in `boe_unscheduled.csv`); BoJ 2010–2027.
-* `maintenance_periods/ecb.csv`: 1/2004 (transitional, from 24 Jan 2004) – 7/2028, contiguous.
-* `meetings/published_effective.csv`: implementation dates published for individual decisions
-  (Fed 2020-03-03 → 4 Mar, BoJ 2016-01-29 → 16 Feb). Like the ECB table, a published date
-  wins over the rule.
-* Holidays: rule-generated 2005–2035; `source` names gov.uk / Cabinet Office where they
-  confirm a date. `us_sifma` is still rule-only (Good Friday question in PR #1).
-* Policy rates: Fed, ECB, BoE from the primary tables and FRED; no `memory` rows left except
-  BoJ 2010-10-06 (BoJ is maintained by hand).
+Every published decision date is included (AC, PR #1):
+
+* Fed 1994–2027: FOMC meetings and every conference call / unscheduled meeting from the
+  historical pages; a call announced the next day takes the announcement date (21 Jan 2008
+  call -> 22 Jan cut). Target 1982+ (FRED DFEDTAR, then the open-market table).
+* ECB Mar 2004–2028 from every maintenance-table release; 8 Oct 2008 coordinated cut unscheduled.
+* BoE Jun 1997–2027 from the MPC voting-history workbook and the dates page; special meetings
+  (18 Sep 2001, 8 Oct 2008, 11 and 19 Mar 2020) in `boe_unscheduled.csv`.
+* BoJ Jan 1998–2027 from the minutes indexes and schedule pages; nine unscheduled meetings,
+  each named so in its minutes, in `boj_unscheduled.csv`. Policy rates 1998–2026 from the
+  statements (call-rate target, complementary deposit facility, policy-rate balance rate) and
+  the basic loan rate CSV; new meetings are read by `--policy-rates boj`.
+* Published implementation dates win over the rules (D16): the ECB maintenance table,
+  policy-rate change dates (Fed target changes took effect on the decision day until 2008;
+  BoJ changes 'effective immediately' 2006–2010), and `meetings/published_effective.csv`.
+* Calendars from 1994. `us_sifma` = SIFMA full closes (SIFMA archive 2015+); `us_sofr` = days
+  without a SOFR publication (= us_sifma + every Good Friday; matches the NY Fed record).
+* No `memory` policy-rate rows remain.
 * `docs/m0_gate.md` (`python scripts/m0_gate.py`): effective-date spot checks for the M0 gate.
 
 `--save-fixtures DIR` writes the text of every fetched page to `DIR/<source>_<YYYYMMDD>.txt`;
