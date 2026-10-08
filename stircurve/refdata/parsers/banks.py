@@ -11,7 +11,9 @@ Sources
   and https://www.federalreserve.gov/monetarypolicy/fomchistorical<YYYY>.htm.
   Layout: "#### 2026 FOMC Meetings", then a month label ("January", "Apr/May",
   "Jan/Feb"), then "27-28" / "30-1" / "22 (notation vote)" / "15 (unscheduled)".
-  Decision date = last day of the range.
+  Decision date = last day of the range, or the statement release date when a
+  historical page gives a later one ("March 2 (unscheduled) Meeting", statement
+  released 3 March 2020).
 * ECB: index https://www.ecb.europa.eu/press/calendars/reserve/html/index.en.html
   links one press release per year ("Indicative operational calendars for
   YYYY") holding a table: MP | Relevant Governing Council meeting | Start of MP
@@ -49,9 +51,12 @@ BOJ_PAST_URL = "https://www.boj.or.jp/en/mopo/mpmsche_minu/past.htm"
 _FED_YEAR_RE = re.compile(r"\b(20\d\d|19\d\d)\s+FOMC\s+Meetings\b", re.I)
 _FED_MONTH_RE = re.compile(rf"^\s*\*?\*?\s*{MONTH_RE}(?:\s*/\s*{MONTH_RE})?\s*\*?\*?\s*$", re.I)
 _FED_DAYS_RE = re.compile(r"^\s*(\d{1,2})(?:\s*[-–]\s*(\d{1,2}))?\*?\s*(\(([^)]*)\))?\s*(Meeting)?\s*$", re.I)
-# historical pages: "January 26-27 Meeting", "March 15 (unscheduled) Meeting"
+# historical pages: "January 26-27 Meeting", "March 15 (unscheduled) Meeting", "July 31-August 1 Meeting"
 _FED_HIST_RE = re.compile(
-    rf"\b{MONTH_RE}(?:\s*/\s*{MONTH_RE})?\s+(\d{{1,2}})(?:\s*[-–]\s*(\d{{1,2}}))?\*?\s*(\(([^)]*)\))?\s*Meeting\b", re.I)
+    rf"\b{MONTH_RE}(?:\s*/\s*{MONTH_RE})?\s+(\d{{1,2}})(?:\s*[-–]\s*(?:{MONTH_RE}\s+)?(\d{{1,2}}))?\*?\s*(\(([^)]*)\))?\s*Meeting\b", re.I)
+
+
+_FED_RELEASED_RE = re.compile(rf"\bStatement\b.*\bReleased\s+{MONTH_RE}\w*\s+(\d{{1,2}}),\s+(\d{{4}})", re.I)
 
 
 def _fed_kind(note: str | None) -> str:
@@ -78,16 +83,25 @@ def parse_fed_text(text: str) -> list[tuple[dt.date, str]]:
             continue
         if year is None:
             continue
+        # historical pages: "Statement (Released March 3, 2020)" under a meeting dated
+        # "March 2 (unscheduled)": the decision is the announced one (AC, PR #1)
+        rel = _FED_RELEASED_RE.search(line)
+        if rel and out and out[-1][1] != "skip":
+            rd = dt.date(int(rel.group(3)), month_number(rel.group(1)), int(rel.group(2)))
+            if 0 < (rd - out[-1][0]).days <= 7:
+                out[-1] = (rd, out[-1][1])
+            continue
         # historical single-line form
-        for m in _FED_HIST_RE.finditer(line):
-            ma, mb, d1, d2, _, note = m.groups()
+        for m in filter(None, [_FED_HIST_RE.match(line)]):   # header lines only, not "minutes of March 15 meeting"
+            ma, mb, d1, mc, d2, _, note = m.groups()
+            mb = mb or mc
             month = month_number(mb) if mb else month_number(ma)
             day = int(d2 or d1)
             y = year
             if mb and month_number(ma) == 12 and month == 1:
                 y = year + 1
             out.append((dt.date(y, month, day), _fed_kind(note)))
-        if _FED_HIST_RE.search(line):
+        if _FED_HIST_RE.match(line):
             continue
         mm = _FED_MONTH_RE.match(line)
         if mm:

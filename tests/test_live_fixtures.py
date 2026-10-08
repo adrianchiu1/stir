@@ -24,8 +24,8 @@ PARSERS = {
     "sifma_holidays": holidays.parse_sifma_text,
 }
 
-# parser output rows per fixture (Fed historical pages: some list a meeting twice,
-# and notation votes / cancelled meetings come back as kind "skip")
+# parser output rows per fixture (Fed: notation votes / cancelled meetings come back
+# as kind "skip")
 EXPECTED = {
     "boe_bank_rate_20261008.txt": 258,
     "boe_upcoming_mpc_dates_20261008.txt": 16,
@@ -54,16 +54,16 @@ EXPECTED = {
     "ecb_reserve_index_20261008.txt": 30,
     "fed_calendar_20261008.txt": 57,
     "fed_historical_2010_20261008.txt": 8,
-    "fed_historical_2011_20261008.txt": 10,
+    "fed_historical_2011_20261008.txt": 8,
     "fed_historical_2012_20261008.txt": 8,
-    "fed_historical_2013_20261008.txt": 9,
-    "fed_historical_2014_20261008.txt": 9,
+    "fed_historical_2013_20261008.txt": 8,
+    "fed_historical_2014_20261008.txt": 8,
     "fed_historical_2015_20261008.txt": 8,
     "fed_historical_2016_20261008.txt": 8,
     "fed_historical_2017_20261008.txt": 8,
     "fed_historical_2018_20261008.txt": 8,
-    "fed_historical_2019_20261008.txt": 9,
-    "fed_historical_2020_20261008.txt": 11,
+    "fed_historical_2019_20261008.txt": 8,
+    "fed_historical_2020_20261008.txt": 10,
     "fed_openmarket_20261008.txt": 60,
     "fred_ioer_20261008.txt": 22,
     "fred_iorb_20261008.txt": 19,

@@ -15,9 +15,10 @@ from pathlib import Path
 
 from .. import REFDATA_DIR
 from .calendars import CALENDAR_NAMES, Calendar
-from .maintenance import (MaintenancePeriod, PolicyRate, load_maintenance_periods, load_policy_rates, mp_lookup,
+from .maintenance import (MaintenancePeriod, PolicyRate, load_maintenance_periods, load_policy_rates,
                           save_maintenance_periods, save_policy_rates, validate_maintenance_periods)
-from .meetings import BANK_CALENDAR, Meeting, effective_date, load_meetings, save_meetings
+from .meetings import (BANK_CALENDAR, Meeting, effective_date, load_meetings, load_published_effective,
+                       published_lookup, save_meetings)
 from .parsers import banks as bank_parsers
 from .parsers import holidays as holiday_parsers
 from .parsers import policy_rates as pr_parsers
@@ -63,7 +64,8 @@ def update_meetings(bank: str, commit: bool = False, historical_years: range | N
                     refdata_dir: Path = REFDATA_DIR, today: dt.date | None = None) -> Diff:
     today = today or dt.date.today()
     cal = Calendar.load(BANK_CALENDAR[bank], refdata_dir=refdata_dir)
-    lookup = mp_lookup(load_maintenance_periods(refdata_dir)) if bank == "ecb" else None
+    lookup = published_lookup(bank, refdata_dir)
+    overrides = load_published_effective(bank, refdata_dir)
 
     if bank == "fed":
         fetched = bank_parsers.fetch_fed(historical_years)
@@ -101,9 +103,14 @@ def update_meetings(bank: str, commit: bool = False, historical_years: range | N
                 merged[d] = m
             elif existing[d].effective_date != m.effective_date:
                 msg = f"{bank} {d}: effective {existing[d].effective_date} -> {m.effective_date}"
-                (diff.changed if d <= today else diff.added).append(msg)
-                if d > today:
+                if d in overrides and overrides[d][0] == m.effective_date:
+                    # from the reviewed published_effective.csv, not from a scraped page
+                    diff.added.append(f"{msg} (published: {overrides[d][1]})")
                     merged[d] = m
+                else:
+                    (diff.changed if d <= today else diff.added).append(msg)
+                    if d > today:
+                        merged[d] = m
         # rows the source no longer shows: only a problem if the source covered that period
         covered_years = {d.year for d in incoming}
         for d in existing:

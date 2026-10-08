@@ -104,11 +104,15 @@ def test_fed_live_historical_pages():
     counts = {}
     for y in range(2010, 2021):
         got = parse_fed_text(f"{y} FOMC Meetings\n" + (LIVE / f"fed_historical_{y}_20261008.txt").read_text())
-        counts[y] = len({d for d, k in got if k == "scheduled"})      # some pages list a meeting twice
+        counts[y] = len([d for d, k in got if k == "scheduled"])
+        if y == 2012:
+            assert dt.date(2012, 8, 1) in [d for d, _ in got]                 # "July 31-August 1 Meeting"
         if y == 2020:
-            assert (dt.date(2020, 3, 18), "skip") in got                 # "March 17-18 (cancelled)"
-            assert [d for d, k in got if k == "unscheduled"] == [dt.date(2020, 3, 2), dt.date(2020, 3, 15)]
-    assert set(counts.values()) == {8}
+            assert (dt.date(2020, 3, 18), "skip") in got                     # "March 17-18 (cancelled)"
+            # "March 2 (unscheduled) Meeting", statement released March 3: decision = 3 Mar;
+            # "minutes of March 15 meeting" is not a meeting
+            assert [d for d, k in got if k == "unscheduled"] == [dt.date(2020, 3, 3), dt.date(2020, 3, 15)]
+    assert counts == {**{y: 8 for y in range(2010, 2020)}, 2020: 7}
 
 
 def test_ecb_live_two_year_release_and_tbd_rows():

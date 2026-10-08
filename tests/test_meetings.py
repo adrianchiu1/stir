@@ -1,6 +1,6 @@
 import datetime as dt
 from stircurve.refdata.calendars import Calendar
-from stircurve.refdata.meetings import (Meeting, effective_date, ecb_rule_effective, extrapolate_cadence,
+from stircurve.refdata.meetings import (BANKS, Meeting, effective_date, ecb_rule_effective, extrapolate_cadence,
                                        load_meetings, parcels, MeetingSchedule)
 from stircurve.refdata.maintenance import load_maintenance_periods, mp_lookup, validate_maintenance_periods
 
@@ -73,3 +73,30 @@ def test_ecb_schedule_uses_published_mp_starts():
     ps = sched.parcels(dt.date(2026, 12, 1), 1)
     assert ps[1].start == dt.date(2026, 12, 23) and ps[1].decision_date == dt.date(2026, 12, 17)
     assert ps[2].start == dt.date(2027, 2, 10)
+
+
+def test_published_effective_dates_win_over_the_rule():
+    from stircurve.refdata.meetings import load_published_effective, published_lookup
+    jp = Calendar.load("jp")
+    boj = published_lookup("boj")
+    assert effective_date("boj", dt.date(2016, 1, 29), jp) == dt.date(2016, 2, 1)            # rule
+    assert effective_date("boj", dt.date(2016, 1, 29), jp, boj) == dt.date(2016, 2, 16)      # published (k160129a)
+    assert effective_date("boj", dt.date(2024, 3, 19), jp, boj) == dt.date(2024, 3, 21)      # rule still applies
+    assert published_lookup("fed")[dt.date(2020, 3, 3)] == dt.date(2020, 3, 4)
+    ecb = published_lookup("ecb")
+    assert ecb[dt.date(2027, 4, 29)] == dt.date(2027, 5, 6)                                   # MP table
+    for bank in BANKS:                                                                       # committed rows agree
+        eff = {m.decision_date: m.effective_date for m in load_meetings(bank)}
+        for d, (e, url) in load_published_effective(bank).items():
+            assert url.startswith("https://") and eff.get(d, e) == e, (bank, d)
+
+
+def test_policy_rate_changes_fall_on_meeting_effective_dates():
+    """Fed target / ECB DFR / BoJ policy-rate changes since 2010 are implementation
+    dates of committed meetings (published or rule)."""
+    from stircurve.refdata.maintenance import load_policy_rates
+    for bank, anchors in (("fed", {"target_upper"}), ("ecb", {"dfr", "mro"}), ("boj", {"policy_rate_balance_rate", "ioer"})):
+        eff = {m.effective_date for m in load_meetings(bank)}
+        miss = [(r.anchor, r.effective_date) for r in load_policy_rates(bank)
+                if r.anchor in anchors and r.effective_date >= dt.date(2010, 1, 1) and r.effective_date not in eff]
+        assert miss == [], bank
