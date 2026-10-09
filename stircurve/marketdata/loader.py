@@ -12,7 +12,8 @@ Checks (``Report``):
             out-of-range values, futures quoted after their last quote date or
             before a verified listing date
   warnings  missing expected columns, stale values (unchanged ``stale_days`` or
-            more), quotes before an unverified listing date, fixings/swaps outside
+            more), quotes before an unsourced listing date (kept in the frame: the
+            data shows the real listing), fixings/swaps outside
             their first/last dates
 Exit code 2 when anything is blocking (as the updaters), else 0.
 """
@@ -26,7 +27,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from .contracts import contract_table
+from .contracts import contract_table, listed_contracts
 from .dump import MARKET_DIR
 from .manifest import Manifest, _date
 
@@ -190,8 +191,11 @@ def load(m: Manifest, start: dt.date | None = None, end: dt.date | None = None,
         if wide.empty:
             continue
         d0, d1 = wide.index[0].date(), wide.index[-1].date()
-        ctab = contract_table(m, d0, d1, [group]) if group in m.futures() else None
+        # columns map against what the dump requests (generous horizon); listing dates come
+        # from the exchange schedule (a contract not yet listed there by d1 has none)
+        ctab = contract_table(m, d0, d1, [group], listing="dump_listing") if group in m.futures() else None
         contracts = {(r.instrument, r.contract): r for r in ctab.itertuples()} if ctab is not None else {}
+        exchange = ({c.contract: c for c in listed_contracts(m, group, d1)} if ctab is not None else {})
         mapped, unknown = column_map(m, group, list(wide.columns), contracts)
         for u in unknown:
             report.add("unknown_columns", u)
@@ -216,13 +220,22 @@ def load(m: Manifest, start: dt.date | None = None, end: dt.date | None = None,
             if ctab is not None:
                 c = contracts[(info.instrument, info.contract)]
                 late = s.notna() & (s.index > pd.Timestamp(c.last_quote))
-                early = s.notna() & (s.index < pd.Timestamp(c.first_listed))
+                x = exchange.get(info.contract)       # None: not listed by d1 under the exchange schedule
+                listed = pd.Timestamp(x.first_listed) if x else pd.Timestamp.max
+                verified = bool(x and x.listing_verified)
+                early = s.notna() & (s.index < listed)
                 for d in s.index[late]:
                     report.add("outside_listing", f"{path}: {d:%Y-%m-%d} {col} after last quote date {c.last_quote}")
-                for d in s.index[early]:
-                    report.add("outside_listing" if c.listing_verified else "outside_listing_unverified",
-                               f"{path}: {d:%Y-%m-%d} {col} before first listed {c.first_listed}")
-                keep &= ~late & ~early
+                if early.any():
+                    when = x.first_listed if x else f"after {d1}"
+                    if verified:
+                        for d in s.index[early]:
+                            report.add("outside_listing", f"{path}: {d:%Y-%m-%d} {col} before first listed {when}")
+                        keep &= ~early
+                    else:   # schedule unsourced: the data shows the real listing; keep the values
+                        report.add("outside_listing_unverified",
+                                   f"{path}: {col} quoted from {s.index[early][0]:%Y-%m-%d}, modelled first listing {when}")
+                keep &= ~late
             first, last = _date(e["first_date"]), _date(e.get("last_date"))
             outside = s.notna() & ((s.index < pd.Timestamp(first)) |
                                    (s.index > pd.Timestamp(last or dt.date.max)))

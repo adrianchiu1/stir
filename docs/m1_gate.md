@@ -79,7 +79,7 @@ Windows are [start, end); last trade and final settlement on the manifest calend
 | ed_fut | 2016-12 | EDZ16 Comdty | 2016-12-21 | 2017-03-21 | 90 | Mon 2016-12-19 | Mon 2016-12-19 | 2010-01-01 (lower bound) | 2016-12-19 |
 | ed_fut | 2019-06 | EDM19 Comdty | 2019-06-19 | 2019-09-19 | 92 | Mon 2019-06-17 | Mon 2019-06-17 | 2010-01-01 (lower bound) | 2019-06-17 |
 | ed_fut | 2023-03 | EDH23 Comdty | 2023-03-15 | 2023-06-15 | 92 | Mon 2023-03-13 | Mon 2023-03-13 | 2013-03-19 | 2023-03-13 |
-| ed_fut | 2023-06 | EDM23 Comdty | 2023-06-21 | 2023-09-21 | 92 | Mon 2023-06-19 | Mon 2023-06-19 | 2013-06-18 | 2023-06-19 |
+| ed_fut | 2023-06 | EDM23 Comdty | 2023-06-21 | 2023-09-21 | 92 | Mon 2023-06-19 | Mon 2023-06-19 | 2013-06-18 | 2023-06-16 |
 | ed_fut | 2023-09 | EDU23 Comdty | 2023-09-20 | 2023-12-20 | 91 | Mon 2023-09-18 | Mon 2023-09-18 | 2013-09-17 | 2023-04-14 (converted 2023-04-14) |
 
 ### Contracts where a holiday moves a date

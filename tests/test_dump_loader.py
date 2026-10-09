@@ -47,8 +47,10 @@ class FakeBloomberg:
     def read_bdh(self, tickers, start="2000-01-01", field="PX_LAST", end=None, timeout=5):
         self.calls.append((dict(tickers), start, end, field))
         days = pd.bdate_range(start, end)
-        for t in tickers.values():
-            if t in self.dead:
+        for name, t in tickers.items():
+            # pxts raises when Bloomberg has nothing for a ticker in the range (dead, or a
+            # contract the generous dump horizon asks for before it was listed)
+            if t in self.dead or all(np.isnan(self.value(name, t, field, d)) for d in days):
                 raise KeyError(t)
         return pd.DataFrame({name: [self.value(name, t, field, d) for d in days] for name, t in tickers.items()},
                             index=pd.DatetimeIndex(days))
@@ -178,3 +180,38 @@ def test_loader_reports_problems():
         (root / "usd/2026/ff_fut.csv").write_text("date,FFV26 Comdty|PX_LAST\n07/10/2026,96\n")
         _, rep = loader.load(M, root=root)
         assert any("non-ISO" in x for x in rep.found["malformed"])
+
+
+def test_dump_requests_generously_and_isolates_unlisted_contracts():
+    day = D(2018, 6, 1)
+    sr3 = {s.ticker for s in M.series(day, day) if s.instrument == "sofr3m_fut"}
+    sr1 = {s.ticker for s in M.series(day, day) if s.instrument == "sofr1m_fut"}
+    assert len(sr3) >= 41 + 6 and len(sr1) >= 13          # dump_listing, not the 20 / 7 listed at launch
+    with tempfile.TemporaryDirectory() as tmp:
+        fake = FakeBloomberg()
+        res = _dump(Path(tmp), day, day, fake)
+        assert not res.blocking
+        dead = [x for x in res.failed if x.startswith("SFR")]
+        assert dead and len(dead) % 3 == 0                    # unlisted SR3s, all three fields
+        sr3_calls = [c for c in fake.calls if any(t.startswith("SFR") for t in c[0].values())]
+        assert len(sr3_calls) < 3 * len(sr3)                   # bisection, not one call per ticker
+        df = dumper.read_wide(Path(tmp) / "usd/2018/sofr3m_fut.csv")
+        assert df["SFRM18 Comdty|PX_LAST"].notna().all() and df["SFRH28 Comdty|PX_LAST"].isna().all()
+        _, rep = loader.load(M, root=Path(tmp))
+        assert rep.found["unknown_columns"] == [] and rep.exit_code == 0, rep.report()
+
+
+def test_quotes_before_an_unsourced_listing_are_kept_and_reported():
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        _dump(root, D(2019, 6, 12), D(2019, 6, 12), FakeBloomberg())
+        f = root / "usd/2019/sofr1m_fut.csv"
+        df = dumper.read_wide(f).copy()
+        far = "SERM20 Comdty|PX_LAST"          # 13th month: requested, beyond the 7 modelled at launch
+        assert far in df and df[far].isna().all()
+        df[far] = 98.0
+        dumper.write_wide(df, f)
+        frame, rep = loader.load(M, root=root)
+        assert rep.exit_code == 0
+        assert any("SERM20" in x for x in rep.found["outside_listing_unverified"])
+        assert ((frame.instrument == "sofr1m_fut") & (frame.contract == "2020-06")).any()

@@ -124,6 +124,11 @@ each parser's row count on it.
 | `stircurve/marketdata/loader.py`, `scripts/check_market_data.py` | Tidy frame keyed by (date, instrument, contract, field) plus a report: unknown columns, malformed files, out-of-range values and quotes outside a contract's listing window block (exit 2); missing columns, stale values and values outside first/last dates warn. |
 | `scripts/m1_gate.py` -> `docs/m1_gate.md` | Gate evidence: rule sources, listing checks against the filings, generated windows, the loader report on real days. |
 
+The dump requests futures generously (`dump_listing` in the manifest: FF 60 months, SR1 13,
+SR3 41 quarterly + 6 serial, ED 44 + 6, from the first date). Contracts Bloomberg has nothing
+for come back as NaN columns. The loader checks listing dates against the exchange schedule
+(`listing`); where that schedule has no source, early quotes are kept and reported.
+
 Column names: `<ticker>|<field>`, e.g. `SFRZ26 Comdty|PX_LAST`, `USOSFR2 Curncy|PX_LAST`,
 `SOFRRATE Index|PX_LAST`. Futures columns always carry the two-digit year; the dump asks
 Bloomberg for the one-digit form while a contract trades (`SFRZ6 Comdty`).

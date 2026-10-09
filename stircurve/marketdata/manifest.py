@@ -135,7 +135,7 @@ class Manifest:
         from .contracts import contract_table   # local: contracts imports this module
 
         out: list[Series] = []
-        table = contract_table(self, start, end)
+        table = contract_table(self, start, end, listing="dump_listing")   # lean to requesting too much
         for row in table.itertuples():
             ins = self.instruments[row.instrument]
             out.append(Series(row.instrument, row.contract, row.bbg_ticker, tuple(ins["fields"]),

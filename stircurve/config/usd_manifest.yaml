@@ -116,6 +116,8 @@ instruments:
     listing:
       - {from: "2010-01-01", months: 36, verified: false, note: "36 months in force before Sep 2020 per 20-321; start of that schedule unknown", source: cbot_20_321}
       - {from: "2020-09-21", months: 60, verified: true, source: cbot_20_321, quote: "from 36 consecutive calendar months to 60 consecutive calendar months"}
+    dump_listing:                   # what the dump requests: lean to too much (AC, PR #2); empty columns cost nothing
+      - {from: "2010-01-01", months: 60}
     first_date: "2010-01-01"
     last_date: null
     valid_range: [85.0, 101.0]
@@ -142,6 +144,8 @@ instruments:
     final_settlement: {rule: publication_of_last_day_rate, calendar: us_sofr, source: cme_sr1_specs}
     listing:
       - {from: "2018-05-07", months: 7, launch: true, verified: false, note: "launch listing per CME spec sheet (secondary); later expansion unknown", source: cme_sr1_specs}
+    dump_listing:
+      - {from: "2018-05-07", months: 13, launch: true}
     first_date: "2018-05-07"
     last_date: null
     valid_range: [85.0, 101.0]
@@ -188,6 +192,8 @@ instruments:
       # "quarterly contract months June 2022 through June 2032 plus the nearest serial months August 2022 through January 2023"
       - {from: "2023-03-01", quarterly: 41, serial: 6, verified: false, note: "nearest 6 serial per CME Submission 23-071 (dated 1 Mar 2023, cited in 23-072); effective date not captured", source: cme_23_072}
       - {from: "2023-04-24", quarterly: 39, serial: 6, verified: true, source: cme_23_072, quote: "listed for 39 consecutive quarters and the nearest 6 serial contract months"}
+    dump_listing:
+      - {from: "2018-05-07", quarterly: 41, serial: 6, launch: true}
     first_date: "2018-05-07"
     last_date: null
     valid_range: [85.0, 101.0]
@@ -230,8 +236,10 @@ instruments:
       source: cme_ed_fallback
     listing:
       - {from: "2010-01-01", quarterly: 40, serial: 4, verified: false, note: "from memory; Chapter 452 says months are 'as may be determined by the Exchange'", source: cme_ch452}
+    dump_listing:
+      - {from: "2010-01-01", quarterly: 44, serial: 6}
     first_date: "2010-01-01"
-    last_date: "2023-06-19"         # EDM3 last trade (2nd London business day before 21 Jun 2023)
+    last_date: "2023-06-16"         # last ED price (AC, PR #2): EDM3 rule last trade Mon 19 Jun 2023 was Juneteenth
     valid_range: [85.0, 101.0]
     stale_days: 5
 

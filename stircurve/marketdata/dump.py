@@ -72,8 +72,11 @@ class DumpResult:
     def report(self) -> str:
         lines = [d.report() for d in self.diffs]
         if self.failed:
-            lines.append(f"no data from Bloomberg for {len(self.failed)} ticker-fields (written as NaN):")
-            lines += [f"  {t}" for t in self.failed]
+            lines.append(f"no data from Bloomberg for {len(self.failed)} ticker-fields (written as NaN; expected for "
+                         "contracts not yet listed, since the dump requests generously):")
+            lines += [f"  {t}" for t in self.failed[:40]]
+            if len(self.failed) > 40:
+                lines.append(f"  ... {len(self.failed) - 40} more")
         return "\n".join(lines)
 
 
@@ -111,8 +114,9 @@ def request_ticker(m: Manifest, s: Series, as_of: dt.date) -> str:
 def fetch(m: Manifest, series: list[Series], start: dt.date, end: dt.date, as_of: dt.date, read_bdh,
           timeout: float = 30, chunk: int = CHUNK) -> tuple[pd.DataFrame, list[str]]:
     """One wide frame (index: dates, columns: canonical ``ticker|field``) and the
-    columns Bloomberg returned nothing for. A chunk that fails is retried ticker
-    by ticker so one dead ticker does not lose the others."""
+    columns Bloomberg returned nothing for. pxts raises when any ticker in a call
+    has no data (the dump requests generously, so this is common): a failing
+    chunk is split in halves until the dead tickers are isolated."""
     fmt = m.column_format
     by_field: dict[str, dict[str, str]] = {}
     for s in series:
@@ -124,18 +128,21 @@ def fetch(m: Manifest, series: list[Series], start: dt.date, end: dt.date, as_of
         df = read_bdh(req, start=start.isoformat(), field=f, end=end.isoformat(), timeout=timeout)
         return df.reindex(columns=list(req))
 
+    def bisect(items: list[tuple[str, str]], f: str) -> None:
+        try:
+            frames.append(call(dict(items), f))
+        except Exception:
+            if len(items) == 1:
+                failed.append(f"{items[0][0]} (requested {items[0][1]})")
+                return
+            half = len(items) // 2
+            bisect(items[:half], f)
+            bisect(items[half:], f)
+
     for f, cols in by_field.items():
         items = list(cols.items())
         for i in range(0, len(items), chunk):
-            req = dict(items[i:i + chunk])
-            try:
-                frames.append(call(req, f))
-            except Exception:
-                for col, tkr in req.items():
-                    try:
-                        frames.append(call({col: tkr}, f))
-                    except Exception:
-                        failed.append(f"{col} (requested {tkr})")
+            bisect(items[i:i + chunk], f)
     wide = pd.concat(frames, axis=1) if frames else pd.DataFrame()
     wide.index = pd.DatetimeIndex(wide.index).normalize() if len(wide) else pd.DatetimeIndex([])
     wide = wide.loc[(wide.index >= pd.Timestamp(start)) & (wide.index <= pd.Timestamp(end))]

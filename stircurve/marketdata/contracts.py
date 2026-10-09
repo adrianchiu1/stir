@@ -118,10 +118,14 @@ def _months(first: dt.date, last: dt.date):
         y, mo = (y + 1, 1) if mo == 12 else (y, mo + 1)
 
 
-def listed_contracts(m: Manifest, instrument: str, until: dt.date) -> list[Contract]:
-    """Every contract of ``instrument`` first listed on or before ``until``."""
+def listed_contracts(m: Manifest, instrument: str, until: dt.date, listing: str = "listing") -> list[Contract]:
+    """Every contract of ``instrument`` first listed on or before ``until``.
+
+    ``listing="dump_listing"`` uses the instrument's generous request horizon
+    (what the Bloomberg dump asks for) instead of the exchange listing schedule."""
     ins = m.instruments[instrument]
-    schedule = sorted(({**r, "from": _date(r["from"])} for r in ins["listing"]), key=lambda r: r["from"])
+    rows = ins.get(listing, ins["listing"])
+    schedule = sorted(({**r, "from": _date(r["from"])} for r in rows), key=lambda r: r["from"])
     excal = m.calendar(ins["exchange_calendar"])
     horizon = max(max(r.get("months", 0), 3 * r.get("quarterly", 0) + 3) for r in schedule)
     start = add_months(schedule[0]["from"].replace(day=1), -12)
@@ -186,12 +190,13 @@ def listed_contracts(m: Manifest, instrument: str, until: dt.date) -> list[Contr
     return out
 
 
-def contract_table(m: Manifest, start: dt.date, end: dt.date, instruments: list[str] | None = None) -> pd.DataFrame:
+def contract_table(m: Manifest, start: dt.date, end: dt.date, instruments: list[str] | None = None,
+                   listing: str = "listing") -> pd.DataFrame:
     """Every futures contract quoted at some point in [start, end] (first_quote <= end,
     last_quote >= start), one row each, sorted by instrument and last trade."""
     rows = []
     for name in instruments or list(m.futures()):
-        for c in listed_contracts(m, name, end):
+        for c in listed_contracts(m, name, end, listing):
             if c.first_quote <= end and c.last_quote >= start and c.first_quote <= c.last_quote:
                 rows.append(asdict(c))
     cols = list(Contract.__dataclass_fields__)

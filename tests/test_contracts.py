@@ -98,11 +98,11 @@ def test_ed_windows_2010_2023():
         assert 89 <= r.accrual_days <= 93
     by = t.set_index("contract")
     assert by.loc["2019-06", "last_trade"] == D(2019, 6, 17)
-    assert by.loc["2023-06", "last_trade"] == D(2023, 6, 19) and by.loc["2023-06", "last_quote"] == D(2023, 6, 19)
+    assert by.loc["2023-06", "last_trade"] == D(2023, 6, 19) and by.loc["2023-06", "last_quote"] == D(2023, 6, 16)
     # contracts expiring after 30 Jun 2023 were converted to SR3 on 14 Apr 2023
     late = t[t.last_trade > D(2023, 6, 30)]
     assert len(late) and (late.last_quote == D(2023, 4, 14)).all() and (late.converted_on == D(2023, 4, 14)).all()
-    assert t.last_quote.max() == D(2023, 6, 19)
+    assert t.last_quote.max() == D(2023, 6, 16)   # last ED price (AC)
 
 
 def test_contract_table_is_deterministic_and_unique():
