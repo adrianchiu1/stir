@@ -249,3 +249,24 @@ def test_loader_blocks_on_files_without_rows():
         _, rep = loader.load(M, D(2026, 10, 7), D(2026, 10, 7), root=root)
         assert rep.found["no_data"] and rep.exit_code == 2
         assert check_market_data.main(["--root", str(root), "--start", "2026-10-07", "--end", "2026-10-07"]) == 2
+
+
+def test_timeouts_retry_once_then_stop_and_default_timeout_is_passed():
+    fake, seen, flaky = FakeBloomberg(), [], {"left": 1}
+
+    def slow_once(tickers, **kw):
+        seen.append(kw["timeout"])
+        if list(tickers) != ["probe"] and flaky["left"]:
+            flaky["left"] -= 1
+            raise RuntimeError("Timeout waiting for Bloomberg response")
+        return fake.read_bdh(tickers, **kw)
+    with tempfile.TemporaryDirectory() as tmp:
+        res = dumper.dump(M, D(2026, 10, 7), D(2026, 10, 7), slow_once, write_csv=True, root=Path(tmp))
+        assert not res.failed or all("Timeout" not in r for r in res.reasons)   # the retry succeeded
+        assert set(seen) == {dumper.TIMEOUT} and dumper.TIMEOUT == 120
+
+    def old_pxts(tickers, start="2000-01-01", field="PX_LAST", end=None):
+        return fake.read_bdh(tickers, start=start, field=field, end=end)
+    with tempfile.TemporaryDirectory() as tmp:
+        rc = dump_bloomberg.main(["--start", "2026-10-07", "--end", "2026-10-07", "--root", tmp], read_bdh=old_pxts)
+        assert rc == 1

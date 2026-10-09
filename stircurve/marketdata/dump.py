@@ -25,6 +25,11 @@ from .. import DATA_DIR
 from .manifest import Manifest, Series
 
 MARKET_DIR = DATA_DIR / "market"
+# seconds pdblp waits for each part of a Bloomberg response (pxts read_bdh ``timeout``).
+# It bounds the wait between messages, not the whole request, so a generous value costs
+# nothing on calls that succeed: 120 s covers a 50-ticker request over 16 years of daily
+# history on a busy terminal.
+TIMEOUT = 120
 CHUNK = 50          # tickers per read_bdh call
 REL_TOL = 1e-12
 
@@ -122,12 +127,14 @@ def request_ticker(m: Manifest, s: Series, as_of: dt.date) -> str:
 # fetching
 # ---------------------------------------------------------------------------
 def fetch(m: Manifest, series: list[Series], start: dt.date, end: dt.date, as_of: dt.date, read_bdh,
-          timeout: float = 30, chunk: int = CHUNK, reasons: dict[str, int] | None = None
+          timeout: float = TIMEOUT, chunk: int = CHUNK, reasons: dict[str, int] | None = None
           ) -> tuple[pd.DataFrame, list[str]]:
     """One wide frame (index: dates, columns: canonical ``ticker|field``) and the
     columns Bloomberg returned nothing for. pxts raises when any ticker in a call
     has no data (the dump requests generously, so this is common): a failing
-    chunk is split in halves until the dead tickers are isolated."""
+    chunk is split in halves until the dead tickers are isolated. A timeout is not
+    'no data': the call is retried once, then the run stops (``DumpError``) rather
+    than bisecting into hundreds of further timeouts."""
     fmt = m.column_format
     by_field: dict[str, dict[str, str]] = {}
     for s in series:
@@ -145,6 +152,14 @@ def fetch(m: Manifest, series: list[Series], start: dt.date, end: dt.date, as_of
         try:
             frames.append(call(dict(items), f))
         except Exception as exc:
+            if is_timeout(exc):
+                try:
+                    frames.append(call(dict(items), f))
+                    return
+                except Exception as again:
+                    raise DumpError(f"Bloomberg timed out twice ({len(items)} tickers, {f}, {start}..{end}, "
+                                    f"timeout {timeout:g}s): {type(again).__name__}: {again}. "
+                                    "Re-run with a larger --timeout or a shorter range / one --group at a time.") from again
             if len(items) == 1:
                 failed.append(f"{items[0][0]} (requested {items[0][1]})")
                 msg = f"{type(exc).__name__}: {exc}"[:160]
@@ -212,6 +227,11 @@ def market_path(root: Path, ccy: str, year: int, group: str) -> Path:
     return root / ccy.lower() / f"{year}" / f"{group}.csv"
 
 
+def is_timeout(exc: Exception) -> bool:
+    """pdblp raises RuntimeError('Timeout ...') when no response arrives in time."""
+    return isinstance(exc, TimeoutError) or "timeout" in str(exc).lower() or "timed out" in str(exc).lower()
+
+
 def probe(m: Manifest, read_bdh, start: dt.date, end: dt.date, timeout: float) -> None:
     """One request for a ticker that always has data (EFFR) before the real run, so a
     missing pdblp or a refused connection stops the run with its own error instead of
@@ -220,15 +240,22 @@ def probe(m: Manifest, read_bdh, start: dt.date, end: dt.date, timeout: float) -
     try:
         df = read_bdh({"probe": ticker}, start=(start - dt.timedelta(days=14)).isoformat(), field="PX_LAST",
                       end=end.isoformat(), timeout=timeout)
-    except Exception as exc:
+    except TypeError as exc:
+        if "timeout" in str(exc):
+            raise DumpError("pxts.read_bdh has no 'timeout' argument: upgrade pxts "
+                            "(pip install -U \"pxts[bloomberg] @ git+https://github.com/adrianchiu1/pxts\")") from exc
         raise DumpError(f"Bloomberg probe ({ticker} PX_LAST) failed: {type(exc).__name__}: {exc}") from exc
+    except Exception as exc:
+        hint = (" Is the terminal logged in, with the API on localhost:8194? Try a larger --timeout."
+                if is_timeout(exc) else "")
+        raise DumpError(f"Bloomberg probe ({ticker} PX_LAST) failed: {type(exc).__name__}: {exc}.{hint}") from exc
     if df is None or len(df) == 0:
         raise DumpError(f"Bloomberg probe ({ticker} PX_LAST) returned no rows for {start - dt.timedelta(days=14)}..{end}")
 
 
 def dump(m: Manifest, start: dt.date, end: dt.date, read_bdh=None, *, write_csv: bool = False,
          as_of: dt.date | None = None, root: Path = MARKET_DIR, groups: list[str] | None = None,
-         timeout: float = 30, chunk: int = CHUNK) -> DumpResult:
+         timeout: float = TIMEOUT, chunk: int = CHUNK) -> DumpResult:
     if read_bdh is None:
         from pxts import read_bdh   # terminal machines only (pip install -e .[bloomberg])
     as_of = as_of or dt.date.today()

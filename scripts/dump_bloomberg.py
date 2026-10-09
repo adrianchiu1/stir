@@ -34,7 +34,8 @@ def main(argv=None, read_bdh=None) -> int:
     ap.add_argument("--group", action="append", help="instrument key, 'fixings' or 'policy_anchors' (default: all)")
     ap.add_argument("--as-of", type=dt.date.fromisoformat, help="date deciding live vs expired ticker form (default today)")
     ap.add_argument("--root", type=Path, default=dumper.MARKET_DIR, help="market-data root (default data/market)")
-    ap.add_argument("--timeout", type=float, default=30, help="read_bdh timeout per request, seconds")
+    ap.add_argument("--timeout", type=float, default=dumper.TIMEOUT,
+                    help=f"seconds pdblp waits for each part of a response (default {dumper.TIMEOUT:g})")
     ap.add_argument("--write-csv", action="store_true", help="write the CSV files when the diff is non-blocking (git add/commit is separate)")
     ap.add_argument("--dry-run", action="store_true", help="(default) show the diff only")
     args = ap.parse_args(argv)
