@@ -58,19 +58,25 @@ sources:
     url: https://www.cmegroup.com/markets/interest-rates/stirs/three-month-sofr.contractSpecs.html
     fixture: cme_sr3_specs
   cme_sr3_specs:
-    title: "CME Three-Month SOFR futures contract specs table and calendar (Rule 46002.G termination of trading; loaded by JavaScript, not in a saved page)"
+    title: "CME Three-Month SOFR futures contract specs table (page text copied by AC, 9 Oct 2026)"
     url: https://www.cmegroup.com/markets/interest-rates/stirs/three-month-sofr.contractSpecs.html
-    calendar_url: https://www.cmegroup.com/markets/interest-rates/stirs/three-month-sofr.calendar.html
-    status: pending_capture
+    fixture: cme_sr3_specs_table
+  cme_sr3_calendar:
+    title: "CME Three-Month SOFR futures calendar: first trade, last trade, settlement per contract (copied by AC, 9 Oct 2026)"
+    url: https://www.cmegroup.com/markets/interest-rates/stirs/three-month-sofr.calendar.html
+    fixture: cme_sr3_calendar
   cme_sr1_specs:
-    title: "CME One-Month SOFR futures contract specs and calendar (Rulebook Chapter 461)"
+    title: "CME One-Month SOFR futures contract specs (Rulebook Chapter 461; page text copied by AC, 9 Oct 2026)"
     url: https://www.cmegroup.com/markets/interest-rates/stirs/one-month-sofr.contractSpecs.html
-    calendar_url: https://www.cmegroup.com/markets/interest-rates/stirs/one-month-sofr.calendar.html
-    status: pending_capture
+    fixture: cme_sr1_specs
+  cme_sr1_calendar:
+    title: "CME One-Month SOFR futures calendar (copied by AC, 9 Oct 2026)"
+    url: https://www.cmegroup.com/markets/interest-rates/stirs/one-month-sofr.calendar.html
+    fixture: cme_sr1_calendar
   cme_ff_calendar:
-    title: "CME 30-Day Federal Funds futures calendar"
+    title: "CME 30-Day Federal Funds futures calendar (copied by AC, 9 Oct 2026)"
     url: https://www.cmegroup.com/markets/interest-rates/stirs/30-day-federal-fund.calendar.html
-    status: pending_capture
+    fixture: cme_ff_calendar
   cme_ed_fallback:
     title: "CME Eurodollar fallbacks implementation plan (conversion of ED expiring after 30 Jun 2023 to SR3 on 14 Apr 2023, spread 26.161bp)"
     url: https://www.cmegroup.com/articles/files/2022/eurodollar-fallbacks-implementation-plan.pdf
@@ -138,21 +144,22 @@ instruments:
     count_fields_months: 13         # OPEN_INT/PX_VOLUME only for contracts starting within this many months (AC's first dump: far contracts raise field exceptions)
     quote: {convention: price, formula: 100 - rate, units: percent, mid: true}
     cycle: monthly
-    reference_window: {rule: calendar_month, source: cme_sr1_specs}
+    reference_window: {rule: calendar_month, source: cme_sr1_specs, quote: "R = arithmetic average of Secured Overnight Financing Rate (SOFR) during contract delivery month"}
     accrual:
-      rule: arithmetic_average      # QUESTION (PR): confirm against Chapter 461 once captured
+      rule: arithmetic_average
       non_publication_days: previous_published
       fixing_calendar: us_sofr
       source: cme_sr1_specs
+      quote: "based on the arithmetic average of daily SOFR values during the contract delivery month"
     daycount: {name: ACT/360, source: cme_sr1_specs}
     exchange_calendar: us_fed
-    last_trade: {rule: last_business_day_of_month, calendar: exchange, source: cme_sr1_specs}
-    final_settlement: {rule: publication_of_last_day_rate, calendar: us_sofr, source: cme_sr1_specs}
+    last_trade: {rule: last_business_day_of_month, calendar: exchange, source: cme_sr1_specs, quote: "Trading terminates on the last business day of the contract month."}
+    final_settlement: {rule: publication_of_last_day_rate, calendar: us_sofr, source: cme_sr1_calendar}
     listing:
-      - {from: "2018-05-07", months: 7, launch: true, verified: false, note: "launch listing per CME spec sheet (secondary); 7 quoted in AC's dump of 2019-06-12", source: cme_sr1_specs}
-      - {from: "2026-10-07", months: 13, verified: false, note: "13 quoted in AC's dump of 2026-10-07 and on CME's page; the change from 7 is earlier, date unknown", source: cme_sr3_page, quote: "the nearest 13 calendar months with One-Month SOFR futures"}
+      - {from: "2018-05-07", months: 7, launch: true, verified: false, note: "launch listing per CME spec sheet (secondary); 7 quoted in AC's dump of 2019-06-12; 13 at some later date (unknown)", source: cme_sr1_specs}
+      - {from: "2025-05-05", months: 25, verified: true, note: "CME calendar: Oct 2026 - May 2027 first traded 5 May 2025", source: cme_sr1_specs, quote: "Monthly contracts listed for 25 consecutive months"}
     dump_listing:
-      - {from: "2018-05-07", months: 13, launch: true}
+      - {from: "2018-05-07", months: 26, launch: true}
     first_date: "2018-05-07"
     last_date: null
     valid_range: [85.0, 101.0]
@@ -168,6 +175,7 @@ instruments:
     count_fields_months: 60         # OPEN_INT/PX_VOLUME only for contracts starting within this many months (AC's first dump: far contracts raise field exceptions)
     quote: {convention: price, formula: 100 - rate, units: percent, mid: true}
     cycle: quarterly_and_serial
+    listing_lead_bd: 1              # a new contract first trades the business day before the expiring one's last trade (CME calendar)
     serial_listed_until: reference_start   # nearest N unexpired serials; a serial is only newly listed before its Reference Quarter starts
                                            # (22-199: Jul 2022 not listed on 25 Jul 2022; AC's dump of 2026-10-07: Jul, Aug, Oct, Nov 2026, Jan, Feb 2027)
     reference_window:
@@ -192,16 +200,18 @@ instruments:
       rule: business_days_before_window_end   # business day before the 3rd Wed ending the Reference Quarter
       n: 1
       calendar: exchange
-      source: cme_sr3_specs         # QUESTION (PR): Rule 46002.G text not captured (cmegroup.com blocked)
+      source: cme_sr3_specs
+      quote: "Trading terminates on the business day prior to the 3rd Wednesday of contract delivery month."
     final_settlement: {rule: publication_of_last_day_rate, calendar: us_sofr, source: cme_sr3_specs}   # AC, PR #2: SFRH24 DES = last trade 18 Jun, settlement 20 Jun 2024
     listing:
-      - {from: "2018-05-07", quarterly: 20, serial: 0, launch: true, verified: false, note: "launch listing per CME spec sheet (secondary)", source: cme_sr3_specs}
-      - {from: "2020-01-01", quarterly: 39, serial: 0, verified: false, note: "39 quarterly in force before Jul 2022 per 22-199; start date unknown", source: cme_22_199}
+      - {from: "2018-05-07", quarterly: 20, serial: 0, launch: true, verified: false, note: "launch listing per CME spec sheet (secondary); 20 quoted in AC's dump of 2019-06-12", source: cme_sr3_specs}
+      - {from: "2019-09-30", quarterly: 39, serial: 0, verified: true, note: "CME calendar: Sep 2026 - Mar 2029 first traded 30 Sep 2019", source: cme_sr3_calendar}
       - {from: "2022-07-25", quarterly: 41, serial: 4, verified: true, source: cme_22_199, quote: "listed for 41 consecutive quarters and the nearest 4 serial contract months"}
       # 22-199 also names the listed set on 25 Jul 2022 (tests/test_contracts.py):
       # "quarterly contract months June 2022 through June 2032 plus the nearest serial months August 2022 through January 2023"
       - {from: "2023-03-01", quarterly: 41, serial: 6, verified: false, note: "nearest 6 serial per CME Submission 23-071 (dated 1 Mar 2023, cited in 23-072); effective date not captured", source: cme_23_072}
       - {from: "2023-04-24", quarterly: 39, serial: 6, verified: true, source: cme_23_072, quote: "listed for 39 consecutive quarters and the nearest 6 serial contract months"}
+      # in force on 9 Oct 2026: {source: cme_sr3_specs, quote: "listed for 39 consecutive quarters and the nearest 6 serial contract months"}
       # still in force on CME's page (9 Oct 2026): {source: cme_sr3_page, quote: "with 39 consecutive listings"}
     dump_listing:
       - {from: "2018-05-07", quarterly: 41, serial: 8, launch: true}

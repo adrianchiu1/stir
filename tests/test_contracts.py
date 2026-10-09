@@ -114,16 +114,39 @@ def test_contract_table_is_deterministic_and_unique():
 
 
 def test_listing_model_matches_bloomberg_dumps():
-    # contracts with a PX_LAST in AC's dumps (data/market/usd): FF 36 then 60 months, SR1 7 then 13,
+    # contracts with a PX_LAST in AC's dumps (data/market/usd): FF 36 then 60 months, SR1 7 (2019; on
+    # 2026-10-07 the dump asked for 13 only, CME lists 25),
     # SR3 20 quarterly then 39 quarterly + 6 serial (incl. two in their Reference Quarter), ED 40 + 4
     def counts(ins, day):
         listed = _listed_on(ins, day)
         q = sum(int(c[5:]) % 3 == 0 for c in listed)
         return q, len(listed) - q
     assert len(_listed_on("ff_fut", D(2019, 6, 12))) == 36 and len(_listed_on("ff_fut", D(2026, 10, 7))) == 60
-    assert len(_listed_on("sofr1m_fut", D(2019, 6, 12))) == 7 and len(_listed_on("sofr1m_fut", D(2026, 10, 7))) == 13
+    assert len(_listed_on("sofr1m_fut", D(2019, 6, 12))) == 7 and len(_listed_on("sofr1m_fut", D(2026, 10, 7))) == 25
     assert counts("sofr3m_fut", D(2019, 6, 12)) == (20, 0)
     assert counts("sofr3m_fut", D(2026, 10, 7)) == (39, 6)
     assert {"2026-07", "2026-08", "2027-01", "2027-02"} <= _listed_on("sofr3m_fut", D(2026, 10, 7))
     assert not {"2027-04", "2027-05"} & _listed_on("sofr3m_fut", D(2026, 10, 7))
     assert counts("ed_fut", D(2019, 6, 12)) == (40, 4)
+
+
+def test_generated_dates_match_cme_calendars():
+    # CME calendar pages copied by AC on 9 Oct 2026 (tests/fixtures/live/cme_*_calendar_*.txt):
+    # first trade, last trade and settlement of every listed contract
+    import glob
+    from stircurve.marketdata.cme import compare, parse_cme_calendar
+    for ins, name, n in (("ff_fut", "cme_ff_calendar", 60), ("sofr1m_fut", "cme_sr1_calendar", 26),
+                         ("sofr3m_fut", "cme_sr3_calendar", 46)):
+        rows = parse_cme_calendar(open(sorted(glob.glob(f"tests/fixtures/live/{name}_*.txt"))[-1]).read())
+        assert len(rows) == n
+        df = compare(M, ins, rows, D(2026, 10, 9))
+        assert df.settlement_ok.all() and df.first_trade_ok.all() and df.first_comparable.all()
+        bad = df[~df.last_trade_ok]
+        if ins == "ff_fut":    # Good Friday 30 Mar 2029: CME last trade Thu 29 Mar; us_fed (AC) gives Fri 30 Mar
+            assert list(bad.contract) == ["2029-03"]
+        else:
+            assert bad.empty, bad
+    # spot checks straight from the pages
+    sr3 = {r["contract"]: r for r in parse_cme_calendar(open(sorted(glob.glob("tests/fixtures/live/cme_sr3_calendar_*.txt"))[-1]).read())}
+    assert (sr3["2029-03"]["last_trade"], sr3["2029-03"]["settlement"]) == (D(2029, 6, 18), D(2029, 6, 20))   # Juneteenth
+    assert sr3["2029-03"]["first_trade"] == D(2019, 9, 30)          # 20 -> 39 quarterly

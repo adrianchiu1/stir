@@ -140,15 +140,22 @@ def listed_contracts(m: Manifest, instrument: str, until: dt.date, listing: str 
     cand.sort(key=lambda c: (c[3], c[0], c[1]))
 
     serial_by_start = ins.get("serial_listed_until") == "reference_start"
+    lead = int(ins.get("listing_lead_bd", 0))
+
+    def counts(day: dt.date, lt: dt.date) -> bool:
+        """Does a contract with last trade ``lt`` count towards the N listed on ``day``?
+        With a lead of k business days the replacement is listed k business days before
+        the expiring contract's last trade, so a contract stops counting k days early."""
+        return lt >= day if lead == 0 else lt > excal.advance_business_days(day, lead)
 
     def listed_on(day: dt.date, row: dict) -> list[tuple[int, int]]:
-        alive = [(y, mo) for y, mo, _, lt in cand if lt >= day]
+        alive = [(y, mo) for y, mo, _, lt in cand if counts(day, lt)]
         if ins["cycle"] == "monthly":
             return alive[: row["months"]]
         q = [c for c in alive if c[1] in QUARTERLY_MONTHS][: row["quarterly"]]
         # nearest unexpired serials; with reference_start, a serial is only newly listed
         # before its reference period starts (one already listed stays to its last trade)
-        serial = [(y, mo) for y, mo, w, lt in cand if mo not in QUARTERLY_MONTHS and lt >= day
+        serial = [(y, mo) for y, mo, w, lt in cand if mo not in QUARTERLY_MONTHS and counts(day, lt)
                   and (not serial_by_start or w[0] >= day or (y, mo) in first_seen)]
         return q + serial[: row.get("serial", 0)]
 
@@ -156,7 +163,8 @@ def listed_contracts(m: Manifest, instrument: str, until: dt.date, listing: str 
         return [r for r in schedule if r["from"] <= day][-1]
 
     events = {r["from"] for r in schedule}
-    events |= {excal.next_business_day(lt) for *_, lt in cand if lt >= schedule[0]["from"]}
+    events |= {excal.next_business_day(lt) if lead == 0 else excal.advance_business_days(lt, -lead)
+               for *_, lt in cand if lt >= schedule[0]["from"]}
     if serial_by_start:
         events |= {excal.next_business_day(w[0]) for _, mo, w, _ in cand
                    if mo not in QUARTERLY_MONTHS and w[0] >= schedule[0]["from"]}

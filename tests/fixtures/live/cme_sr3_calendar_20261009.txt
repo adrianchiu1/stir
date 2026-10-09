@@ -1,0 +1,645 @@
+
+Markets
+Data
+Solutions
+Insights
+Education
+Interest Rates
+Three-Month SOFR
+Futures and Options
+Globex Code
+SR3H7
+Last
+95.50
+Change
+-0.03 (-0.03%)
+Volume
+67,036
+Last Updated09 Oct 2026 06:25:27 AM CT.Market data is delayed by at least 10 minutes
+Three-Month SOFR Futures - Calendar
+Contract Month	Product Code	
+First Trade
+Last Trade
+Settlement	
+First Holding
+Last Holding
+First Position
+Last Position
+First Notice
+Last Notice
+First Delivery
+Last Delivery
+Jul 2026	SR3N26	
+16 Jan 2026
+20 Oct 2026
+21 Oct 2026	
+-
+-
+-
+-
+-
+-
+-
+-
+Aug 2026	SR3Q26	
+13 Feb 2026
+17 Nov 2026
+18 Nov 2026	
+-
+-
+-
+-
+-
+-
+-
+-
+Sep 2026	SR3U26	
+30 Sep 2019
+15 Dec 2026
+16 Dec 2026	
+-
+-
+-
+-
+-
+-
+-
+-
+Oct 2026	SR3V26	
+13 Apr 2026
+19 Jan 2027
+20 Jan 2027	
+-
+-
+-
+-
+-
+-
+-
+-
+Nov 2026	SR3X26	
+18 May 2026
+16 Feb 2027
+17 Feb 2027	
+-
+-
+-
+-
+-
+-
+-
+-
+Dec 2026	SR3Z26	
+30 Sep 2019
+16 Mar 2027
+17 Mar 2027	
+-
+-
+-
+-
+-
+-
+-
+-
+Jan 2027	SR3F27	
+13 Jul 2026
+20 Apr 2027
+21 Apr 2027	
+-
+-
+-
+-
+-
+-
+-
+-
+Feb 2027	SR3G27	
+17 Aug 2026
+18 May 2027
+19 May 2027	
+-
+-
+-
+-
+-
+-
+-
+-
+Mar 2027	SR3H27	
+30 Sep 2019
+15 Jun 2027
+16 Jun 2027	
+-
+-
+-
+-
+-
+-
+-
+-
+Apr 2027	SR3J27	
+19 Oct 2026
+20 Jul 2027
+21 Jul 2027	
+-
+-
+-
+-
+-
+-
+-
+-
+Jun 2027	SR3M27	
+30 Sep 2019
+14 Sep 2027
+15 Sep 2027	
+-
+-
+-
+-
+-
+-
+-
+-
+Sep 2027	SR3U27	
+30 Sep 2019
+14 Dec 2027
+15 Dec 2027	
+-
+-
+-
+-
+-
+-
+-
+-
+Dec 2027	SR3Z27	
+30 Sep 2019
+14 Mar 2028
+15 Mar 2028	
+-
+-
+-
+-
+-
+-
+-
+-
+Mar 2028	SR3H28	
+30 Sep 2019
+20 Jun 2028
+21 Jun 2028	
+-
+-
+-
+-
+-
+-
+-
+-
+Jun 2028	SR3M28	
+30 Sep 2019
+19 Sep 2028
+20 Sep 2028	
+-
+-
+-
+-
+-
+-
+-
+-
+Sep 2028	SR3U28	
+30 Sep 2019
+19 Dec 2028
+20 Dec 2028	
+-
+-
+-
+-
+-
+-
+-
+-
+Dec 2028	SR3Z28	
+30 Sep 2019
+20 Mar 2029
+21 Mar 2029	
+-
+-
+-
+-
+-
+-
+-
+-
+Mar 2029	SR3H29	
+30 Sep 2019
+18 Jun 2029
+20 Jun 2029	
+-
+-
+-
+-
+-
+-
+-
+-
+Jun 2029	SR3M29	
+16 Dec 2019
+18 Sep 2029
+19 Sep 2029	
+-
+-
+-
+-
+-
+-
+-
+-
+Sep 2029	SR3U29	
+16 Mar 2020
+18 Dec 2029
+19 Dec 2029	
+-
+-
+-
+-
+-
+-
+-
+-
+Dec 2029	SR3Z29	
+15 Jun 2020
+19 Mar 2030
+20 Mar 2030	
+-
+-
+-
+-
+-
+-
+-
+-
+Mar 2030	SR3H30	
+14 Sep 2020
+18 Jun 2030
+20 Jun 2030	
+-
+-
+-
+-
+-
+-
+-
+-
+Jun 2030	SR3M30	
+14 Dec 2020
+17 Sep 2030
+18 Sep 2030	
+-
+-
+-
+-
+-
+-
+-
+-
+Sep 2030	SR3U30	
+15 Mar 2021
+17 Dec 2030
+18 Dec 2030	
+-
+-
+-
+-
+-
+-
+-
+-
+Dec 2030	SR3Z30	
+14 Jun 2021
+18 Mar 2031
+19 Mar 2031	
+-
+-
+-
+-
+-
+-
+-
+-
+Mar 2031	SR3H31	
+13 Sep 2021
+17 Jun 2031
+18 Jun 2031	
+-
+-
+-
+-
+-
+-
+-
+-
+Jun 2031	SR3M31	
+13 Dec 2021
+16 Sep 2031
+17 Sep 2031	
+-
+-
+-
+-
+-
+-
+-
+-
+Sep 2031	SR3U31	
+14 Mar 2022
+16 Dec 2031
+17 Dec 2031	
+-
+-
+-
+-
+-
+-
+-
+-
+Dec 2031	SR3Z31	
+13 Jun 2022
+16 Mar 2032
+17 Mar 2032	
+-
+-
+-
+-
+-
+-
+-
+-
+Mar 2032	SR3H32	
+25 Jul 2022
+15 Jun 2032
+16 Jun 2032	
+-
+-
+-
+-
+-
+-
+-
+-
+Jun 2032	SR3M32	
+25 Jul 2022
+14 Sep 2032
+15 Sep 2032	
+-
+-
+-
+-
+-
+-
+-
+-
+Sep 2032	SR3U32	
+19 Sep 2022
+14 Dec 2032
+15 Dec 2032	
+-
+-
+-
+-
+-
+-
+-
+-
+Dec 2032	SR3Z32	
+19 Dec 2022
+15 Mar 2033
+16 Mar 2033	
+-
+-
+-
+-
+-
+-
+-
+-
+Mar 2033	SR3H33	
+13 Mar 2023
+14 Jun 2033
+15 Jun 2033	
+-
+-
+-
+-
+-
+-
+-
+-
+Jun 2033	SR3M33	
+18 Dec 2023
+20 Sep 2033
+21 Sep 2033	
+-
+-
+-
+-
+-
+-
+-
+-
+Sep 2033	SR3U33	
+18 Mar 2024
+20 Dec 2033
+21 Dec 2033	
+-
+-
+-
+-
+-
+-
+-
+-
+Dec 2033	SR3Z33	
+17 Jun 2024
+14 Mar 2034
+15 Mar 2034	
+-
+-
+-
+-
+-
+-
+-
+-
+Mar 2034	SR3H34	
+16 Sep 2024
+20 Jun 2034
+21 Jun 2034	
+-
+-
+-
+-
+-
+-
+-
+-
+Jun 2034	SR3M34	
+16 Dec 2024
+19 Sep 2034
+20 Sep 2034	
+-
+-
+-
+-
+-
+-
+-
+-
+Sep 2034	SR3U34	
+17 Mar 2025
+19 Dec 2034
+20 Dec 2034	
+-
+-
+-
+-
+-
+-
+-
+-
+Dec 2034	SR3Z34	
+16 Jun 2025
+20 Mar 2035
+21 Mar 2035	
+-
+-
+-
+-
+-
+-
+-
+-
+Mar 2035	SR3H35	
+15 Sep 2025
+18 Jun 2035
+20 Jun 2035	
+-
+-
+-
+-
+-
+-
+-
+-
+Jun 2035	SR3M35	
+15 Dec 2025
+18 Sep 2035
+19 Sep 2035	
+-
+-
+-
+-
+-
+-
+-
+-
+Sep 2035	SR3U35	
+16 Mar 2026
+18 Dec 2035
+19 Dec 2035	
+-
+-
+-
+-
+-
+-
+-
+-
+Dec 2035	SR3Z35	
+15 Jun 2026
+18 Mar 2036
+19 Mar 2036	
+-
+-
+-
+-
+-
+-
+-
+-
+Mar 2036	SR3H36	
+14 Sep 2026
+17 Jun 2036
+18 Jun 2036	
+-
+-
+-
+-
+-
+-
+-
+-
+
+FedWatch
+Explore probabilities for FOMC rate moves, compare target ranges or view historical rate data.
+Treasury Analytics
+Analyze deliverable baskets, CTD/OTR securities, futures/cash yield curves, inter-commodity spreads, and more.
+TreasuryWatch
+Gain an in-depth view into the US Treasury market, including yields, volatility, auctions, coupon issuance projections, and more.
+STIR Analytics
+View historical fixings for EFFR and SOFR, and analyze basis spreads between Eurodollar, Fed Fund, and SOFR futures.
+Total Cost Analysis
+Analyze the all-in costs of managing interest rate exposure using listed futures versus over-the-counter (OTC) instruments like swaps.
+SOFRWatch
+Visualize the potential impacts of FOMC decisions on SOFR expectations.
+Looking for more? Explore our additional resources
+Resources
+Margins
+Daily Settlements
+Final Settlements
+Rulebooks
+Expiration calendar
+Bloomberg codes
+Globex Reference Sheet
+Block rules & minimums
+Liquidity providers
+Rates Recap
+T-BILL FUTURES
+PRECISE EXPOSURE AT THE SHORT END OF THE CURVE
+
+company
+About Us
+Corporate Citizenship
+Media Room
+Careers
+Investor Relations
+Subscription Center
+Contact Us
+international
+Global Offices
+Partner Exchanges
+Latin America
+Europe, Middle East & Africa
+Asia-Pacific
+MARKET REGULATION
+Overview
+Rulebooks
+Regulatory Guidance
+Rule Filings
+Regulatory Outreach
+OUR EXCHANGES
+CME
+CBOT
+NYMEX
+COMEX
+YouTube Twitter Facebook LinkedIn Instagram Rss
+CME Group is the world’s leading derivatives marketplace. The company is comprised of four Designated Contract Markets (DCMs). 
+Further information on each exchange's rules and product listings can be found by clicking on the links to CME, CBOT, NYMEX and COMEX.
+
+© 2026 CME Group Inc. All rights reserved.
+
+Disclaimer  |  Privacy Notice  |  Cookie Notice  |  Terms of Use  |  Data Terms of Use  |  Modern Slavery Act Transparency Statement  |  Report a Security Concern
+
+facebook sharing button Sharewhatsapp sharing button Shareblogger sharing button Sharedigg sharing button Shareprint sharing button Printarrow_right sharing button

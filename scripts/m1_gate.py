@@ -111,15 +111,53 @@ def sample_windows(m) -> list[str]:
     return rows
 
 
+CALENDARS = (("ff_fut", "cme_ff_calendar"), ("sofr1m_fut", "cme_sr1_calendar"), ("sofr3m_fut", "cme_sr3_calendar"))
+
+
+def calendar_results(m):
+    from stircurve.marketdata.cme import compare, parse_cme_calendar
+    out = {}
+    for ins, name in CALENDARS:
+        f = sources.latest_fixture(name)
+        if f is None:
+            continue
+        rows = parse_cme_calendar(f.read_text(encoding="utf-8"))
+        out[ins] = (f.name, compare(m, ins, rows, D(2026, 10, 9)))
+    return out
+
+
 def exchange_comparison(m) -> list[str]:
-    caps = sorted(sources.LIVE_FIXTURES.glob("cme_*_[0-9]*.txt"))
-    if not caps:
-        return ["No CME calendar captures yet: cmegroup.com refuses scripted access (HTTP 403, \"This IP address is",
-                "blocked due to suspected web scraping\") and its terms of use forbid it. Save the four calendar pages",
-                "from a browser and convert them (README, M1 section); the comparison parser is written against the",
-                "first real capture, as for every M0 parser. Until then the generated windows rest on the rule text",
-                "above and the full table is in `docs/m1_gate_contracts.csv` for a side-by-side check."]
-    return [f"Captured: {', '.join(p.name for p in caps)} (comparison parser pending its first fixture)."]
+    res = calendar_results(m)
+    if not res:
+        return ["No CME calendar captures yet (copy the calendar page text; README, M1 section)."]
+    lines = ["CME calendar pages copied by AC (9 Oct 2026): every listed contract's first trade, last trade and",
+             "settlement against the generator (`stircurve/marketdata/cme.py`, `tests/test_contracts.py`).", "",
+             "| Product | Capture | Contracts | Last trade | Settlement | First trade |", "| --- | --- | --- | --- | --- | --- |"]
+    for ins, (fname, df) in res.items():
+        n = len(df)
+        lines.append(f"| {ins} | `{fname}` | {n} ({df.contract.min()} .. {df.contract.max()}) | "
+                     f"{int(df.last_trade_ok.sum())}/{n} | {int(df.settlement_ok.sum())}/{n} | {int(df.first_trade_ok.sum())}/{n} |")
+    bad = [(ins, r) for ins, (_, df) in res.items()
+           for r in df[~(df.last_trade_ok & df.settlement_ok & df.first_trade_ok)].itertuples()]
+    if bad:
+        lines += ["", "Differences:", "", "| Product | Contract | CME first / last / settlement | Generated | Why |", "| --- | --- | --- | --- | --- |"]
+        for ins, r in bad:
+            why = ("Good Friday month-end: CME closed; manifest uses `us_fed` (AC, PR #2), `us_sifma` would match"
+                   if ins == "ff_fut" and r.cme_last_trade != r.gen_last_trade else "")
+            lines.append(f"| {ins} | {r.contract} | {r.cme_first_trade} / {_wd(r.cme_last_trade)} / {_wd(r.cme_settlement)} | "
+                         f"{r.gen_first_listed} / {_wd(r.gen_last_trade)} / {_wd(r.gen_final_settlement)} | {why} |")
+    return lines
+
+
+def calendar_status(m) -> list[str]:
+    res = calendar_results(m)
+    if not res:
+        return ["| Windows vs CME published calendars (dates) | ⏳ needs the calendar pages' text |"]
+    n = sum(len(df) for _, df in res.values())
+    ok = sum(int((df.last_trade_ok & df.settlement_ok & df.first_trade_ok).sum()) for _, df in res.values())
+    mark = "✔" if ok == n else "⚠"
+    return [f"| Windows vs CME published calendars (FF, SR1, SR3) | {mark} {ok}/{n} contracts match on first trade, "
+            f"last trade and settlement{'' if ok == n else ' (see Differences)'} |"]
 
 
 def real_day_status(m) -> list[str]:
@@ -134,8 +172,8 @@ def real_day_status(m) -> list[str]:
         extra = "; other findings: " + ", ".join(f"{k} {n}" for k, n in others.items()) if others else ""
         out.append(f"| {day}: loads with zero unknown columns | {'✔' if unknown == 0 else '✘'} {unknown} unknown "
                    f"of {rep.columns} columns, {rep.values} values{extra} |")
-    out.append("| Listing model vs the contracts Bloomberg quotes on those days | ✔ FF 36/60, SR1 7/13, SR3 20q / 39q+6s, "
-               "ED 40q+4s (tests/test_contracts.py) |")
+    out.append("| Listing model vs the contracts Bloomberg quotes on those days | ✔ FF 36/60, SR1 7 / 25 (the 2026 dump asked "
+               "for 13), SR3 20q / 39q+6s, ED 40q+4s (tests/test_contracts.py) |")
     return out
 
 
@@ -175,10 +213,10 @@ def main() -> int:
         "| Gate item | Status |",
         "| --- | --- |",
         "| Windows: FF, ED, SR3 reference quarter and contract naming, FF/SR3 listing schedules | ✔ rule text captured live (cftc.gov filings) and quoted in the manifest |",
-        "| ED conversion (14 Apr 2023, ED expiring after 30 Jun 2023); SR1 13 months; SR3 39 quarterly | ✔ CME pages saved by AC, quoted; ED last prices confirmed by AC (EDU23 HP) |",
-        "| Windows: SR3 last trade, SR1 window / last trade | ⏳ CME spec tables load by JavaScript: copy the page text (README) |",
+        "| ED conversion (14 Apr 2023, ED expiring after 30 Jun 2023) | ✔ CME pages saved by AC, quoted; ED last prices confirmed by AC (EDU23 HP) |",
+        "| Windows: SR3 last trade, SR1 window / accrual / last trade, listing schedules | ✔ CME spec pages (copied text), quoted |",
         "| SR3 on non-SOFR IMM dates (Juneteenth 2024, 2030) | ✔ AC: SFRH24 last trade 18 Jun, settlement 20 Jun 2024 |",
-        "| Windows vs CME published calendars (dates) | ⏳ needs the calendar tables' text (saved .html pages hold none) |",
+        *calendar_status(m),
         *real_day_status(m),
         "",
         "## Rule sources",
