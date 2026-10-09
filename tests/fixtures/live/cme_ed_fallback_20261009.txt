@@ -1,0 +1,447 @@
+© 2022 CME Group. All rights reserved. CME GROUP PUBLIC; See 
+Disclaimer For Information
+Eurodollar Fallbacks Implementation
+CME Group confirms April 14th, 2023* as the planned date to convert Eurodollar 
+futures and options to corresponding SOFR contracts
+© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+Fallback Process for Eurodollar Futures 
+Fallback Process for Options on Eurodollar Futures & 
+Conversion Valuation Methodology 
+Table of contents
+Background, Approach, and Conversion Date
+02
+01
+03
+Operational Processing and Timeline04
+3© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+Fallback approach for CME Eurodollar futures and options (“F&O”)
+• Based on latest market feedback and to be more closely aligned with recently published industry OTC IRS 
+transition timelines, CME Group will amend those Eurodollar F&O fallback rules to set the Eurodollar F&O 
+conversion date to April 14, 2023*, and to implement the necessary operational steps to promote an orderly 
+industry-wide transition.
+• Effective March 29, 2021, CME amended its rulebook for Eurodollar F&O to add fallback event procedures for 
+three-month USD LIBOR, with relevant conversion processes currently scheduled to take place following 
+publication of USD LIBOR on June 30, 2023, reflecting market feedback at the time. 
+• Further to the UK FCA announcement on March 5, 2021, issued in coordination with ICE Benchmark Administration 
+Limited (“IBA”), the authorized administrator of ICE LIBOR,all remaining USD LIBOR tenors (e.g., overnight, one-
+month, three-month, six-month and twelve-month) will either cease to be provided by IBA or will nolonger be 
+representative of the underlying market immediately after publication on June 30, 2023.
+CME Eurodollar 
+F&O fallback 
+rules
+CME Group 
+Update
+ICE LIBOR 
+Phase-out
+4© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+Key principles for fallbacks for CME Eurodollar futures and options
+SOFR-based fallbacks: client feedback driven, economically accurate, operationally simple, and 
+aligned with the economics of the ISDA’s fallback methodology for OTC swaps
+o Effective March 29, 2021, CME added fallback procedures to our rulebook for Eurodollar futures and options.
+o Proposed update preserves these principles and promotes broad alignment with wider industry transition timelines.
+Key principles for Eurodollar futures and options fallback conversion
+o Eligible open positions at the time of conversion would be terminated and replaced by an equal number of corresponding SOFR 
+contracts.
+o Futures are handled by adding the ISDA fallback spread of 26.161 bps to final Eurodollar futures settlement prices, creating an 
+onset price for the new positions in 3-month SOFR contracts while the original Eurodollar position is closed out at the same 
+settlement price.
+o Options follow a two-step process whereby SOFR strikes are mapped to temporary non-standard strikes of Eurodollars at the 
+exact spread of 26.161bps, these instruments are then compared to the nearest standard strike Eurodollar option to calculate the
+correct premium adjustment for replacement SOFR options. In all cases the new SOFR option will be 25bps higher than the 
+original Eurodollar option.
+o Only positions in futures and options with underlying futures expiring after June 30, 2023 will be in scope and eligible for 
+conversion.
+o Post conversion, April 2023, May 2023 and June 2023 Eurodollar futures, and associated options will be the only remaining 
+listed Eurodollar contracts and will be available for trading until expiration.
+5© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+Eurodollar F&O conversion date - April 14, 2023
+Confirmed by client validation, CME Group intends to convert all eligible Eurodollar F&O to SOFR 
+equivalent contracts on April 14, 2023*
+o April 2023, May 2023 and June 2023 Eurodollar futures, and associated options will be excluded from the conversion and will 
+continue to be available for trading until expiration. 
+o Feedback from customers with respect to the conversion of cleared OTC USD derivatives has indicated a strong desire to manage 
+operational work and timelines.
+o As a result, CME intends to convert OTC USD cleared derivatives onApril 21, 2023*, maintaining broad industry alignment and 
+mindful of the proposed LCH main conversion on May 20, 2023. 
+o The planned conversion date of April 14, 2023* for Eurodollar F&O conversion accounts for OTC market plans and timing, in 
+response to market participant feedback. This proposal is now final and will be implemented in the relevant contract Rulebook 
+terms by CME.
+6© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+Additional Eurodollar F&O conversion actions
+• Margin efficiency
+o Margin offsets between same month Eurodollar and SOFR contracts maximized to represent post transition offset
+• Inclusion of SOFR options into portfolio margining with OTC Swap Clearing
+o Scheduled to be live on December 12, 2022
+o Customers already benefitting from SOFR futures in portfolio margining 
+• Transition functionality
+o SED reduced tick spreadsallow trading between Eurodollar and SOFR futures at 1/10th basis point increments based on 
+fallback spread
+o Exchange defined LS spreads allow SOFR vs Eurodollar options trades at $1.25/contract price increments equal to 
+1/20th basis points
+• Fee Waivers for reduced tick Inter-commodity spreads
+o From November 2022* CME will begin implementing fee waivers for SED and LS inter-commodity spread further 
+reducing any frictional costs for customers who are transitioning to SOFR
+7© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+SOFR futures and options are now the leading liquidity pool
+Inter-Commodity Spread (ICS) Instruments: Liquid standard and reduced-tick ICS instruments for both futures and 
+options are available. The SED Spread for futures and LS Spread for options allow reduced-tick trading to enable efficient 
+voluntary conversion of Eurodollar Open Interest to SOFR in our markets. 
+• CME expects to waive exchange fees for these spreads beginning in November 2022, to help facilitate further transition. 
+Source: CME Group
+*Source: SBSDRView from Clarus
+**Source: Refinitiv Deals Screener)
+Q3 2022 ADV Current OI 
+(Oct. 10)
+Futures
+SOFR 2.1M 7.8M
+Eurodollar 1.3M 8.1M
+SOFR % of ED 169% 96%
+Options
+SOFR 585k 15.0M
+Eurodollar 512k 22.6M
+SOFR % of ED 114% 66%
+SOFR futures and options 
+volumes are now consistently 
+higher than Eurodollars:
+With the growth of CME Term 
+SOFR usage, significant hedging 
+activity is expected to go into 
+SOFR derivatives, further 
+augmenting liquidity.
+Expiring Eurodollar options OI 
+continues to rebuild into SOFR Options
+ADV and OI growth Expiring Options OI going into SOFR CME Term SOFR
+OI at Expiry ED Options OI SOFR Options OI
+Dec-21 38.4M 3k
+Mar-22 40.5M 1.2M
+Jun-22 37.0M 4.8M
+Sep-22 28.3M 13.1M
+Current (10/10) 22.6M 15.0M
+Upcoming 
+Expiries ED Options OI SOFR Options OI
+Dec-22 11.8M 8.5M
+CME Term SOFR Usage
+OTC Derivatives 
+Referencing Term SOFR* $533 Billion
+Loans Referencing 
+Term SOFR**
+$2.3 Trillion
+4,050 Loans
+Licenses Issued 6,500+
+# of Firms under License 1,650+
+ADV: Average Daily Volume
+OI: Open Interest (open positions)
+© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+Fallback Process for Eurodollar Futures 
+Fallback Process for Options on Eurodollar Futures & Proposed 
+Conversion Valuation Methodology 
+Table of contents
+Background, Approach, and Conversion Date
+02
+01
+03
+Operational Processing and Timeline04
+9© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+SR3 Onset Price for conversion:
+All existing Three-Month Eurodollar (ED) futures contracts will be converted into the 
+corresponding 3-month SOFR (SR3) futures as follows:
+Fallback process for Eurodollar futures
+SOFR futures Onset Price    =
+Eurodollar 
+futures
+3-Month 
+SOFR futures
+1 Time Conversion:
+SR3 Onset Price = ED Futures Settle + 
+Fallback Spread Adjustment
++   Fallback Spread Adjustment3-month Eurodollar 
+futures Settlement
+Final settlement price Fixed at 26.161 bps
+* Final settlement price of Eurodollars will be to 4 decimal places to conform with existing client infrastructure, with the impact of the additional 0.001bp being handled by a 
+balancing cash flow between longs and shorts (cash residual amount)
+© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+Fallback Process for Eurodollar Futures
+Fallback Process for Options on Eurodollar Futures & Proposed 
+Conversion Valuation Methodology 
+Table of contents
+Background, Approach, and Conversion Date
+02
+01
+03
+Operational Processing and Timeline04
+© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+Fallback flow chart – options on Eurodollar futures
+Eurodollar 
+options
+3-Month 
+SOFR options
+Step 1
+Step 2
+3-Month SOFR options Non-Standard Strike                         = 
+ED Strike + Fallback Spread Adjustment (26.161 bps)
+Positions allocated to 3-
+Month SOFR options with 
+Strike = ED Strike + 0.25
+Premium Differential*
+Steps 1 and 2 are concurrent
+* Premium differential corresponds to premium differences between ED Option premium corresponding to Strike K vs. SR3 Option premium corresponding to Strike (K + 25 bps)
+12© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+SOFR as the Independent price source
+o Based on current observations and trends of volume and open interest, SOFR options will be the primary source of 
+market data at the point of conversion
+o SOFR options are deemed the Independent Option, and Eurodollar as the Dependent Option
+o SOFR options premiums will be used as independent prices in order to determine the premium of ED options for the 
+purpose of conversion
+o Option premium for the Independent SOFR option would be observed from end of day settlement prices 1
+o Equivalent option premium for the outgoing Dependent Eurodollar option would be calculated using the prices of the 
+Independent SOFR option
+Fallback process for options on Eurodollar futures
+1https://www.cmegroup.com/confluence/display/EPICSANDBOX/CME%2C+CBOT%2C+NYMEX%2C+COMEX+Daily+Option+Settlement+Procedures
+13© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+All remaining eligible options on Three-Month Eurodollar (ED) futures will be converted into 
+corresponding options on 3-Month SOFR (SR3) futures
+o With the linear fallback adjustment of 26.161 bps we note that:
+ED option price (for an ED Strike K) = SR3 option price (for ED Strike K + 26.161bps)
+Similarly, since SOFR options will be the independent price source we have:
+ED option price (for a SOFR Strike K – 26.161bps ) = SR3 option price (for SOFR Strike K)
+o CME lists ED options and SR3 options at specific strike intervals (6.25, 12.50, or 25 bps), strikes are not listed at intervals 
+matching the exact 26.161bps fallback spread
+o The nearest standard strike option in SR3 will be 25bps higher than the original ED strike 
+Open positions on each Eurodollar option strike will be converted to the nearest standard strike 
+on the corresponding listed SOFR option contract using the following formula:
+Rearranging the second equation from above
+SR3 option price (for a given SOFR Strike K) = ED option price (for SOFR Strike K - 25 bps) + Premium Differential*
+*Premium Differential represents the difference in option premium corresponding to SR3 Strike K – 26.161bp  and SR3 Strike K – 25bp. 
+Fallback process for options on Eurodollar futures
+14© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+Premium Differential
+o Replacement SOFR options and their equivalent ED options will have different Option Premium values due to differences in 
+Intrinsic and Time Value. 
+o Replacement SOFR options willbe at strikes that are25 bps above the original EDOptions. The difference between the fallback 
+spread of 26.161bps and 25 bps will be accounted for.
+o Quarterly SOFR options will have expiry dates that are not perfectly aligned with the original quarterly ED option (Friday 2:00PM 
+SOFR vs. Monday 5:00 AM ED). Given the small difference in time to expiry and based on market participant feedback, CME will 
+not adjust for this technical variation. Mid Curve options expiration dates are aligned.
+o Long ED option holder will pay the Short Position holder if the Option Premium of the converted SR3 option is higher than that of 
+the corresponding ED option. Alternatively, Short ED option will pay the Long Position holder if the Option Premium of the 
+converted SR3 option is lower than the active ED option.
+o CME approach is designed to avoid winners or losers driven by this conversion.
+Fallback process for options on Eurodollar futures
+Option Premium Intrinsic Value Time Value
+15© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+Use of out of the money options
+o Consistent with daily settlement process, CME will use out of the money (OTM) options to derive a single volatility surface which 
+will be used in the pricing adjustments of both OTM and in the money (ITM) options.
+Determining prices for standard strikes from non-standard strikes
+o Use settlement price of OTM SOFR options with strike K as the price for OTM ED options with strike K – 26.161bps for the next 
+steps.
+o Imply lognormal volatility for the non-standard adjusted strikes (OTM) of the Dependent Eurodollar Option (SOFR Strike K –
+26.161bps).
+o Determine the implied lognormal volatility of the listed standard strikes for Dependent Eurodollar Options (SOFR strike K – 25bps) 
+by interpolating the implied lognormal volatility of the non-standard strikes from above.
+o Price the standard strikes of the Dependent Eurodollar Option under Whaley model using the interpolated volatility from above.
+Fallback process for options on Eurodollar futures
+16© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+Option 
+Type
+ED 
+Standard 
+Strike
+Offset Price Whaley 
+volatility
+Put 98.25 0.4719 0.017268
+Put 98.5 0.5695 0.017137
+Call 98.75 0.6618 0.016817
+Call 99 0.5609 0.017131
+Option 
+Type
+ED Strike = 
+SOFR Strike -
+26.161bps
+Price = 
+SOFR DSP
+Whaley 
+volatility
+Put 98.23839 0.4675 0.017268
+Put 98.48839 0.565 0.017153
+Call 98.73839 0.6675 0.016819
+Call 98.98839 0.565 0.017109
+Illustration of Pricing Impact
+Assumption: SOFR option is Independent Option and ED option is Dependent Option
+SOFR Futures Price: 99.00 ED Futures Price: 98.7384   Fallback Spread: 26.161 bps  
+Fallback process for options on Eurodollar futures
+Prices of OTM ED options at non-standard 
+strikes is assumed to be the same as the 
+corresponding SOFR options
+Implied volatility for ED 
+option is calculated 
+using price copied from 
+SOFR settlement
+Interpolated 
+Volatility from non-
+standard Strikes
+Option 
+Type
+SOFR 
+Strike
+Daily 
+Settlement 
+Price (DSP)
+Whaley 
+volatility
+Put 98.5 0.4675 0.017287
+Put 98.75 0.565 0.017179
+Call 99 0.6675 0.016836
+Call 99.25 0.565 0.017127
+© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+Fallback Process for Eurodollar Futures 
+Fallback Process for Options on Eurodollar Futures & Proposed 
+Conversion Valuation Methodology 
+Table of contents
+Background, Approach, and Conversion Date
+02
+01
+03
+Operational Processing and Timeline04
+18© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+Pre-Conversion Activities
+• Complete all Fallback setups for in-scope ED F&O to be effective on Conversion Date, including:
+• Establishing product relationships between the corresponding Eurodollar and SOFR contracts
+• Conduct testing (timeline will be forthcoming) with industry to ensure readiness by all parties 
+and their systems
+• Clearing Advisory notification provided to FCMs with all operational processing details
+Conversion Date Processing
+• Identify all Eurodollar F&O positions to be converted to SOFR
+• Set corresponding Eurodollar F&O contracts to “non-tradeable” with a Last Trade Date of April 14 and 
+a Final Settle Date of April 17
+• Settlement on Eurodollar futures will be calculated based on the corresponding SR3 futures
+• For each Eurodollar futures and options contract, generate an offset transaction and confirm message 
+to effect removal of the position
+• For each SOFR futures and options contract, generate an onset transaction and confirm message to 
+effect migration of the position
+• Offset and Onset prices for futures and options will be determined as described above
+• Compute and assign the cash residual amount to the SOFR futures onset position
+Operational processing – Eurodollar F&O conversion and delisting
+Post-Conversion
+• Only April, May and June 2023 Eurodollar futures and associated options will remain tradeable. All 
+other Eurodollar futures and optionsinstruments will be removed.
+19© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+Operational timeline* – Eurodollar F&O conversion 
+Friday
+April 14, 2023
+Sunday
+April 16, 2023
+Saturday
+April 15, 2023
+• 5:00 pm ET: Eurodollar futures and options (except April, May and June 2023 futures and 
+associated options) are no longer tradeable
+• End of Day (9:00 pm ET):  Finalize EOD positions for April 14
+• 11:00 pm ET: Cutoff for clearing firms submitting, to CME, instructions to effect customer level 
+conversion results
+• Start of Day:    Establish SOD positions for Monday, April 17
+• 8:00 am ET:     Open window for final upload of conversion files used in conversion
+• 10:00 am ET:   Run conversion processing for Eurodollar futures and options;
+establish resulting SOFR futures and options positions
+• 11:00 am ET:   Generate conversion transactions and clearing firm messaging using customer   
+level instructions as provided on Friday
+• 12:00 pm ET:   Notify FCMs of conversion completion 
+• 6:00 pm ET:     CME opens markets for trading
+No processing
+* Times provided above are estimates
+20© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+Eurodollar futures conversion will take place through offsetting each start of day position at an equal and opposite 
+quantity using the Final Settlement Price for the position. An onset will be used to re-establish the position in the 
+corresponding SR3 futures contract, as shown below.
+Eurodollar conversion example: Futures reporting
+* Eurodollar offset price will be set equal to the Final settlement price resulting in asymmetrical variation between ED and SR3.
+** SOFR onset price will be calculated from the Eurodollar offset settlement price. Note that the SOFR onset price will be ro unded to .0001.
+*** A residual amount will be calculated as -.00001 x 50 x 2500 multiplier = -1.25 (multiply by -1 for a short)
+Position Type Long 
+Qty
+Short 
+Qty
+Settlement 
+Price
+Offset/Onset 
+Price
+Cash 
+Residual Amt
+SOD position – Eurodollar (ED) Futures 50 0 99.45
+Offset position – Eurodollar (ED) Futures 0 50 99.45*
+EOD position – Eurodollar (ED) Futures 0 0
+SOD position – SOFR (SR3) Futures 0 0 99.71
+Onset position – SOFR (SR3) Futures 50 0 99.7116** -1.25***
+EOD position – SOFR (SR3) Futures 50 0
+21© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+Eurodollar conversion example: Options reporting
+* Eurodollar option offset price will be set equal to the implied price assuming SOFR option as independent option following the steps defined before 
+Eurodollar options conversion will take place in a manner like futures, with offset transactions generated based on start of 
+day positions at an equal and opposite quantity and offset price consistent with calculation in conversion methodology.  
+An onset will be used to re-establish the position in a corresponding SOFR option contract with onset price as SOFR 
+settlement price, as shown below.
+Position Type Long 
+Qty
+Short 
+Qty
+Strike Price Offset/Onset
+Price
+Option SOD position – Eurodollar Option (ED) Call 50 0 98.5
+Offset SOD position – Eurodollar Options Call 
+(ED)
+0 50 98.5 .0525*
+EOD position – Eurodollar Option (ED) 0 0 98.5
+SOD position – SOFR Option Call (SR3) 0 0 98.75
+Onset position – SOFR Option Call (SR3) 50 0 98.75 .053
+EOD position – SOFR Option Call (SR3) 50 0 98.75
+22© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+Indicative Cash Flow Report
+o Beginning in Q4 2022, CME will publish a daily Indicative Cash Flow Report for all Eurodollar futures and options 
+contracts.
+o Report will be pre-loaded with a mapping of all ED futures and options on ED futures contracts and corresponding 
+prices, while also allowing FCMs to input their customer level positions if desired.
+o Referencing entered positions, the fallback spread adjustment and multiplier, the report will compute all relevant cash 
+flows and prices:
+- For futures, this includes the cash residual amount on the onset transaction
+• Cash residual amount will be calculated as -.00001 x Onset Qty x 2500 multiplier (multiply by -1 for a short)
+- For options, this includes the Eurodollar and SOFR option premium amounts , the SOFR option precise strike 
+and the net premium
+o Report will be made available directly within FCM’s sFTP folders and on the cmegroup.com interest rates web page.
+Indicative analysis reporting
+23© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+• CME Clearing will conduct testing with FCM back offices on different dates leading up the actual conversion
+• Both production and test portfolios will be used for testing
+• FCM’s are expected to provide client level instruction files, process resulting conversion transactions, and move 
+positions in books
+• Street-wide tests have been scheduled for the following dates:
+- Wed 12/7/22 – Thu 12/8/22
+- Fri 1/20/23 - Mon 1/23/23 
+- Fri 2/10/23 - Mon 2/13/23
+- Fri 3/3/23 - Mon 3/10/23
+- Fri 3/31/23 - Mon 4/3/23
+• Results can be checked against the indicative cash flow report for the date of the test if desired
+• Clients should reach out to their FCM to confirm availability of test outputs
+Eurodollar Conversion Testing and Readiness Program
+24© 2023 CME Group. All rights reserved. CME GROUP PUBLIC
+CME (“the Exchange”) has entered into an agreement with ICE Benchmark Administration Limited which permits the Exchange to us e ICE LIBOR as the basis for settling Three –Month Eurodollar Futures 
+contracts and to refer to ICE LIBOR in connection with creating, marketing, trading, clearing, settling and promoting Three –Month Eurodollar Futures contracts.
+Three–Month Eurodollar Futures contracts are not in any way sponsored, endorsed, sold or promoted by ICE Benchmark Administratio n Limited, and ICE Benchmark Administration Limited has no obligation or 
+liability in connection with the trading of any such contracts. ICE LIBOR is compiled and calculated solely by ICE Benchmark Administration Limited. ICE LIBOR® is a registered trademark of Intercontinental 
+Exchange Holdings, Inc. and is used under license. However, ICE Benchmark Administration Limited shall not be liable (whether in negligence or otherwise) to any person for any error in ICE LIBOR, and ICE 
+Benchmark Administration Limited shall not be under any obligation to advise any person of any error therein.
+ICE BENCHMARK ADMINISTRATION LIMITED MAKES NO WARRANTY, EXPRESS OR IMPLIED, EITHER AS TO THE RESULTS TO BE OBTAINED FROM THE USE OF ICE LIBOR AND/OR THE FIGURE 
+AT WHICH ICE LIBOR STANDS AT ANY PARTICULAR TIME ON ANY PARTICULAR DAY OR OTHERWISE. ICE BENCHMARK ADMINISTRATION LIMITED MAK ES NO EXPRESS OR IMPLIED 
+WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE FOR USE WITH RESPECT TO THREE –MONTH EURODOLLAR Futures CONTRAC TS.
+Neither Futures trading nor swaps trading are suitable for all investors, and each involves the risk of loss. Swaps trading s hould only be undertaken by investors who are Eligible Contract Participants (ECPs) 
+within the meaning of Section 1a(18) of the Commodity Exchange Act. Futures and swaps each are leveraged investments and, bec ause only a percentage of a contract's value is required to trade, it is possible 
+to lose more than the amount of money deposited for either a Futures or swaps position. Therefore, traders should only use fu nds that they can afford to lose without affecting their lifestyles and only a portion of 
+those funds should be devoted to any one trade because traders cannot expect to profit on every trade. All references to opti ons refer to options on Futures.
+Any research views expressed those of the individual author and do not necessarily represent the views of the CME Group or it s affiliates. The information within this presentation has been compiled by CME 
+Group for general purposes only. CME Group assumes no responsibility for any errors or omissions. All examples are hypothetic al situations, used for explanation purposes only, and should not be considered 
+investment advice or the results of actual market experience.
+All matters pertaining to rules and specifications herein are made subject to and are superseded by official rulebook of the organizations. Current rules should be consulted in all cases concerning contract 
+specifications
+CME Group is a trademark of CME Group Inc. The Globe Logo, CME, Globex and Chicago Mercantile Exchange are trademarks of Chicago Mercantile Exchange Inc. CBOT and the Chicago Board of Trade 
+are trademarks of the Board of Trade of the City of Chicago, Inc. NYMEX, New York Mercantile Exchange and ClearPort are registered trademarks of New York Mercantile Exchange, Inc. COMEX is a 
+trademark of Commodity Exchange, Inc. All other trademarks are the property of their respective owners. 
+Copyright © 2022 CME Group. All rights reserved.
+Disclaimer

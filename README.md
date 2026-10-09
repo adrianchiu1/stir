@@ -4,10 +4,13 @@ Meeting-date aware STIR / OIS curve construction for central-bank policy pricing
 (Fed, ECB, BoE, BoJ first; built so the next 18 currencies fit). Design spec and
 decision log live in the team doc *STIR Policy-Pricing Tool — Design Spec v0.1*.
 
-**Status: M0 (parts 1 and 2).** Reference data layer only: business-day calendars,
-meeting schedules with effective-date rules and cadence extrapolation, ECB
-reserve maintenance periods, policy-rate histories for all four banks,
-deterministic updaters and tests. No curve code yet. Nothing here calls Bloomberg or any AI service.
+**Status: M1 in review (USD market data) on top of M0 (reference data).** M0: business-day
+calendars, meeting schedules with effective-date rules and cadence extrapolation, ECB
+reserve maintenance periods, policy-rate histories for all four banks, deterministic
+updaters and tests. M1: USD market-data manifest, contract-table generator, Bloomberg
+dump script and CSV loader/validator (see below). No curve code yet. Nothing in the
+package calls Bloomberg or any AI service at runtime; `scripts/dump_bloomberg.py` is the
+only Bloomberg caller and runs on a terminal machine.
 
 ## Layout
 
@@ -18,10 +21,11 @@ data/refdata/         committed reference data (CSV) — the source of truth at 
   meetings/           <bank>.csv, <bank>_unscheduled.csv
   maintenance_periods/ecb.csv
   policy_rates/       <bank>.csv with a confidence column (primary | derived | memory:<how to verify>)
-data/market/          Bloomberg CSV dumps written by pxts (M1)
+data/market/usd/<YYYY>/<group>.csv  Bloomberg dumps (M1): one column per <ticker>|<field>
 data/curves/          local parquet store, git-ignored
 exports/              analytics shared with the team
-scripts/              update_refdata.py, run_tests.py
+scripts/              update_refdata.py, run_tests.py, dump_bloomberg.py, check_market_data.py,
+                      contract_table.py, capture_exchange_specs.py, m0_gate.py, m1_gate.py
 tests/                fixtures/live: pages captured by --save-fixtures on 8 Oct 2026
 ```
 
@@ -107,5 +111,51 @@ Every published decision date is included (AC, PR #1):
 `--save-fixtures DIR` writes the text of every fetched page to `DIR/<source>_<YYYYMMDD>.txt`;
 `tests/fixtures/live` holds the 8 Oct 2026 capture and `tests/test_live_fixtures.py` pins
 each parser's row count on it.
+
+## M1: USD market data
+
+| Piece | What it does |
+| --- | --- |
+| `stircurve/config/usd_manifest.yaml` | Every instrument the `usd.yaml` families use (`ff_fut`, `sofr1m_fut`, `sofr3m_fut`, `ed_fut`, `ois_effr`, `ois_sofr`, `swap_libor3m`), the EFFR / SOFR / USD LIBOR 3M fixings and the policy anchors: Bloomberg ticker pattern, fields, quote convention (mids, D10), window, accrual, day count, calendars (named, never hard-coded), last trade, final settlement, listing schedule, first/last dates, valid range, staleness threshold, and the source of every rule. |
+| `stircurve/marketdata/manifest.py` | Loads and validates the manifest against `usd.yaml`; ticker naming; the column plan for any date range. |
+| `stircurve/marketdata/contracts.py`, `scripts/contract_table.py` | Contract table: every listed future in a range with reference window [start, end), last trade, final settlement, first listed, last quote, settlement rule. |
+| `stircurve/marketdata/sources.py`, `scripts/capture_exchange_specs.py` | Captures the rule documents (CME/CBOT filings on cftc.gov, NY Fed, FCA) into `tests/fixtures/live`; every quoted rule passage must appear in its capture. |
+| `stircurve/marketdata/dump.py`, `scripts/dump_bloomberg.py` | Terminal machine only: manifest -> Bloomberg via pdblp (one session, one bulk request per field, bad securities skipped; `--backend pxts` for `pxts.read_bdh`) -> wide CSVs. Dry run by default; `--write-csv` writes the files (committing them to git is a separate step); a changed or vanished value blocks (exit 2); re-runs are no-ops. |
+| `stircurve/marketdata/loader.py`, `scripts/check_market_data.py` | Tidy frame keyed by (date, instrument, contract, field) plus a report: unknown columns, malformed files, out-of-range values and quotes outside a contract's listing window block (exit 2); missing columns, stale values and values outside first/last dates warn. |
+| `scripts/m1_gate.py` -> `docs/m1_gate.md` | Gate evidence: rule sources, listing checks against the filings, generated windows, the loader report on real days. |
+
+The dump requests futures generously (`dump_listing` in the manifest: FF 60 months, SR1 13,
+SR3 41 quarterly + 6 serial, ED 44 + 6, from the first date). Contracts Bloomberg has nothing
+for come back as NaN columns. The loader checks listing dates against the exchange schedule
+(`listing`); where that schedule has no source, early quotes are kept and reported.
+
+Column names: `<ticker>|<field>`, e.g. `SFRZ26 Comdty|PX_LAST`, `USOSFR2 Curncy|PX_LAST`,
+`SOFRRATE Index|PX_LAST`. Futures columns always carry the two-digit year; the dump asks
+Bloomberg for the one-digit form while a contract trades (`SFRZ6 Comdty`).
+
+On a Bloomberg terminal machine (`pip install -e .[bloomberg]`, plus `blpapi` from Bloomberg's index). Every Bloomberg request is logged with its size, time and outcome:
+
+```
+python scripts/dump_bloomberg.py --start 2026-10-07 --end 2026-10-07              # dry run: diff only
+python scripts/dump_bloomberg.py --start 2026-10-07 --end 2026-10-07 --write-csv
+python scripts/dump_bloomberg.py --start 2019-06-12 --end 2019-06-12 --write-csv  # LIBOR era
+python scripts/check_market_data.py --start 2026-10-07 --end 2026-10-07           # exit 0 = no blocking problem
+python scripts/m1_gate.py                                                         # refresh docs/m1_gate.md
+```
+
+Rule documents (any machine with internet):
+
+```
+python scripts/capture_exchange_specs.py --save-fixtures tests/fixtures/live
+python scripts/capture_exchange_specs.py --check
+```
+
+cmegroup.com is never fetched by script (its terms forbid it and it answers 403). Its tables
+(contract specs, calendars) are loaded by JavaScript, so a saved .html misses them: open the
+page, wait for the table, then Ctrl+A, Ctrl+C and paste into a text file (or print to PDF),
+named after the manifest source, e.g.
+`cme_sr3_specs_table.txt`, `cme_sr3_specs_calendar.txt`, `cme_sr1_specs.txt`, `cme_sr1_specs_calendar.txt`,
+`cme_ff_calendar.txt`, and run
+`python scripts/capture_exchange_specs.py --from-saved <files> --save-fixtures tests/fixtures/live`.
 
 See `CLAUDE.md` for working rules and `docs/decisions.md` for the decision log and build plan.

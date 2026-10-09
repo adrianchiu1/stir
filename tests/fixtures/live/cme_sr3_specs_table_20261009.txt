@@ -1,0 +1,125 @@
+
+Markets
+Data
+Solutions
+Insights
+Education
+Interest Rates
+Three-Month SOFR
+Futures and Options
+Globex Code
+SR3H7
+Last
+95.50
+Change
+-0.03 (-0.03%)
+Volume
+66,721
+Last Updated09 Oct 2026 06:23:42 AM CT.Market data is delayed by at least 10 minutes
+Three-Month SOFR Futures - Contract Specs
+Contract Unit	
+$2,500 x contract-grade IMM Index
+Price Quotation	
+contract-grade IMM Index = 100 minus R 
+
+R = business-day compounded Secured Overnight Financing Rate (SOFR) per annum during contract Reference Quarter
+
+Reference Quarter:  For a given contract, interval from (and including) 3rd Wed of 3rd month preceding delivery month, to (and not including) 3rd Wed of delivery month.
+Trading Hours	
+CME Globex:
+Sunday - Friday 5:00 p.m. - 4:00 p.m. (6:00 p.m. - 5:00 p.m. ET) with a 60-minute break each day beginning at 4:00 p.m. (5:00 p.m. ET)
+CME ClearPort:
+Sunday 5:00 p.m. - Friday 5:45 p.m. CT with no reporting Monday - Thursday from 5:45 p.m. - 6:00 p.m. CT
+Minimum Price Fluctuation	
+All contract months with four months or less until last day of trading (as defined in Rulebook section 46002.C): 0.0025 IMM Index points (¼ basis point per annum) = $6.25 
+
+All other contract months: 0.005 IMM Index points (½ basis point per annum) = $12.50
+
+Min Final Settle Fluctuation: 0.0001 IMM Index points
+Product Code	
+CME Globex: SR3CME ClearPort: SR3Clearing: SR3
+Listed Contracts	
+Quarterly contracts (Mar, Jun, Sep, Dec) listed for 39 consecutive quarters and the nearest 6 serial contract months
+Settlement Method	
+Financially Settled
+Floating Price	
+Daily transaction-value weighted median interest rate on overnight US Treasury general collateral repurchase transactions, based on data collected by FRBNY from BNY Mellon, the FICC GCF Repo service, and the FICC DVP service.
+Termination of Trading	
+Trading terminates on the business day prior to the 3rd Wednesday of contract delivery month.
+Settlement Procedures	
+SR3 Settlement Procedures
+Position Limits	
+CME Position Limits
+Exchange Rulebook	
+CME 460
+Block Minimum	
+Block Minimum Thresholds
+Price Limit or Circuit	
+Price Limits
+Vendor Codes	
+Quote Vendor Symbols Listing
+About Three-Month SOFR
+CME SOFR futures offer the leading source of price discovery and liquidity on the Secured Overnight Financing Rate (SOFR), a broad measure of the cost of borrowing cash overnight collateralized by Treasury securities. Three-Month SOFR futures are cash settled and based on a business-day compounded SOFR per annum during contract Reference Quarter. 
+
+FedWatch
+Explore probabilities for FOMC rate moves, compare target ranges or view historical rate data.
+Treasury Analytics
+Analyze deliverable baskets, CTD/OTR securities, futures/cash yield curves, inter-commodity spreads, and more.
+TreasuryWatch
+Gain an in-depth view into the US Treasury market, including yields, volatility, auctions, coupon issuance projections, and more.
+STIR Analytics
+View historical fixings for EFFR and SOFR, and analyze basis spreads between Eurodollar, Fed Fund, and SOFR futures.
+Total Cost Analysis
+Analyze the all-in costs of managing interest rate exposure using listed futures versus over-the-counter (OTC) instruments like swaps.
+SOFRWatch
+Visualize the potential impacts of FOMC decisions on SOFR expectations.
+Looking for more? Explore our additional resources
+Resources
+Margins
+Daily Settlements
+Final Settlements
+Rulebooks
+Expiration calendar
+Bloomberg codes
+Globex Reference Sheet
+Block rules & minimums
+Liquidity providers
+Rates Recap
+T-BILL FUTURES
+PRECISE EXPOSURE AT THE SHORT END OF THE CURVE
+
+company
+About Us
+Corporate Citizenship
+Media Room
+Careers
+Investor Relations
+Subscription Center
+Contact Us
+international
+Global Offices
+Partner Exchanges
+Latin America
+Europe, Middle East & Africa
+Asia-Pacific
+MARKET REGULATION
+Overview
+Rulebooks
+Regulatory Guidance
+Rule Filings
+Regulatory Outreach
+OUR EXCHANGES
+CME
+CBOT
+NYMEX
+COMEX
+YouTube Twitter Facebook LinkedIn Instagram Rss
+CME Group is the world’s leading derivatives marketplace. The company is comprised of four Designated Contract Markets (DCMs). 
+Further information on each exchange's rules and product listings can be found by clicking on the links to CME, CBOT, NYMEX and COMEX.
+
+© 2026 CME Group Inc. All rights reserved.
+
+Disclaimer  |  Privacy Notice  |  Cookie Notice  |  Terms of Use  |  Data Terms of Use  |  Modern Slavery Act Transparency Statement  |  Report a Security Concern
+
+
+facebook sharing button Sharewhatsapp sharing button Shareblogger sharing button Sharedigg sharing button Shareprint sharing button Printarrow_right sharing button

@@ -1,0 +1,115 @@
+1 
+FCA announcement on future cessation and loss of representativeness of the LIBOR 
+benchmarks 
+05 March 2021 
+1. This statement announces the future cessation or loss o f representativeness of the 35 LIBOR
+benchmark settings currently published by ICE Benchmark Administration (IBA), an authorised
+administrator, regulated and supervised by the FCA.
+2. IB
+A notified the FCA, following the completion of its recent consultation  and notices of future
+departure received from the majority of the panel banks for each LIBOR setting, that it intends to
+cease providing all LIBOR settings for all currencies, subject to any rights of the FCA to compel IBA
+to continue publication.
+3. W
+e have completed our assessments of the effect of panel bank departures on LIBOR’s ability to
+represent the underlying market, and of how IBA intends to cease providing LIBOR, as required by
+the UK Benchmarks Regulation (BMR). We have decided not to require any panel banks to
+continue to submit to LIBOR beyond the dates from which they have notified their departure , or
+t
+o require IBA to continue to publish LIBOR on the basis of panel bank submissions beyond such
+dates. We have no intention to use our proposed powers to compel IBA to continue to publish any
+of the following 26 LIBOR settings as ’synthetic’ LIBOR (as described below) . Therefore, these 26
+L
+IBOR settings will permanently cease as we set out below.
+• P
+ublication of all 7 euro LIBOR settings, all 7 Swiss franc LIBOR settings, the Spot Next, 1-week,
+2-month and 12-month Japanese yen LIBOR settings, the overnight, 1-week, 2-month and 12-
+month sterling LIBO R settings, and the 1 -week and 2 -month US dollar LIBOR settings will
+cease immediately after 31 December 2021.
+• P
+ublication of the overnight and 12 -month US dollar LIBOR settings will cease immediately
+after 30 June 2023.
+4. W
+e will consult on requiring IBA to continue to publish the 3 remaining sterling LIBOR settings (1-
+month, 3-month and 6 -month) for a further period after end- 2021 on a changed methodology
+(also known as a ‘synthetic’) basis using the proposed new powers th e government is legislating
+to grant us under the BMR. Using our proposed powers in this way would be intended to protect
+consumers and market integrity by reducing disruption in markets where it is unlikely to be
+feasible to convert  certain outstanding contracts that reference LIBOR to alternative referenc e
+rat
+es.
+5. W
+e will consult on requiring IBA also to continue to publish the 1 -month, 3-month and 6-month
+J
+apanese yen LIBOR settings after end -2021 on a synthetic basis, for one additional year. This
+proposed use of our powers would be intended primarily to protect market integrity by allowing
+more time for transition away from Japanese yen LIBOR to complete. We do not envisage using
+our proposed powers to compel IBA to continue to publish any Japanese yen LIBOR settings after
+e
+nd-2022, and publication of these settings will consequently cease permanently immediately
+after a final publication on 30 December 2022.
+2 
+6. As the transition away from US dollar LIBOR progresses, we will continue to consider the case for
+u
+sing these proposed powers also to require continued publication on a synthetic basis of the 1 -
+month, 3-month and 6-month US dollar LIBOR settings for a further period after end -June 2023,
+taking into account views and evidence from the US authorities and other stakeholders.
+7. W
+here we decide to require IBA to continue the publication of any settings on a synthetic basis,
+the methodology we would propose to require LIBOR's administrator to use is as set out in our
+statements of policy described below. Although this methodology provides in our view a fair
+approximation of what panel bank LIBOR would have been beyond the end-dates for each of the
+panels, LIBOR settings published on this synthetic basis will no longer be representative of the
+underlying market and economic reality the setting is intended to measure as those terms are
+used in the BMR.
+8. C
+onsequently it is clear that these 9 LIBOR benchmark settings (1 -month, 3-month and 6-month
+s
+ettings in each of sterling, Japanese yen and US dollar LIBOR) will no longer be representative of
+the underlying market and economic reality that such setting is intended to measure and that
+representativeness will not be restored, as set out below.
+• I
+mmediately after 31 December 2021, the 1 -month, 3 -month and 6 -month Japanese yen
+LIBOR settings and the 1-month, 3-month and 6-month sterling LIBOR settings will no longer
+be representative and representativeness will not be restored.
+• I
+mmediately after 30 June 2023, the 1-month, 3-month and 6-month US dollar LIBOR settings
+wi
+ll no longer be representative and representativeness will not be restored.
+9. I
+t follows that all 35 LIBOR settings will either cease to be provided by any administrator or no
+longer be representative immediately after the dates set out above.
+10. W
+e make this statement in the awareness that it will engage certain contractual triggers for the
+calculation and future application of fallbacks that are activated by pre -cessation or cessation
+announcements made by the FCA (howsoever described) in contracts, and in accordance with our
+11 March 2020 statement on LIBOR contractual triggers.
+11. T
+he exercise of our proposed new powers to require continued publication on a synthetic basis is
+subject to the enactment of the Financial Services Bill by Parliament. Any decision to use them to
+require a methodology change for LIBOR settings will take into account evidence and views from
+market participants and our counterpart global authorities, and will be consulted upon in due
+course.
+12. W
+e have also published today our statements of policy  in relation to some of the proposed new
+powers that the government is legislating to grant us under the BMR.  The statements of policy
+provide more detail of the policy framework which explains why we have no intention to use our
+proposed powers to require continued publication on a synthetic basis for 26 of the LIBOR
+settings, will con sult on using them for the remaining 3 sterling LIBOR settings and, for one
+additional year, the remaining 3 Japanese yen LIBOR settings, and will continue to consider the
+case for using them for the 3 US dollar LIBOR settings as described above. It also c onfirms our
+i
+ntentions with regard to the methodology we would propose to use for any settings published on
+a synthetic basis (i.e. a forward looking term rate version of the relevant Risk Free Rate plus a fixed 
+3 
+spread adjustment calculated over the same period and in the same way as the spread adjustment 
+implemented in the IBOR Fallbacks Supplement and the 2020 IBOR Fallbacks Protocol published 
+by the International Swaps and Derivatives Association).  
+13. We
+ remind market participants that, although publication of certain LIBOR settings on a synthetic
+basis would be intended to assist legacy contract holders, new use of this synthetic LIBOR by UK
+regulated firms in regulated financial instruments would be prohibited under the BMR  as
+amended by the Financial Se rvices Bill currently being enacted by Parliament . Continued use by
+regulated firms in legacy financial instruments would also be subject to the FCA using its proposed
+powers to permit such use. We will consult later in 2021 on which legacy uses of synthetic LIBOR
+might be permitted.

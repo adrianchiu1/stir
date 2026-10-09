@@ -1,0 +1,149 @@
+ 
+ 
+ 
+SUBMISSION COVER SHEET  
+IMPORTANT:    Check box if Confidential Treatment is requested     
+Registered Entity Identifier Code (optional): 23-072 
+Organization: Chicago Mercantile Exchange Inc. (“CME”) 
+Filing as a:        DCM          SEF          DCO          SDR        
+Please note - only ONE choice allowed.  
+Filing Date (mm/dd/yy ):  03/28/23   Filing Description:  Reduction of the Listing Schedule of 
+the Three-Month SOFR Futures Contract 
+ 
+SPECIFY FILING TYPE    
+Please note only ONE choice allowed per Submission.  
+Organization Rules and Rule Amendments  
+ Certification       § 40.6(a) 
+ Approval       § 40.5(a) 
+ Notification      § 40.6(d) 
+ Advance Notice of SIDCO Rule Change    § 40.10(a) 
+ SIDCO Emergency Rule Change     § 40.10(h) 
+Rule Numbers:   
+New Product    Please note only ONE product per Submission.  
+ Certification      § 40.2(a)  
+ Certification Security Futures     § 41.23(a) 
+ Certification Swap Class     § 40.2(d) 
+ Approval      § 40.3(a) 
+ Approval Security Futures     § 41.23(b) 
+ Novel Derivative Product Notification    § 40.12(a) 
+ Swap Submission      § 39.5 
+Product Terms and Conditions (product related Rules a nd Rule Amendments)  
+ Certification      § 40.6(a)  
+ Certification Made Available to Trade Determination  § 40.6(a) 
+ Certification Security Futures     § 41.24(a) 
+ Delisting (No Open Interest)     § 40.6(a)  
+ Approval        § 40.5(a) 
+ Approval Made Available to Trade Determination   § 40.5(a) 
+ Approval Security Futures     § 41.24(c) 
+ Approval Amendments to enumerated agricultural products  § 40.4(a),  § 40.5(a) 
+ “Non-Material Agricultural Rule Change”    § 40.4(b)(5) 
+ Notification      § 40.6(d) 
+ 
+Official Name(s) of Product(s) Affected : See filing.  
+ 
+Rule Numbers:    CME Chapter 460 .
+300 Vesey Street     New York, NY 10282   T 212 299 2200  F 212 301 4645   christopher.bowen@cmegroup.com   cmegroup.com 
+1 
+ 
+  
+Christopher Bowen  
+Managing Director and Chief Regulatory Counsel 
+Legal Department 
+ 
+ 
+ 
+March 28, 2023 
+ 
+VIA ELECTRONIC PORTAL 
+ 
+Mr. Christopher J. Kirkpatrick 
+Office of the Secretariat 
+Commodity Futures Trading Commission 
+3 Lafayette Center 
+1155 21st Street NW 
+Washington, DC   20581 
+ 
+ 
+Re: CFTC Regulation 40.6(a) Certification.  Reduction of the Listing Schedule of the 
+Three-Month SOFR Futures Contract. 
+CME Submission No. 23-072 
+ 
+Dear Mr. Kirkpatrick: 
+ 
+Chicago Mercantile Exchange Inc. (“CME”  or “Exchanges”) certifies to the Commodity Futures Trading Commission 
+(“CFTC” or “Commission”) the reduction of the listing schedule of the Three -Month SOFR Futures contract (the 
+“Contract”) for trading on the CME Globex electronic trading platform (“CME Globex”) and for submission for clearing 
+via CME ClearPort as noted in the table below effective Sunday, April 23, 2023, for trade date Monday, April 24, 2023.  
+  
+Contract Title Commodity  
+Code 
+Rulebook 
+Chapter 
+Current 
+Listing  
+Schedule 
+Reduced 
+ Listing 
+ Schedule 
+ 
+ 
+Three-Month 
+SOFR Futures 
+ 
+ 
+SR3 
+ 
+ 
+460 
+Quarterly contracts (Mar, Jun, 
+Sep, Dec) listed for 41 
+consecutive quarters and the 
+nearest 6 serial contract 
+months 
+Quarterly contracts (Mar, Jun, 
+Sep, Dec) listed for 39 
+consecutive quarters and the 
+nearest 6 serial contract 
+months 
+  
+The listing schedule of the Contract currently provides that quarterly contracts will be listed for forty-one (41) months. 
+Effective on trade date April 24, 2023, the Exchange will reduce the listing schedule of quarterly contracts from (41) to 
+(39) months (collectively, the “Rule Amendments”). The listing schedule of serial contracts will remain unchanged, the 
+nearest six (6) serial contract months will be listed (see CME Submission No. 23-071 dated March 1, 2023).  
+ 
+The Exchange reviewed the de signated contract market core principles (“Core Principles”) as set forth in the 
+Commodity Exchange Act (“CEA” or “Act”) and identified that the Rule Amendments may have some bearing on the 
+following Core Principles:  
+ 
+• Daily Publication of Trading Informat ion: CME will continue to publish contract trading volumes,  open 
+interest levels, and price information daily on its website. 
+ 
+• Execution of Transactions: The Exchange will continue to provide a competitive, open, and efficient market 
+and mechanism for executing transactions that protects the price discovery process of trading the Contract. 
+ 
+• Availability of General Information : The Exchange will release a Special Executive Report (“SER”)  
+regarding the Rule Amendments to ensure notification to market participants. The SER will also be posted on 
+the CME Group website. 
+ 
+ 
+Pursuant to Section 5c(c) of the Act and Regulation 40.6(a), the Exchange certifies that the Rule Amendments comply 
+with the Act, including all regulations thereunder.  There were no substantive opposing views to this proposal. 
+
+300 Vesey Street     New York, NY 10282   T 212 299 2200  F 212 301 4645   christopher.bowen@cmegroup.com   cmegroup.com 
+2 
+ 
+ 
+The Exchange certif ies that this submission has been concurrently posted on the Exchange ’s website at 
+http://www.cmegroup.com/market-regulation/rule-fillings.html. 
+ 
+Should you have any questions concerning the above, please contact the undersigned at ( 212) 299 -2200 or 
+CMEGSubmissionInquiry@cmegroup.com.  
+                                         
+ Sincerely, 
+ 
+ 
+                                                                                      /s/ Christopher Bowen 
+                                                                                                   Managing Director and Chief Regulatory Counsel 
+ 
+ 
+ 
