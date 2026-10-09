@@ -102,7 +102,7 @@ instruments:
       source: cbot_ch22
       quote: "the rate for such day shall be the rate for the last preceding day for which a rate was published"
     daycount: {name: ACT/360, source: cbot_ch22, quote: "the actual number of days spanned by the one-month term of such deposit, divided by a 360-day year"}
-    exchange_calendar: us_sifma      # QUESTION (PR): CME business days; us_sifma vs us_fed differ on Good Friday month-ends (2013-03-29, 2018-03-30, 2024-03-29)
+    exchange_calendar: us_fed        # AC, PR #2: Good Friday month-ends (2013-03-29, 2018-03-30, 2024-03-29) count; nobody trades them
     last_trade:
       rule: last_business_day_of_month
       calendar: exchange
@@ -137,7 +137,7 @@ instruments:
       fixing_calendar: us_sofr
       source: cme_sr1_specs
     daycount: {name: ACT/360, source: cme_sr1_specs}
-    exchange_calendar: us_sifma
+    exchange_calendar: us_fed
     last_trade: {rule: last_business_day_of_month, calendar: exchange, source: cme_sr1_specs}
     final_settlement: {rule: publication_of_last_day_rate, calendar: us_sofr, source: cme_sr1_specs}
     listing:
@@ -173,7 +173,7 @@ instruments:
       source: cme_19_366
       quote: "rate per annum of daily compounded SOFR interest"
     daycount: {name: ACT/360, source: cme_24_204, quote: "360 days per year / 91 days"}
-    exchange_calendar: us_sifma
+    exchange_calendar: us_fed
     last_trade:
       rule: business_days_before_window_end   # business day before the 3rd Wed ending the Reference Quarter
       n: 1
@@ -207,7 +207,7 @@ instruments:
       rule: imm_plus_tenor          # 3M deposit from the 3rd Wed (spot); end adjusted on the joint calendar
       tenor: 3M
       adjust: modified_following
-      calendars: [uk, us_fed]       # QUESTION (PR): ICE LIBOR maturity calendar (London only vs London+NY); or IMM-to-IMM?
+      calendars: [uk, us_fed]       # London+NY; London-only gives the same end for every ED quoted 2010-2023
       source: cme_ch452
       quote: "three-month unsecured wholesale Eurodollar bank deposit"
     accrual:
@@ -216,7 +216,7 @@ instruments:
       source: cme_ch452
       quote: "as first published on the second London bank business day immediately preceding the third Wednesday"
     daycount: {name: ACT/360, source: cme_ch452, quote: "the actual number of days spanned by the three-month term of such deposit, divided by a 360-day year"}
-    exchange_calendar: us_sifma
+    exchange_calendar: us_fed
     last_trade:
       rule: business_days_before_imm
       n: 2
@@ -267,8 +267,8 @@ instruments:
     tenors: [1W, 2W, 3W, 1M, 2M, 3M, 4M, 5M, 6M, 7M, 8M, 9M, 10M, 11M, 1Y, 18M, 2Y, 3Y, 4Y, 5Y, 6Y, 7Y, 8Y, 9Y, 10Y, 12Y, 15Y, 20Y, 25Y, 30Y]
     fixed_leg: {frequency: annual, short_tenor: single_payment_le_1y, daycount: ACT/360}
     float_leg: {frequency: annual, accrual: compounded, daycount: ACT/360, fixing_calendar: us_sofr}
-    spot_lag: {days: 2, calendar: us_sifma}      # QUESTION (PR): us_sifma vs us_sofr for SOFR OIS accrual/payment
-    payment_lag: {days: 2, calendar: us_sifma}
+    spot_lag: {days: 2, calendar: us_sofr}       # AC, PR #2: repo-market days = SIFMA full trading days (us_sofr)
+    payment_lag: {days: 2, calendar: us_sofr}
     roll: modified_following
     source: bbg_des
     first_date: "2018-07-01"        # QUESTION (PR): first usable USOSFR history

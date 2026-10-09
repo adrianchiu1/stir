@@ -120,7 +120,7 @@ each parser's row count on it.
 | `stircurve/marketdata/manifest.py` | Loads and validates the manifest against `usd.yaml`; ticker naming; the column plan for any date range. |
 | `stircurve/marketdata/contracts.py`, `scripts/contract_table.py` | Contract table: every listed future in a range with reference window [start, end), last trade, final settlement, first listed, last quote, settlement rule. |
 | `stircurve/marketdata/sources.py`, `scripts/capture_exchange_specs.py` | Captures the rule documents (CME/CBOT filings on cftc.gov, NY Fed, FCA) into `tests/fixtures/live`; every quoted rule passage must appear in its capture. |
-| `stircurve/marketdata/dump.py`, `scripts/dump_bloomberg.py` | Terminal machine only: manifest -> `pxts.read_bdh` -> wide CSVs. Dry run by default; `--commit` writes; a changed or vanished value blocks (exit 2); re-runs are no-ops. |
+| `stircurve/marketdata/dump.py`, `scripts/dump_bloomberg.py` | Terminal machine only: manifest -> `pxts.read_bdh` -> wide CSVs. Dry run by default; `--write-csv` writes the files (committing them to git is a separate step); a changed or vanished value blocks (exit 2); re-runs are no-ops. |
 | `stircurve/marketdata/loader.py`, `scripts/check_market_data.py` | Tidy frame keyed by (date, instrument, contract, field) plus a report: unknown columns, malformed files, out-of-range values and quotes outside a contract's listing window block (exit 2); missing columns, stale values and values outside first/last dates warn. |
 | `scripts/m1_gate.py` -> `docs/m1_gate.md` | Gate evidence: rule sources, listing checks against the filings, generated windows, the loader report on real days. |
 
@@ -132,8 +132,8 @@ On a Bloomberg terminal machine (`pip install -e .[bloomberg]`):
 
 ```
 python scripts/dump_bloomberg.py --start 2026-10-07 --end 2026-10-07              # dry run: diff only
-python scripts/dump_bloomberg.py --start 2026-10-07 --end 2026-10-07 --commit
-python scripts/dump_bloomberg.py --start 2019-06-12 --end 2019-06-12 --commit     # LIBOR era
+python scripts/dump_bloomberg.py --start 2026-10-07 --end 2026-10-07 --write-csv
+python scripts/dump_bloomberg.py --start 2019-06-12 --end 2019-06-12 --write-csv  # LIBOR era
 python scripts/check_market_data.py --start 2026-10-07 --end 2026-10-07           # exit 0 = no blocking problem
 python scripts/m1_gate.py                                                         # refresh docs/m1_gate.md
 ```

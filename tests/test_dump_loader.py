@@ -54,15 +54,15 @@ class FakeBloomberg:
                             index=pd.DatetimeIndex(days))
 
 
-def _dump(root, start, end, fake, commit=True, as_of=D(2026, 10, 8)):
-    return dumper.dump(M, start, end, fake.read_bdh, commit=commit, as_of=as_of, root=root)
+def _dump(root, start, end, fake, write_csv=True, as_of=D(2026, 10, 8)):
+    return dumper.dump(M, start, end, fake.read_bdh, write_csv=write_csv, as_of=as_of, root=root)
 
 
 def test_dump_writes_wide_csvs_and_is_idempotent():
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         fake = FakeBloomberg()
-        dry = _dump(root, D(2026, 10, 7), D(2026, 10, 7), fake, commit=False)
+        dry = _dump(root, D(2026, 10, 7), D(2026, 10, 7), fake, write_csv=False)
         assert not dry.blocking and not dry.written and not any(root.rglob("*.csv"))
         res = _dump(root, D(2026, 10, 7), D(2026, 10, 7), fake)
         files = sorted(p.relative_to(root).as_posix() for p in root.rglob("*.csv"))
@@ -92,7 +92,7 @@ def test_dump_refuses_to_change_values_on_file():
         f = root / "usd/2026/fixings.csv"
         before = f.read_bytes()
         rc = dump_bloomberg.main(["--start", "2026-10-07", "--end", "2026-10-07", "--root", str(root),
-                                  "--as-of", "2026-10-08", "--commit"],
+                                  "--as-of", "2026-10-08", "--write-csv"],
                                  read_bdh=FakeBloomberg(bump={"SOFRRATE Index": 0.01}).read_bdh)
         assert rc == 2 and f.read_bytes() == before
         res = _dump(root, D(2026, 10, 7), D(2026, 10, 7), FakeBloomberg(dead={"SOFRRATE Index"}))

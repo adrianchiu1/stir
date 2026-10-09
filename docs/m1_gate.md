@@ -60,13 +60,13 @@ Windows are [start, end); last trade and final settlement on the manifest calend
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | ff_fut | 2010-01 | FFF10 Comdty | 2010-01-01 | 2010-02-01 | 31 | Fri 2010-01-29 | Mon 2010-02-01 | 2010-01-01 (lower bound) | 2010-01-29 |
 | ff_fut | 2015-12 | FFZ15 Comdty | 2015-12-01 | 2016-01-01 | 31 | Thu 2015-12-31 | Mon 2016-01-04 | 2013-01-02 | 2015-12-31 |
-| ff_fut | 2018-03 | FFH18 Comdty | 2018-03-01 | 2018-04-01 | 31 | Thu 2018-03-29 | Mon 2018-04-02 | 2015-04-01 | 2018-03-29 |
-| ff_fut | 2024-03 | FFH24 Comdty | 2024-03-01 | 2024-04-01 | 31 | Thu 2024-03-28 | Mon 2024-04-01 | 2020-09-21 | 2024-03-28 |
+| ff_fut | 2018-03 | FFH18 Comdty | 2018-03-01 | 2018-04-01 | 31 | Fri 2018-03-30 | Mon 2018-04-02 | 2015-04-01 | 2018-03-30 |
+| ff_fut | 2024-03 | FFH24 Comdty | 2024-03-01 | 2024-04-01 | 31 | Fri 2024-03-29 | Mon 2024-04-01 | 2020-09-21 | 2024-03-29 |
 | ff_fut | 2026-10 | FFV26 Comdty | 2026-10-01 | 2026-11-01 | 31 | Fri 2026-10-30 | Mon 2026-11-02 | 2021-11-01 | 2026-10-30 |
 | ff_fut | 2027-12 | FFZ27 Comdty | 2027-12-01 | 2028-01-01 | 31 | Fri 2027-12-31 | Mon 2028-01-03 | 2023-01-03 | 2027-12-31 |
 | sofr1m_fut | 2018-05 | SERK18 Comdty | 2018-05-01 | 2018-06-01 | 31 | Thu 2018-05-31 | Fri 2018-06-01 | 2018-05-07 | 2018-05-31 |
 | sofr1m_fut | 2020-03 | SERH20 Comdty | 2020-03-01 | 2020-04-01 | 31 | Tue 2020-03-31 | Wed 2020-04-01 | 2019-09-03 | 2020-03-31 |
-| sofr1m_fut | 2024-03 | SERH24 Comdty | 2024-03-01 | 2024-04-01 | 31 | Thu 2024-03-28 | Mon 2024-04-01 | 2023-09-01 | 2024-03-28 |
+| sofr1m_fut | 2024-03 | SERH24 Comdty | 2024-03-01 | 2024-04-01 | 31 | Fri 2024-03-29 | Mon 2024-04-01 | 2023-09-01 | 2024-03-29 |
 | sofr1m_fut | 2026-10 | SERV26 Comdty | 2026-10-01 | 2026-11-01 | 31 | Fri 2026-10-30 | Mon 2026-11-02 | 2026-04-01 | 2026-10-30 |
 | sofr1m_fut | 2027-12 | SERZ27 Comdty | 2027-12-01 | 2028-01-01 | 31 | Fri 2027-12-31 | Mon 2028-01-03 | 2027-06-01 | 2027-12-31 |
 | sofr3m_fut | 2018-06 | SFRM18 Comdty | 2018-06-20 | 2018-09-19 | 91 | Tue 2018-09-18 | Wed 2018-09-19 | 2018-05-07 | 2018-09-18 |
@@ -82,26 +82,26 @@ Windows are [start, end); last trade and final settlement on the manifest calend
 | ed_fut | 2023-06 | EDM23 Comdty | 2023-06-21 | 2023-09-21 | 92 | Mon 2023-06-19 | Mon 2023-06-19 | 2013-06-18 | 2023-06-19 |
 | ed_fut | 2023-09 | EDU23 Comdty | 2023-09-20 | 2023-12-20 | 91 | Mon 2023-09-18 | Mon 2023-09-18 | 2013-09-17 | 2023-04-14 (converted 2023-04-14) |
 
-### Contracts where the calendar choice moves a date
+### Contracts where a holiday moves a date
 
-Each row is an open question in the PR (exchange business days: `us_sifma` vs `us_fed`; SR3 Reference Quarter
-boundaries on non-SOFR days).
+Exchange business days are `us_fed` (AC, PR #2). SR3 Reference Quarters keep their IMM boundaries when
+the IMM date is not a SOFR day (Juneteenth 2024 and 2030; open in the PR).
 
-| Instrument | Contract | Ticker | Window [start, end) | Last trade (manifest) | Alternative | Why |
+| Instrument | Contract | Ticker | Window [start, end) | Last trade | Final settlement | Why |
 | --- | --- | --- | --- | --- | --- | --- |
-| ff_fut | 2013-03 | FFH13 Comdty | 2013-03-01–2013-04-01 | Thu 2013-03-28 | Fri 2013-03-29 | us_fed business day (Good Friday: SIFMA closed, Fed open) |
-| ff_fut | 2018-03 | FFH18 Comdty | 2018-03-01–2018-04-01 | Thu 2018-03-29 | Fri 2018-03-30 | us_fed business day (Good Friday: SIFMA closed, Fed open) |
-| ff_fut | 2024-03 | FFH24 Comdty | 2024-03-01–2024-04-01 | Thu 2024-03-28 | Fri 2024-03-29 | us_fed business day (Good Friday: SIFMA closed, Fed open) |
-| ff_fut | 2029-03 | FFH29 Comdty | 2029-03-01–2029-04-01 | Thu 2029-03-29 | Fri 2029-03-30 | us_fed business day (Good Friday: SIFMA closed, Fed open) |
-| sofr1m_fut | 2024-03 | SERH24 Comdty | 2024-03-01–2024-04-01 | Thu 2024-03-28 | Fri 2024-03-29 | us_fed business day (Good Friday: SIFMA closed, Fed open) |
-| sofr3m_fut | 2024-03 | SFRH24 Comdty | 2024-03-20–2024-06-19 | Tue 2024-06-18 | — | Reference Quarter ends on a non-SOFR day (Wed 2024-06-19); final settlement Thu 2024-06-20 |
-| sofr3m_fut | 2024-06 | SFRM24 Comdty | 2024-06-19–2024-09-18 | Tue 2024-09-17 | — | Reference Quarter starts on a non-SOFR day (Wed 2024-06-19); final settlement Wed 2024-09-18 |
-| sofr3m_fut | 2030-03 | SFRH30 Comdty | 2030-03-20–2030-06-19 | Tue 2030-06-18 | — | Reference Quarter ends on a non-SOFR day (Wed 2030-06-19); final settlement Thu 2030-06-20 |
-| sofr3m_fut | 2030-06 | SFRM30 Comdty | 2030-06-19–2030-09-18 | Tue 2030-09-17 | — | Reference Quarter starts on a non-SOFR day (Wed 2030-06-19); final settlement Wed 2030-09-18 |
-| ed_fut | 2017-04 | EDJ17 Comdty | 2017-04-19–2017-07-19 | Thu 2017-04-13 | Mon 2017-04-17 | London holiday: not the Monday before the IMM date |
-| ed_fut | 2020-04 | EDJ20 Comdty | 2020-04-15–2020-07-15 | Thu 2020-04-09 | Mon 2020-04-13 | London holiday: not the Monday before the IMM date |
-| ed_fut | 2022-04 | EDJ22 Comdty | 2022-04-20–2022-07-20 | Thu 2022-04-14 | Mon 2022-04-18 | London holiday: not the Monday before the IMM date |
-| ed_fut | 2022-09 | EDU22 Comdty | 2022-09-21–2022-12-21 | Fri 2022-09-16 | Mon 2022-09-19 | London holiday: not the Monday before the IMM date |
+| ff_fut | 2013-03 | FFH13 Comdty | 2013-03-01–2013-04-01 | Fri 2013-03-29 | Mon 2013-04-01 | Good Friday month-end: SIFMA closed, last trade on the us_fed day (AC, PR #2) |
+| ff_fut | 2018-03 | FFH18 Comdty | 2018-03-01–2018-04-01 | Fri 2018-03-30 | Mon 2018-04-02 | Good Friday month-end: SIFMA closed, last trade on the us_fed day (AC, PR #2) |
+| ff_fut | 2024-03 | FFH24 Comdty | 2024-03-01–2024-04-01 | Fri 2024-03-29 | Mon 2024-04-01 | Good Friday month-end: SIFMA closed, last trade on the us_fed day (AC, PR #2) |
+| ff_fut | 2029-03 | FFH29 Comdty | 2029-03-01–2029-04-01 | Fri 2029-03-30 | Mon 2029-04-02 | Good Friday month-end: SIFMA closed, last trade on the us_fed day (AC, PR #2) |
+| sofr1m_fut | 2024-03 | SERH24 Comdty | 2024-03-01–2024-04-01 | Fri 2024-03-29 | Mon 2024-04-01 | Good Friday month-end: SIFMA closed, last trade on the us_fed day (AC, PR #2) |
+| sofr3m_fut | 2024-03 | SFRH24 Comdty | 2024-03-20–2024-06-19 | Tue 2024-06-18 | Thu 2024-06-20 | Reference Quarter ends on a non-SOFR day (Wed 2024-06-19) |
+| sofr3m_fut | 2024-06 | SFRM24 Comdty | 2024-06-19–2024-09-18 | Tue 2024-09-17 | Wed 2024-09-18 | Reference Quarter starts on a non-SOFR day (Wed 2024-06-19) |
+| sofr3m_fut | 2030-03 | SFRH30 Comdty | 2030-03-20–2030-06-19 | Tue 2030-06-18 | Thu 2030-06-20 | Reference Quarter ends on a non-SOFR day (Wed 2030-06-19) |
+| sofr3m_fut | 2030-06 | SFRM30 Comdty | 2030-06-19–2030-09-18 | Tue 2030-09-17 | Wed 2030-09-18 | Reference Quarter starts on a non-SOFR day (Wed 2030-06-19) |
+| ed_fut | 2017-04 | EDJ17 Comdty | 2017-04-19–2017-07-19 | Thu 2017-04-13 | Thu 2017-04-13 | London holiday: not the Monday before the IMM date |
+| ed_fut | 2020-04 | EDJ20 Comdty | 2020-04-15–2020-07-15 | Thu 2020-04-09 | Thu 2020-04-09 | London holiday: not the Monday before the IMM date |
+| ed_fut | 2022-04 | EDJ22 Comdty | 2022-04-20–2022-07-20 | Thu 2022-04-14 | Thu 2022-04-14 | London holiday: not the Monday before the IMM date |
+| ed_fut | 2022-09 | EDU22 Comdty | 2022-09-21–2022-12-21 | Fri 2022-09-16 | Fri 2022-09-16 | London holiday: not the Monday before the IMM date |
 
 ## Windows vs the exchange's published calendars
 
@@ -119,7 +119,7 @@ Not dumped yet. On the terminal machine:
 
 ```
 python scripts/dump_bloomberg.py --start 2026-10-07 --end 2026-10-07            # dry run
-python scripts/dump_bloomberg.py --start 2026-10-07 --end 2026-10-07 --commit
+python scripts/dump_bloomberg.py --start 2026-10-07 --end 2026-10-07 --write-csv
 python scripts/check_market_data.py --start 2026-10-07 --end 2026-10-07
 ```
 
@@ -129,6 +129,6 @@ Not dumped yet. On the terminal machine:
 
 ```
 python scripts/dump_bloomberg.py --start 2019-06-12 --end 2019-06-12            # dry run
-python scripts/dump_bloomberg.py --start 2019-06-12 --end 2019-06-12 --commit
+python scripts/dump_bloomberg.py --start 2019-06-12 --end 2019-06-12 --write-csv
 python scripts/check_market_data.py --start 2019-06-12 --end 2019-06-12
 ```

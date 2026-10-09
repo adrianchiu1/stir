@@ -10,7 +10,7 @@ Never overwrites silently. The new values are merged into the existing file
 and diffed like the reference-data updaters: new dates, new columns and
 NaN -> value fills are additions; a changed value or a value that disappears
 is blocking (nothing is written, exit 2). Files are written only with
-``commit=True``; an unchanged file is not rewritten (idempotent).
+``write_csv=True``; an unchanged file is not rewritten (idempotent).
 """
 from __future__ import annotations
 
@@ -190,7 +190,7 @@ def market_path(root: Path, ccy: str, year: int, group: str) -> Path:
     return root / ccy.lower() / f"{year}" / f"{group}.csv"
 
 
-def dump(m: Manifest, start: dt.date, end: dt.date, read_bdh=None, *, commit: bool = False,
+def dump(m: Manifest, start: dt.date, end: dt.date, read_bdh=None, *, write_csv: bool = False,
          as_of: dt.date | None = None, root: Path = MARKET_DIR, groups: list[str] | None = None,
          timeout: float = 30, chunk: int = CHUNK) -> DumpResult:
     if read_bdh is None:
@@ -207,7 +207,7 @@ def dump(m: Manifest, start: dt.date, end: dt.date, read_bdh=None, *, commit: bo
         result.diffs.append(diff)
         if not diff.empty:
             staged.append((merged, path))
-    if commit and not result.blocking:
+    if write_csv and not result.blocking:
         for merged, path in staged:
             write_wide(merged, path)
             result.written.append(path)

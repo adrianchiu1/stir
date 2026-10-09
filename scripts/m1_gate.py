@@ -71,35 +71,24 @@ def listing_checks(m) -> list[str]:
 
 
 def calendar_sensitive(m) -> list[str]:
-    """Contracts whose last trade / window moves with the calendar choice (PR questions)."""
-    rows = ["| Instrument | Contract | Ticker | Window [start, end) | Last trade (manifest) | Alternative | Why |",
+    """Contracts where a holiday moves a date away from the plain rule."""
+    rows = ["| Instrument | Contract | Ticker | Window [start, end) | Last trade | Final settlement | Why |",
             "| --- | --- | --- | --- | --- | --- | --- |"]
-    fed, sifma = m.calendar("us_fed"), m.calendar("us_sifma")
+    sifma, sofr = m.calendar("us_sifma"), m.calendar("us_sofr")
     for ins, (a, b) in RANGES.items():
         t = contract_table(m, D(a, 1, 1), D(b, 12, 31), [ins])
         for r in t.itertuples():
-            if ins in ("ff_fut", "sofr1m_fut"):
-                alt = fed.previous_business_day(r.ref_end)
-                why = "us_fed business day (Good Friday: SIFMA closed, Fed open)"
-            elif ins == "sofr3m_fut":
-                alt = fed.previous_business_day(r.ref_end)
-                why = "us_fed business day before the end IMM date"
-            else:
-                alt = r.ref_start - dt.timedelta(days=2)
-                why = "London holiday: not the Monday before the IMM date"
-                if alt == r.last_trade:
-                    continue
-                rows.append(f"| {ins} | {r.contract} | {r.bbg_ticker} | {r.ref_start}–{r.ref_end} | {_wd(r.last_trade)} | {_wd(alt)} | {why} |")
-                continue
-            if alt != r.last_trade:
-                rows.append(f"| {ins} | {r.contract} | {r.bbg_ticker} | {r.ref_start}–{r.ref_end} | {_wd(r.last_trade)} | {_wd(alt)} | {why} |")
-        if ins == "sofr3m_fut":
-            sofr = m.calendar("us_sofr")
-            for r in t.itertuples():
-                for label, d in (("starts", r.ref_start), ("ends", r.ref_end)):
-                    if not sofr.is_business_day(d):
-                        rows.append(f"| {ins} | {r.contract} | {r.bbg_ticker} | {r.ref_start}–{r.ref_end} | {_wd(r.last_trade)} | — | "
-                                    f"Reference Quarter {label} on a non-SOFR day ({_wd(d)}); final settlement {_wd(r.final_settlement)} |")
+            why = []
+            if ins in ("ff_fut", "sofr1m_fut") and sifma.previous_business_day(r.ref_end) != r.last_trade:
+                why.append("Good Friday month-end: SIFMA closed, last trade on the us_fed day (AC, PR #2)")
+            if ins == "sofr3m_fut":
+                why += [f"Reference Quarter {label} on a non-SOFR day ({_wd(d)})"
+                        for label, d in (("starts", r.ref_start), ("ends", r.ref_end)) if not sofr.is_business_day(d)]
+            if ins == "ed_fut" and r.ref_start - dt.timedelta(days=2) != r.last_trade:
+                why.append("London holiday: not the Monday before the IMM date")
+            if why:
+                rows.append(f"| {ins} | {r.contract} | {r.bbg_ticker} | {r.ref_start}–{r.ref_end} | {_wd(r.last_trade)} | "
+                            f"{_wd(r.final_settlement)} | {'; '.join(why)} |")
     return rows
 
 
@@ -140,7 +129,7 @@ def loader_section(m) -> list[str]:
         if not rep.values:
             out += [f"### {day}", "", "Not dumped yet. On the terminal machine:", "", "```",
                     f"python scripts/dump_bloomberg.py --start {day} --end {day}            # dry run",
-                    f"python scripts/dump_bloomberg.py --start {day} --end {day} --commit",
+                    f"python scripts/dump_bloomberg.py --start {day} --end {day} --write-csv",
                     f"python scripts/check_market_data.py --start {day} --end {day}", "```", ""]
             continue
         out += [f"### {day}", "", "```", rep.report(), "```", "",
@@ -187,10 +176,10 @@ def main() -> int:
         "",
         *sample_windows(m),
         "",
-        "### Contracts where the calendar choice moves a date",
+        "### Contracts where a holiday moves a date",
         "",
-        "Each row is an open question in the PR (exchange business days: `us_sifma` vs `us_fed`; SR3 Reference Quarter",
-        "boundaries on non-SOFR days).",
+        "Exchange business days are `us_fed` (AC, PR #2). SR3 Reference Quarters keep their IMM boundaries when",
+        "the IMM date is not a SOFR day (Juneteenth 2024 and 2030; open in the PR).",
         "",
         *calendar_sensitive(m),
         "",

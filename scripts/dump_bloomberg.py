@@ -4,14 +4,14 @@
 Run on a Bloomberg terminal machine (pip install -e .[bloomberg]); pxts.read_bdh
 is the only network call. Writes data/market/<ccy>/<YYYY>/<group>.csv, one
 column per <ticker>|<field>, ISO dates, NaN for missing. Nothing is written
-without --commit; a run that would change or remove a value already in a file
+without --write-csv; a run that would change or remove a value already in a file
 writes nothing and exits 2. Re-running the same range is a no-op.
 
 Examples
     python scripts/dump_bloomberg.py --start 2026-10-07 --end 2026-10-07              # dry run: diff only
-    python scripts/dump_bloomberg.py --start 2026-10-07 --end 2026-10-07 --commit
-    python scripts/dump_bloomberg.py --start 2019-06-12 --end 2019-06-12 --commit
-    python scripts/dump_bloomberg.py --start 2010-01-01 --end 2026-10-07 --group sofr3m_fut --commit
+    python scripts/dump_bloomberg.py --start 2026-10-07 --end 2026-10-07 --write-csv
+    python scripts/dump_bloomberg.py --start 2019-06-12 --end 2019-06-12 --write-csv
+    python scripts/dump_bloomberg.py --start 2010-01-01 --end 2026-10-07 --group sofr3m_fut --write-csv
 """
 from __future__ import annotations
 
@@ -35,13 +35,13 @@ def main(argv=None, read_bdh=None) -> int:
     ap.add_argument("--as-of", type=dt.date.fromisoformat, help="date deciding live vs expired ticker form (default today)")
     ap.add_argument("--root", type=Path, default=dumper.MARKET_DIR, help="market-data root (default data/market)")
     ap.add_argument("--timeout", type=float, default=30, help="read_bdh timeout per request, seconds")
-    ap.add_argument("--commit", action="store_true", help="write files when the diff is non-blocking")
+    ap.add_argument("--write-csv", action="store_true", help="write the CSV files when the diff is non-blocking (git add/commit is separate)")
     ap.add_argument("--dry-run", action="store_true", help="(default) show the diff only")
     args = ap.parse_args(argv)
     if args.end < args.start:
         ap.error("--end before --start")
     m = load_manifest(args.ccy)
-    res = dumper.dump(m, args.start, args.end, read_bdh, commit=args.commit and not args.dry_run,
+    res = dumper.dump(m, args.start, args.end, read_bdh, write_csv=args.write_csv and not args.dry_run,
                       as_of=args.as_of, root=args.root, groups=args.group, timeout=args.timeout)
     print(res.report())
     if res.blocking:
@@ -50,7 +50,7 @@ def main(argv=None, read_bdh=None) -> int:
     if res.written:
         print(f"\nwritten: {len(res.written)} file(s)")
     else:
-        print("\nok" + (" (nothing to write)" if args.commit else " (dry run; add --commit to write)"))
+        print("\nok" + (" (nothing to write)" if args.write_csv else " (dry run; add --write-csv to write)"))
     return 0
 
 

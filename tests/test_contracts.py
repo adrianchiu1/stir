@@ -20,18 +20,18 @@ def _listed_on(ins, day):
 
 def test_ff_windows_2010_2027():
     t = _table("ff_fut", 2010, 2027)
-    sifma, fed = M.calendar("us_sifma"), M.calendar("us_fed")
+    fed = M.calendar("us_fed")
     assert t.contract.str[:4].astype(int).between(2010, 2032).all()
     for r in t.itertuples():
         assert r.ref_start.day == 1 and r.ref_end.day == 1 and r.ref_end.month % 12 == (r.ref_start.month + 1) % 12
-        assert r.last_trade.month == r.ref_start.month and sifma.is_business_day(r.last_trade)
-        assert not any(sifma.is_business_day(r.last_trade + dt.timedelta(days=k))
+        assert r.last_trade.month == r.ref_start.month and fed.is_business_day(r.last_trade)
+        assert not any(fed.is_business_day(r.last_trade + dt.timedelta(days=k))
                        for k in range(1, (r.ref_end - r.last_trade).days))
         assert fed.is_business_day(r.final_settlement) and r.final_settlement >= r.ref_end_inclusive
     by = t.set_index("contract")
-    # Good Friday month-ends: us_sifma closed, us_fed open (QUESTION in the PR)
-    assert by.loc["2024-03", "last_trade"] == D(2024, 3, 28)
-    assert by.loc["2018-03", "last_trade"] == D(2018, 3, 29)
+    # Good Friday month-ends are us_fed business days (AC, PR #2)
+    assert by.loc["2024-03", "last_trade"] == D(2024, 3, 29)
+    assert by.loc["2018-03", "last_trade"] == D(2018, 3, 30)
     assert by.loc["2024-03", "final_settlement"] == D(2024, 4, 1)
     assert by.loc["2026-10", "last_trade"] == D(2026, 10, 30)
 
@@ -45,14 +45,14 @@ def test_ff_listing_36_then_60_months():
 
 def test_sr3_windows_2018_2027():
     t = _table("sofr3m_fut", 2018, 2027)
-    sifma = M.calendar("us_sifma")
+    fed = M.calendar("us_fed")
     for r in t.itertuples():
         y, mo = map(int, r.contract.split("-"))
         assert r.ref_start == third_wednesday(y, mo)       # named for the month its Reference Quarter starts (19-366)
         end_m = (mo + 2) % 12 + 1
         assert r.ref_end == third_wednesday(y + (mo + 3 > 12), end_m)
         assert r.accrual_days in (84, 91, 98)               # 12-14 weeks (24-204)
-        assert r.last_trade == sifma.previous_business_day(r.ref_end)
+        assert r.last_trade == fed.previous_business_day(r.ref_end)
     by = t.set_index("contract")
     assert (by.loc["2024-03", "ref_start"], by.loc["2024-03", "ref_end"]) == (D(2024, 3, 20), D(2024, 6, 19))
     assert by.loc["2024-03", "last_trade"] == D(2024, 6, 18)
@@ -79,10 +79,10 @@ def test_sr3_listed_set_25_jul_2022_matches_cme_22_199():
 
 def test_sr1_windows_2018_2027():
     t = _table("sofr1m_fut", 2018, 2027)
-    sifma = M.calendar("us_sifma")
+    fed = M.calendar("us_fed")
     for r in t.itertuples():
         assert r.ref_start.day == 1 and r.ref_end.day == 1
-        assert r.last_trade == sifma.previous_business_day(r.ref_end)
+        assert r.last_trade == fed.previous_business_day(r.ref_end)
     assert t.first_listed.min() == D(2018, 5, 7)
     assert len(_listed_on("sofr1m_fut", D(2018, 5, 7))) == 7
 
