@@ -175,7 +175,9 @@ def test_every_live_fixture_has_an_expected_count():
     m = load_manifest("usd")
     rule_docs = {latest_fixture(s["fixture"], LIVE).name for s in m.sources.values()
                  if s.get("fixture") and s.get("status", "captured") == "captured"}
-    assert sorted(p.name for p in LIVE.iterdir() if p.name not in rule_docs) == sorted(EXPECTED)
+    # WIRP captures (wirp_*) are M2 gate fixtures, pinned by tests/test_wirp.py
+    assert sorted(p.name for p in LIVE.iterdir() if p.name not in rule_docs
+                  and not p.name.startswith("wirp_")) == sorted(EXPECTED)
 
 
 def test_live_fixture_row_counts():

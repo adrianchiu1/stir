@@ -24,3 +24,43 @@ default_family_schedule:            # rolling 3m avg OI rule decides the switch;
 turns: [month_end, quarter_end, year_end]
 daycount: ACT/360
 spot_lag: 2
+front_end:                          # M2: EFFR-family front end (D2, D4, D7, D11; AC, PR #4)
+  family: effr
+  curves:                           # one step curve per instrument; FF and OIS are separate instruments with a basis (AC)
+    effr_fut: {instruments: [ff_fut], wirp_model: futures}
+    effr_ois: {instruments: [ois_effr], wirp_model: ois}
+  horizon_years: 3                  # parcels and synthetic meetings to as-of + 3y (D2); extended to the last instrument used
+  unscheduled: from_decision_date   # a decided unscheduled meeting is a known step from its decision date (no look-ahead)
+  move_size: 0.25                   # percent: A.R.M. (assumed rate move) for "number of 25bp moves"
+  spread:                           # D7: fixing - anchor in effect; converts implied EFFR to an implied policy rate
+    fixing: EFFR
+    anchor: target_midpoint         # policy_rates/fed.csv (see policy_anchors above)
+    window_bd: 63                   # trailing business days of the fixing calendar, ending the last rate date before as-of
+    turn_days: [month_end]          # last fixing-calendar business day of each month (quarter- and year-ends are month-ends)
+    estimator: winsorised_mean      # alternative: median
+    winsor: [0.10, 0.90]
+    min_obs: 20                     # fewer non-turn fixings than this: no spread (reported)
+  month_end_adjustment:             # D-F: a measured fixing effect inside the FF instrument model, never a node; off for the gate
+    enabled: false
+    dip_bp: 0.0                     # expected EFFR dip on a month-end day (bp), from policy.spread.turn_effects
+  fit:                              # D4: robust IRLS (Huber) with liquidity/staleness weights, per curve
+    quote_sigma_bp: {ff_fut: 0.5, ois_effr: 0.5}   # quote noise of a fully liquid, fresh quote (the fixed scale)
+    huber_k: 1.345                  # Huber threshold in standardised residuals
+    drop_weight: 0.2                # final Huber weight below this: on the drop list, refitted without it
+    max_iter: 50
+    tol_bp: 1.0e-5
+    liquidity:                      # weight = clip(max(OPEN_INT / open_interest_full, PX_VOLUME / volume_full), floor, 1)
+      ff_fut: {open_interest_full: 50000, volume_full: 20000, floor: 0.05, exclude_without_any: true}  # no OI and no volume: a derived settlement price, excluded
+    stale_multiplier: 0.1           # weight multiplier for a quote unchanged stale_days or more (manifest)
+    step_prior_sigma_bp: 100.0      # very weak prior on every step: keeps the problem well-posed, pulls an identified step by < 0.1bp
+    tie_sigma_bp: 2.0               # consecutive meetings nothing in the data tells apart move by equal steps (D-C: equal steps in time)
+    beyond_data_sigma_bp: 0.5       # steps after the last instrument's window: flat
+    stub_prior_sigma_bp: 25.0       # weak level prior on the stub (anchor + spread, else the last fixing)
+    loo_drop_z: 6.0                 # a quote whose leave-one-out residual exceeds this many times its effective noise (sigma / sqrt(weight)) is dropped
+    identified_threshold: 0.99      # share of a parcel's direction the data pin down; below it the parcel is prior-driven
+    leverage_threshold: 0.9         # quotes at or above: alone pin a parcel (leave-one-out residual reported)
+  wirp:                             # the replica of Bloomberg's two models (docs/research/wirp): gate reference
+    arm: 0.25
+    min_sensitivity: 0.01           # a quote prices a parcel when d(rate)/d(parcel) exceeds this (share of its window)
+    futures: {instrument: ff_fut, require_activity: true}      # contracts with open interest or volume only (WIRP's reach)
+    ois: {instrument: ois_effr, max_tenor_months: 12, skip_tenors: [2W, 3W]}   # 1W then the monthly tenors ("1M over 3W")
