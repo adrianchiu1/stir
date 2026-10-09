@@ -18,6 +18,17 @@ drop appears. Identification: the share of each parcel's unit direction lying
 in the row space of the weighted data Jacobian (1 = the data pin it down, 0 =
 only the prior does); parcels below ``identified_threshold`` are
 under-identified and their value comes from the prior's split (D4).
+
+The prior is a smooth (Tikhonov) pull: it also biases parcels the data identify,
+by about (sigma_quote / prior_sigma)^2 of the prior gap per quote pinning them
+(0.04bp for a 33bp gap at 0.5bp / 10bp; the OIS-split prior is usually within a
+few bp, so ~0.01bp). The identification table reports fitted minus prior.
+
+Leverage: the diagonal of the hat matrix of the final weighted problem (prior
+rows included). A quote with leverage near 1 alone pins a parcel: an error in it
+moves the parcel instead of leaving a residual, so no residual-based method
+(Huber included) can flag it, and its neighbours take the blame. The drop-list
+review reads residuals together with leverage.
 """
 from __future__ import annotations
 
@@ -46,6 +57,7 @@ class FitResult:
     huber_weight: np.ndarray
     dropped: list[int]           # observation indices on the drop list (in drop order)
     identification: np.ndarray   # per parcel, in [0, 1]
+    leverage: np.ndarray         # per observation, in [0, 1]
     iterations: int
     converged: bool
     rounds: list[list[int]] = field(default_factory=list)   # observations dropped in each refit round
@@ -104,7 +116,11 @@ def _solve(obs, active, x0, prior, prior_sigma_bp, k, max_iter, tol_bp):
     hw = huber_weights(r * np.sqrt(w) / sig, k)
     W = np.where(act, hw * w / sig ** 2, 0.0)
     J = jacobian(obs, x, f) * 100.0
-    return x, f, r, hw, np.sqrt(W)[:, None] * J, it, converged
+    # hat-matrix diagonal: rows a_i = sqrt(w_i)/sigma_i J_i against the final information matrix
+    A = np.vstack([np.sqrt(W)[:, None] * J, np.diag(100.0 / prior_sigma_bp)])
+    rows = (np.sqrt(w) / sig)[:, None] * J
+    lev = np.einsum("ij,ij->i", rows @ np.linalg.pinv(A.T @ A), rows) * np.where(act, hw, 1.0)
+    return x, f, r, hw, np.sqrt(W)[:, None] * J, lev, it, converged
 
 
 def fit(obs: list[Observation], prior: np.ndarray, prior_sigma_bp: np.ndarray | float, *, huber_k: float = 1.345,
@@ -117,7 +133,7 @@ def fit(obs: list[Observation], prior: np.ndarray, prior_sigma_bp: np.ndarray | 
     rounds: list[list[int]] = []
     total_it = 0
     for _ in range(MAX_DROP_ROUNDS):
-        x, f, r, hw, Jw, it, conv = _solve(obs, active, x, prior, ps, huber_k, max_iter, tol_bp)
+        x, f, r, hw, Jw, lev, it, conv = _solve(obs, active, x, prior, ps, huber_k, max_iter, tol_bp)
         total_it += it
         new = [i for i in active if hw[i] < drop_weight]
         if not new:
@@ -125,4 +141,6 @@ def fit(obs: list[Observation], prior: np.ndarray, prior_sigma_bp: np.ndarray | 
         rounds.append(new)
         dropped += new
         active = [i for i in active if i not in new]
-    return FitResult(x, f, r, hw, dropped, identification(Jw), total_it, conv, rounds)
+    lev = np.clip(lev, 0.0, 1.0)
+    lev[dropped] = np.nan            # not part of the final problem
+    return FitResult(x, f, r, hw, dropped, identification(Jw), lev, total_it, conv, rounds)

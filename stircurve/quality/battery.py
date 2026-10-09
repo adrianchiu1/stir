@@ -34,6 +34,7 @@ def instrument_table(fe: FrontEnd) -> pd.DataFrame:
                      "sigma_bp": fe.sigma_bp[i], "open_interest": q.open_interest, "volume": q.volume,
                      "liquidity_weight": round(float(fe.liquidity[i]), 4), "stale": q.stale, "stale_run": q.stale_run,
                      "weight": round(float(fe.weights[i]), 4), "huber_weight": round(float(fit.huber_weight[i]), 4),
+                     "leverage": round(float(fit.leverage[i]), 3),
                      "status": status, "reason": reason, "notes": "; ".join(q.notes)})
     for s in fe.inputs.skipped:
         rows.append({"instrument": s.instrument, "contract": s.contract, "ticker": s.ticker, "status": "skipped",
@@ -49,12 +50,19 @@ def drop_list(fe: FrontEnd, include_horizon: bool = False) -> pd.DataFrame:
     return d[["instrument", "contract", "ticker", "status", "reason", "residual_bp"]].reset_index(drop=True)
 
 
+def high_leverage(fe: FrontEnd, threshold: float = 0.9) -> pd.DataFrame:
+    """Used quotes that alone pin a parcel: an error in one cannot show as a residual."""
+    t = instrument_table(fe)
+    t = t[(t["status"] == "used") & (t["leverage"] >= threshold)]
+    return t[["instrument", "contract", "ticker", "quote_rate", "residual_bp", "leverage"]].reset_index(drop=True)
+
+
 def input_flags(fe: FrontEnd) -> pd.DataFrame:
     t = instrument_table(fe)
     stale = t[t["stale"] == True]  # noqa: E712
     listing = t[t["notes"].fillna("").str.contains("listing") | t["reason"].fillna("").str.contains("listing")]
     rows = [{"flag": "stale", "instrument": r.instrument, "contract": r.contract, "status": r.status,
-             "detail": f"unchanged {r.stale_run} observations"} for r in stale.itertuples()]
+             "detail": f"unchanged {int(r.stale_run)} observations"} for r in stale.itertuples()]
     rows += [{"flag": "outside_listing", "instrument": r.instrument, "contract": r.contract, "status": r.status,
               "detail": r.reason if r.status == "skipped" else r.notes} for r in listing.itertuples()]
     if fe.missing_fixings:
@@ -126,6 +134,10 @@ def report(fe: FrontEnd) -> str:
         "## Drop list",
         "",
         _md(drop_list(fe)),
+        "High-leverage quotes (>= 0.9: each alone pins a parcel, so an error in it moves the curve "
+        "instead of showing as a residual):",
+        "",
+        _md(high_leverage(fe)),
         "## Stale and outside-listing inputs",
         "",
         _md(input_flags(fe)),
