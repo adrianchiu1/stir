@@ -127,7 +127,9 @@ def loader_section(m) -> list[str]:
     for day in GATE_DAYS:
         frame, rep = loader.load(m, day, day)
         if not rep.values:
-            out += [f"### {day}", "", "Not dumped yet. On the terminal machine:", "", "```",
+            state = ("Dumped, but the files hold no rows (every Bloomberg request failed and the old dump wrote "
+                     "headers only). Re-run on the terminal machine:" if rep.files else "Not dumped yet. On the terminal machine:")
+            out += [f"### {day}", "", state, "", "```",
                     f"python scripts/dump_bloomberg.py --start {day} --end {day}            # dry run",
                     f"python scripts/dump_bloomberg.py --start {day} --end {day} --write-csv",
                     f"python scripts/check_market_data.py --start {day} --end {day}", "```", ""]

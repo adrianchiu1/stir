@@ -115,7 +115,7 @@ above and the full table is in `docs/m1_gate_contracts.csv` for a side-by-side c
 
 ### 2026-10-07
 
-Not dumped yet. On the terminal machine:
+Dumped, but the files hold no rows (every Bloomberg request failed and the old dump wrote headers only). Re-run on the terminal machine:
 
 ```
 python scripts/dump_bloomberg.py --start 2026-10-07 --end 2026-10-07            # dry run
@@ -125,7 +125,7 @@ python scripts/check_market_data.py --start 2026-10-07 --end 2026-10-07
 
 ### 2019-06-12
 
-Not dumped yet. On the terminal machine:
+Dumped, but the files hold no rows (every Bloomberg request failed and the old dump wrote headers only). Re-run on the terminal machine:
 
 ```
 python scripts/dump_bloomberg.py --start 2019-06-12 --end 2019-06-12            # dry run

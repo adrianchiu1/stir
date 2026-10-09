@@ -7,7 +7,8 @@ instrument's window (before listing, after last trade/conversion, outside
 first/last dates) are reported and left out of the frame.
 
 Checks (``Report``):
-  blocking  unknown columns (no manifest entry, wrong file, unknown field, unlisted
+  blocking  files or ranges with no rows (and a run that loads no values at all),
+            unknown columns (no manifest entry, wrong file, unknown field, unlisted
             contract), malformed files (bad dates, duplicate dates, non-numbers),
             out-of-range values, futures quoted after their last quote date or
             before a verified listing date
@@ -33,9 +34,9 @@ from .manifest import Manifest, _date
 
 QUOTE_FIELDS = ("PX_LAST", "PX_SETTLE", "PX_MID")
 COUNT_FIELDS = ("OPEN_INT", "PX_VOLUME")
-CHECKS = ("unknown_columns", "malformed", "out_of_range", "outside_listing", "missing_columns",
+CHECKS = ("no_data", "unknown_columns", "malformed", "out_of_range", "outside_listing", "missing_columns",
           "stale", "outside_listing_unverified", "outside_dates")
-BLOCKING = ("unknown_columns", "malformed", "out_of_range", "outside_listing")
+BLOCKING = ("no_data", "unknown_columns", "malformed", "out_of_range", "outside_listing")
 
 
 @dataclass
@@ -50,7 +51,7 @@ class Report:
 
     @property
     def blocking(self) -> bool:
-        return any(self.found[k] for k in BLOCKING)
+        return any(self.found[k] for k in BLOCKING) or (bool(self.files) and not self.values)
 
     @property
     def exit_code(self) -> int:
@@ -61,6 +62,8 @@ class Report:
 
     def report(self, limit: int = 40) -> str:
         lines = [f"{len(self.files)} file(s), {self.columns} columns, {self.values} values"]
+        if self.files and not self.values:
+            lines.append("BLOCKING: no values loaded")
         for k in CHECKS:
             items = self.found[k]
             tag = "BLOCKING" if k in BLOCKING else "warning"
@@ -189,6 +192,7 @@ def load(m: Manifest, start: dt.date | None = None, end: dt.date | None = None,
             wide = wide.loc[(wide.index >= pd.Timestamp(start or dt.date.min)) &
                             (wide.index <= pd.Timestamp(end or dt.date.max))]
         if wide.empty:
+            report.add("no_data", f"{path}: no rows" + (f" in {start or '...'}..{end or '...'}" if start or end else ""))
             continue
         d0, d1 = wide.index[0].date(), wide.index[-1].date()
         # columns map against what the dump requests (generous horizon); listing dates come

@@ -59,10 +59,16 @@ class FileDiff:
         return "\n".join(lines)
 
 
+class DumpError(RuntimeError):
+    """Bloomberg is unusable for this run (no pdblp, no connection, every request failing)."""
+
+
 @dataclass
 class DumpResult:
     diffs: list[FileDiff] = field(default_factory=list)
     failed: list[str] = field(default_factory=list)      # tickers Bloomberg returned nothing for
+    reasons: dict[str, int] = field(default_factory=dict)  # error message -> count, for the failed tickers
+    empty: list[Path] = field(default_factory=list)       # files with no rows returned (not written)
     written: list[Path] = field(default_factory=list)
 
     @property
@@ -77,6 +83,10 @@ class DumpResult:
             lines += [f"  {t}" for t in self.failed[:40]]
             if len(self.failed) > 40:
                 lines.append(f"  ... {len(self.failed) - 40} more")
+            lines.append("errors behind them:")
+            lines += [f"  {n} x {msg}" for msg, n in sorted(self.reasons.items(), key=lambda kv: -kv[1])[:5]]
+        for p in self.empty:
+            lines.append(f"{p}: Bloomberg returned no rows for the range; not written")
         return "\n".join(lines)
 
 
@@ -112,7 +122,8 @@ def request_ticker(m: Manifest, s: Series, as_of: dt.date) -> str:
 # fetching
 # ---------------------------------------------------------------------------
 def fetch(m: Manifest, series: list[Series], start: dt.date, end: dt.date, as_of: dt.date, read_bdh,
-          timeout: float = 30, chunk: int = CHUNK) -> tuple[pd.DataFrame, list[str]]:
+          timeout: float = 30, chunk: int = CHUNK, reasons: dict[str, int] | None = None
+          ) -> tuple[pd.DataFrame, list[str]]:
     """One wide frame (index: dates, columns: canonical ``ticker|field``) and the
     columns Bloomberg returned nothing for. pxts raises when any ticker in a call
     has no data (the dump requests generously, so this is common): a failing
@@ -128,12 +139,16 @@ def fetch(m: Manifest, series: list[Series], start: dt.date, end: dt.date, as_of
         df = read_bdh(req, start=start.isoformat(), field=f, end=end.isoformat(), timeout=timeout)
         return df.reindex(columns=list(req))
 
+    reasons = {} if reasons is None else reasons
+
     def bisect(items: list[tuple[str, str]], f: str) -> None:
         try:
             frames.append(call(dict(items), f))
-        except Exception:
+        except Exception as exc:
             if len(items) == 1:
                 failed.append(f"{items[0][0]} (requested {items[0][1]})")
+                msg = f"{type(exc).__name__}: {exc}"[:160]
+                reasons[msg] = reasons.get(msg, 0) + 1
                 return
             half = len(items) // 2
             bisect(items[:half], f)
@@ -197,23 +212,46 @@ def market_path(root: Path, ccy: str, year: int, group: str) -> Path:
     return root / ccy.lower() / f"{year}" / f"{group}.csv"
 
 
+def probe(m: Manifest, read_bdh, start: dt.date, end: dt.date, timeout: float) -> None:
+    """One request for a ticker that always has data (EFFR) before the real run, so a
+    missing pdblp or a refused connection stops the run with its own error instead of
+    turning into hundreds of 'no data' columns."""
+    ticker = m.fixings["EFFR"]["ticker"]
+    try:
+        df = read_bdh({"probe": ticker}, start=(start - dt.timedelta(days=14)).isoformat(), field="PX_LAST",
+                      end=end.isoformat(), timeout=timeout)
+    except Exception as exc:
+        raise DumpError(f"Bloomberg probe ({ticker} PX_LAST) failed: {type(exc).__name__}: {exc}") from exc
+    if df is None or len(df) == 0:
+        raise DumpError(f"Bloomberg probe ({ticker} PX_LAST) returned no rows for {start - dt.timedelta(days=14)}..{end}")
+
+
 def dump(m: Manifest, start: dt.date, end: dt.date, read_bdh=None, *, write_csv: bool = False,
          as_of: dt.date | None = None, root: Path = MARKET_DIR, groups: list[str] | None = None,
          timeout: float = 30, chunk: int = CHUNK) -> DumpResult:
     if read_bdh is None:
         from pxts import read_bdh   # terminal machines only (pip install -e .[bloomberg])
     as_of = as_of or dt.date.today()
+    probe(m, read_bdh, start, end, timeout)
     result = DumpResult()
-    staged = []
+    staged, requested = [], 0
     for (year, group), (a, b, series) in sorted(plan(m, start, end, groups).items()):
-        new, failed = fetch(m, series, a, b, as_of, read_bdh, timeout=timeout, chunk=chunk)
+        new, failed = fetch(m, series, a, b, as_of, read_bdh, timeout=timeout, chunk=chunk, reasons=result.reasons)
         result.failed += failed
+        requested += sum(len(s.fields) for s in series)
         path = market_path(root, m.currency, year, group)
+        if new.empty:
+            result.empty.append(path)
+            continue
         existing = read_wide(path) if path.exists() else None
         merged, diff = merge(existing, new, path)
         result.diffs.append(diff)
         if not diff.empty:
             staged.append((merged, path))
+    if requested and len(result.failed) == requested:
+        top = max(result.reasons, key=result.reasons.get) if result.reasons else "unknown"
+        raise DumpError(f"Bloomberg returned nothing for any of {requested} ticker-fields; nothing written. "
+                        f"Most common error: {top}")
     if write_csv and not result.blocking:
         for merged, path in staged:
             write_wide(merged, path)

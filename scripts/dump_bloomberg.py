@@ -41,8 +41,12 @@ def main(argv=None, read_bdh=None) -> int:
     if args.end < args.start:
         ap.error("--end before --start")
     m = load_manifest(args.ccy)
-    res = dumper.dump(m, args.start, args.end, read_bdh, write_csv=args.write_csv and not args.dry_run,
-                      as_of=args.as_of, root=args.root, groups=args.group, timeout=args.timeout)
+    try:
+        res = dumper.dump(m, args.start, args.end, read_bdh, write_csv=args.write_csv and not args.dry_run,
+                          as_of=args.as_of, root=args.root, groups=args.group, timeout=args.timeout)
+    except dumper.DumpError as exc:
+        print(f"ERROR: {exc}")
+        return 1
     print(res.report())
     if res.blocking:
         print("\nBLOCKING diff: a value already on file would change or disappear; nothing written.")

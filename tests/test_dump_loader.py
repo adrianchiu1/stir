@@ -215,3 +215,37 @@ def test_quotes_before_an_unsourced_listing_are_kept_and_reported():
         assert rep.exit_code == 0
         assert any("SERM20" in x for x in rep.found["outside_listing_unverified"])
         assert ((frame.instrument == "sofr1m_fut") & (frame.contract == "2020-06")).any()
+
+
+def test_broken_bloomberg_stops_the_run_and_writes_nothing():
+    def no_pdblp(*a, **k):
+        raise ImportError("pdblp required for read_bdh()")
+    with tempfile.TemporaryDirectory() as tmp:
+        rc = dump_bloomberg.main(["--start", "2026-10-07", "--end", "2026-10-07", "--root", tmp, "--write-csv"],
+                                 read_bdh=no_pdblp)
+        assert rc == 1 and not any(Path(tmp).rglob("*.csv"))
+
+    fake = FakeBloomberg()
+
+    def only_probe(tickers, **kw):           # connection fine for the probe, then every request errors
+        if list(tickers) == ["probe"]:
+            return fake.read_bdh(tickers, **kw)
+        raise RuntimeError("Bloomberg request timed out")
+    with tempfile.TemporaryDirectory() as tmp:
+        try:
+            dumper.dump(M, D(2026, 10, 7), D(2026, 10, 7), only_probe, write_csv=True, root=Path(tmp))
+            raise AssertionError("expected DumpError")
+        except dumper.DumpError as exc:
+            assert "RuntimeError: Bloomberg request timed out" in str(exc)
+        assert not any(Path(tmp).rglob("*.csv"))
+
+
+def test_loader_blocks_on_files_without_rows():
+    # what a dump that silently got nothing used to write: header only
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        (root / "usd/2026").mkdir(parents=True)
+        (root / "usd/2026/fixings.csv").write_text("date,FEDL01 Index|PX_LAST,SOFRRATE Index|PX_LAST\n")
+        _, rep = loader.load(M, D(2026, 10, 7), D(2026, 10, 7), root=root)
+        assert rep.found["no_data"] and rep.exit_code == 2
+        assert check_market_data.main(["--root", str(root), "--start", "2026-10-07", "--end", "2026-10-07"]) == 2
