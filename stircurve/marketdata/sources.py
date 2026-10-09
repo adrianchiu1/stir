@@ -33,6 +33,8 @@ def pdf_text(data: bytes) -> str:
 def document_text(data: bytes, url_or_name: str) -> str:
     if data[:5] == b"%PDF-" or url_or_name.lower().endswith(".pdf"):
         return pdf_text(data)
+    if url_or_name.lower().endswith(".txt"):      # page text copied from a browser (Ctrl+A, Ctrl+C)
+        return data.decode("utf-8-sig", errors="replace").replace("\r\n", "\n")
     return html_to_text(data.decode("utf-8", errors="replace"))
 
 

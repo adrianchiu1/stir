@@ -1,0 +1,563 @@
+Three-Month SOFR Futures Contract Specs - CME Group
+ Markets Home
+ Market Data Home
+Real-time market data
+Stream live futures and options market data directly from CME Group.
+Market Data on Google Analytics Hub
+Discover a cost-efficient way to access, query, and share CME Group market data.
+DATAMINE:
+THE SOURCE FOR HISTORICAL DATA
+Explore historical market data straight from the source to help refine your trading strategies.
+ Solutions Home
+Clearing Advisories
+Access and filter an archive of recent and historical notices for every aspect of trading at CME Group, including Clearing advisories.
+Uncleared margin rules
+Explore our suite of capital-efficient solutions to URM challenges designed to help minimize your initial margin requirements.
+ Insights Home
+Dive into the Subscription Center
+Sign up for the latest news, product highlights, economic insights and more subscriptions, tailored to your trading interests, delivered straight to your inbox. 
+The world's most valuable exchange brand
+Learn more about Brand Finance naming CME Group the most valuable exchange brand for the 11th year in a row.
+ Education Home
+Turn curiosity into confidence
+Explore our new, fully customizable, pro-level Trading Simulator and get to know our range of futures contracts.
+Elevate your trading skills
+Ready to take your trading to the next level? Compete against your peers in our monthly Trading Challenges.
+Underpinned by a diverse ecosystem of over 7,000 institutional participants globally, Three-Month SOFR futures and options are the primary liquidity pool for hedging USD short-term interest rates, trading on average over 5 million contracts each day. With expansive liquidity supporting a vast range of linear and non-linear strategies across the forward curve, users can effectively target interest rate risks wherever they lie.
+ Latest Interest Rates news
+ Pricing & Hedging IRS with SOFR Futures
+ Guide to SR3 Notional
+ Understanding SOFR futures
+ SOFR Packs and Bundles
+ Using SOFR in Convexity Trades
+ Settlement Methodology
+ Trading SOFR options
+ Globex Strategy Guide
+ Futures market makers
+ Options market markers
+ Vendor codes
+ Courses
+ CME SOFRWatch Tool
+ CME FedWatch
+ STIR Analytics
+ Open Interest Profile
+ Features and benefits
+ Price discovery out 10 years
+Quarterly contracts reflect SOFR expectations between IMM dates, with 39 consecutive listings to fulfill risk management needs out to 10 years.
+ Expansive liquidity
+Access deep liquidity along the forward curve, and across an array of strategies including, outrights, spreads, butterflies, packs and bundles, and other multi-legged variations.
+ Unrivaled options flexibility
+Fine tune risk exposures with the flexibility of 80 options expiries listed at any given time, ranging from one week to four years.
+ Hedging granularity
+Precisely frame SOFR expectations over the nearest 13 calendar months with One-Month SOFR futures.
+ Explore this product in depth
+ Review contract highlights
+Contract Unit
+$2,500 x contract-grade IMM Index
+Price Quotation
+contract-grade IMM Index = 100 minus R
+R = business-day compounded Secured Overnight Financing Rate (SOFR) per annum during contract Reference Quarter
+Reference Quarter: For a given contract, interval from (and including) 3rd Wed of 3rd month preceding delivery month, to (and not including) 3rd Wed of delivery month. Points and fractions of points with par on the basis of 100 points
+Product Code
+CME Globex: SR3
+CME ClearPort: SR3
+Clearing: SR3
+ View full contract specs
+ SOFR CVOL Indices
+Track forward-looking risk expectations on short-term interest rates with the CME Group Volatility Index (CVOLTM), a robust measure of 90-day implied volatility derived from deeply liquid options on SOFR futures.
+ PRODUCTS
+ Term SOFR Reference Rates
+Anchor your USD lending with the transparency and reliability of Term SOFR, the leading benchmark that now supports trillions of dollars in loans and revolving credit facilities.
+ Learn more
+SOFR OPTIONS: 80 EXPIRIES, UNRIVALED NON-LINEAR FLEXIBILITY 
+ Trading SOFR within the STIR ecosystem
+Trade Three-Month SOFR futures versus related Interest Rate products to manage basis risk, capture relative-value opportunities, and unlock cross-margin savings.
+ SOFR vs. €STR
+Seamlessly trade cross currency basis spreads between EU and U.S. money market rates.
+ Learn more
+ SOFR vs. T-Bills
+Neutralize asset swap risk in SOFR-hedged bill portfolios with 1:1 SR3-TBF3 spreads.
+ Learn more
+ SOFR Packs and Bundles
+Trade strips of consecutive contracts in a single transaction to create a “synthetic” term investment or to hedge OTC swaps.
+ Learn more
+ SOFR and cleared swaps
+Portfolio margining IRS with SOFR can offer margin savings of as high as 97% on popular convexity bias trades.
+ Learn more
+Margins offsets are subject to change based upon market conditions.
+ Courses
+ Take self-guided courses on SOFR futures and options products.
+If you’re new to SOFR, the courses below can help you quickly understand the market and start trading.
+ Explore more courses
+ Contact an Interest Rate expert
+Connect with a member of our expert Interest Rate team for more information about our products.
+ First Name
+ Last Name
+ Business Email
+ Location
+ Please Select...
+ UNITED STATES OF AMERICA
+ CANADA
+ AFGHANISTAN
+ ALBANIA
+ ALGERIA
+ AMERICAN SAMOA
+ ANDORRA
+ ANGOLA
+ ANGUILLA
+ ANTARCTICA
+ ANTIGUA AND BARBUDA
+ ARGENTINA
+ ARMENIA
+ ARUBA
+ AUSTRALIA
+ AUSTRIA
+ AZERBAIJAN
+ BAHAMAS
+ BAHRAIN
+ BANGLADESH
+ BARBADOS
+ BELARUS
+ BELGIUM
+ BELIZE
+ BENIN
+ BERMUDA
+ BHUTAN
+ BOLIVIA
+ BOSNIA AND HERZEGOVINA
+ BOTSWANA
+ BOUVET ISLAND
+ BRAZIL
+ BRITISH INDIAN OCEAN TERRITORY
+ BRITISH VIRGIN ISLANDS
+ BRUNEI DARUSSALAM
+ BULGARIA
+ BURKINA FASO
+ BURUNDI
+ CAMBODIA
+ CAMEROON
+ CAPE VERDE
+ CAYMAN ISLANDS
+ CENTRAL AFRICAN REPUBLIC
+ CHAD
+ CHILE
+ CHINA
+ CHRISTMAS ISLAND
+ COCOS KEELING ISLANDS
+ COLOMBIA
+ COMOROS
+ CONGO
+ CONGO THE DEMOCRATIC REPUBLIC OF
+ COOK ISLANDS
+ COSTA RICA
+ COTE D IVOIRE
+ CROATIA
+ CUBA
+ CYPRUS
+ CZECH REPUBLIC
+ DENMARK
+ DJIBOUTI
+ DOMINICA
+ DOMINICAN REPUBLIC
+ EAST TIMOR
+ ECUADOR
+ EGYPT
+ EL SALVADOR
+ EQUATORIAL GUINEA
+ ERITREA
+ ESTONIA
+ ETHIOPIA
+ FALKLAND ISLANDS
+ FAROE ISLANDS
+ FIJI
+ FINLAND
+ FRANCE
+ FRANCE METROPOLITAN
+ FRENCH GUIANA
+ FRENCH POLYNESIA
+ FRENCH SOUTHERN TERRITORIES
+ GABON
+ GAMBIA
+ GEORGIA
+ GERMANY
+ GHANA
+ GIBRALTAR
+ GREECE
+ GREENLAND
+ GRENADA
+ GUADELOUPE
+ GUAM
+ GUATEMALA
+ GUERNSEY
+ GUINEA
+ GUINEA BISSAU
+ GUYANA
+ HAITI
+ HEARD AND MC DONALD ISLANDS
+ HOLY SEE
+ HONDURAS
+ HONG KONG
+ HUNGARY
+ ICELAND
+ INDIA
+ INDONESIA
+ IRAN ISLAMIC REPUBLIC OF
+ IRAQ
+ IRELAND
+ ISRAEL
+ ITALY
+ JAMAICA
+ JAPAN
+ JERSEY
+ JORDAN
+ KAZAKSTAN
+ KENYA
+ KIRIBATI
+ KOREA DEMOCRATIC REPUBLIC OF
+ KOREA REPUBLIC OF
+ KUWAIT
+ KYRGYZSTAN
+ LAO PEOPLES DEMOCRATIC REPUBLIC OF
+ LATVIA
+ LEBANON
+ LESOTHO
+ LIBERIA
+ LIBYAN ARAB JAMAHIRIYA
+ LIECHTENSTEIN
+ LITHUANIA
+ LUXEMBOURG
+ MACAU
+ MACEDONIA THE FORMER YUGOSLAV REPUBLIC OF
+ MADAGASCAR
+ MALAWI
+ MALAYSIA
+ MALDIVES
+ MALI
+ MALTA
+ MARSHALL ISLANDS
+ MARTINIQUE
+ MAURITANIA
+ MAURITIUS
+ MAYOTTE
+ MEXICO
+ MICRONESIA FEDERATED STATES OF
+ MOLDOVA REPUBLIC OF
+ MONACO
+ MONGOLIA
+ MONTSERRAT
+ MOROCCO
+ MOZAMBIQUE
+ MYANMAR
+ NAMIBIA
+ NAURU
+ NEPAL
+ NETHERLANDS
+ NETHERLANDS ANTILLES
+ NEW CALEDONIA
+ NEW ZEALAND
+ NICARAGUA
+ NIGER
+ NIGERIA
+ NIUE
+ NORFOLK ISLAND
+ NORTHERN MARIANA ISLANDS
+ NORWAY
+ OMAN
+ PAKISTAN
+ PALAU
+ PALESTINIAN TERRITORY OCCUPIED
+ PANAMA
+ PAPUA NEW GUINEA
+ PARAGUAY
+ PERU
+ PHILIPPINES
+ PITCAIRN
+ POLAND
+ PORTUGAL
+ PUERTO RICO
+ QATAR
+ REUNION
+ ROMANIA
+ RUSSIAN FEDERATION
+ RWANDA
+ SAINT HELENA
+ SAINT KITTS AND NEVIS
+ SAINT LUCIA
+ SAINT PIERRE AND MIQUELON
+ SAINT VINCENT AND THE GRENADINES
+ SAMOA
+ SAN MARINO
+ SAO TOME AND PRINCIPE
+ SAUDI ARABIA
+ SENEGAL
+ SEYCHELLES
+ SIERRA LEONE
+ SINGAPORE
+ SLOVAKIA
+ SLOVENIA
+ SOLOMON ISLANDS
+ SOMALIA
+ SOUTH AFRICA
+ SOUTH GEORGIA AND SOUTH SANDWICH ISLANDS
+ SPAIN
+ SRI LANKA
+ SUDAN
+ SURINAME
+ SVALBARD AND JAN MAYEN
+ SWAZILAND
+ SWEDEN
+ SWITZERLAND
+ SYRIAN ARAB REPUBLIC
+ TAIWAN
+ TAJIKISTAN
+ TANZANIA UNITED REPUBLIC OF
+ THAILAND
+ TOGO
+ TOKELAU
+ TONGA
+ TRINIDAD AND TOBAGO
+ TUNISIA
+ TURKEY
+ TURKMENISTAN
+ TURKS AND CAICOS ISLANDS
+ TUVALU
+ UGANDA
+ UKRAINE
+ UNITED ARAB EMIRATES
+ UNITED KINGDOM
+ UNITED STATES MINOR OUTLYING ISLANDS
+ UNITED STATES VIRGIN ISLANDS
+ URUGUAY
+ UZBEKISTAN
+ VANUATU
+ VENEZUELA
+ VIETNAM
+ WALLIS AND FUTUNA ISLANDS
+ WESTERN SAHARA
+ YEMEN
+ YUGOSLAVIA
+ ZAMBIA
+ ZIMBABWE
+ Job Role
+ Please Select...
+ Accounting/Finance
+ Broker
+ Clearing
+ Consultant
+ Executive
+ Financial Advisor/Registered Investment Advisor
+ Independent Trader/Investor
+ Legal/Compliance
+ Market Data
+ Marketing
+ Operations
+ Portfolio Manager
+ Professor/Educator
+ Research Analyst/Professional
+ Risk Manager/Middle Office
+ Sales
+ Student
+ Supply Chain Management
+ Technology
+ Trading/Investing
+ Treasurer
+ Other
+ Other Job Role (Please Specify)
+ Company Type
+ Please Select...
+ Agriculture Company/Producer
+ Asset Manager/Family Office/Investment Advisory
+ Bank
+ Broker/FCM
+ Consulting/Financial Advisory Firm
+ Consumer Goods and Services/Airline/Construction
+ Energy Company/Producer/Utility
+ Exchange
+ FinTech
+ Government/Regulator
+ Hedge Fund/CTA
+ Independent Software Vendor
+ Independent Trader/Investor
+ Index Service
+ Industry Trade Association
+ Insurance Company
+ Market Data Vendor
+ Media
+ Metals Company/Producer/Mining
+ Pension Fund/Endowment
+ Proprietary Trading Firm
+ Third Party/Vendor Fund Administrator
+ University/Education
+ Other
+ Other Company Type (Please Specify)
+ Company Name
+ Message
+ (Optional)
+ I have read and understand the Privacy Policy.
+ I have read and agree the Terms of Service and Cookie Policy.
+ Yes. I would like to receive communications regarding CME Group products, services, & events. I understand that I can unsubscribe at any time. By registering, I agree to the processing of my personal data in accordance with the CME Group Privacy Policy. (Optional)
+ question or comment
+ About Three-Month SOFR
+CME SOFR futures offer the leading source of price discovery and liquidity on the Secured Overnight Financing Rate (SOFR), a broad measure of the cost of borrowing cash overnight collateralized by Treasury securities. Three-Month SOFR futures are cash settled and based on a business-day compounded SOFR per annum during contract Reference Quarter. 
+FedWatch
+Explore probabilities for FOMC rate moves, compare target ranges or view historical rate data.
+Treasury Analytics
+Analyze deliverable baskets, CTD/OTR securities, futures/cash yield curves, inter-commodity spreads, and more.
+TreasuryWatch
+Gain an in-depth view into the US Treasury market, including yields, volatility, auctions, coupon issuance projections, and more.
+STIR Analytics
+View historical fixings for EFFR and SOFR, and analyze basis spreads between Eurodollar, Fed Fund, and SOFR futures.
+Total Cost Analysis
+Analyze the all-in costs of managing interest rate exposure using listed futures versus over-the-counter (OTC) instruments like swaps.
+SOFRWatch
+Visualize the potential impacts of FOMC decisions on SOFR expectations.
+ Looking for more? Explore our additional resources
+ Resources
+ Margins
+ Daily Settlements
+ Final Settlements
+ Rulebooks
+ Expiration calendar
+ Bloomberg codes
+ Globex Reference Sheet
+ Block rules & minimums
+ Liquidity providers
+ Rates Recap
+T-BILL FUTURES
+PRECISE EXPOSURE AT THE SHORT END OF THE CURVE
+FedWatch
+Explore probabilities for FOMC rate moves, compare target ranges or view historical rate data.
+Treasury Analytics
+Analyze deliverable baskets, CTD/OTR securities, futures/cash yield curves, inter-commodity spreads, and more.
+TreasuryWatch
+Gain an in-depth view into the US Treasury market, including yields, volatility, auctions, coupon issuance projections, and more.
+STIR Analytics
+View historical fixings for EFFR and SOFR, and analyze basis spreads between Eurodollar, Fed Fund, and SOFR futures.
+Total Cost Analysis
+Analyze the all-in costs of managing interest rate exposure using listed futures versus over-the-counter (OTC) instruments like swaps.
+SOFRWatch
+Visualize the potential impacts of FOMC decisions on SOFR expectations.
+ Looking for more? Explore our additional resources
+ Resources
+ Margins
+ Daily Settlements
+ Final Settlements
+ Rulebooks
+ Expiration calendar
+ Bloomberg codes
+ Globex Reference Sheet
+ Block rules & minimums
+ Liquidity providers
+ Rates Recap
+T-BILL FUTURES
+PRECISE EXPOSURE AT THE SHORT END OF THE CURVE
+FedWatch
+Explore probabilities for FOMC rate moves, compare target ranges or view historical rate data.
+Treasury Analytics
+Analyze deliverable baskets, CTD/OTR securities, futures/cash yield curves, inter-commodity spreads, and more.
+TreasuryWatch
+Gain an in-depth view into the US Treasury market, including yields, volatility, auctions, coupon issuance projections, and more.
+STIR Analytics
+View historical fixings for EFFR and SOFR, and analyze basis spreads between Eurodollar, Fed Fund, and SOFR futures.
+Total Cost Analysis
+Analyze the all-in costs of managing interest rate exposure using listed futures versus over-the-counter (OTC) instruments like swaps.
+SOFRWatch
+Visualize the potential impacts of FOMC decisions on SOFR expectations.
+ Looking for more? Explore our additional resources
+ Resources
+ Margins
+ Daily Settlements
+ Final Settlements
+ Rulebooks
+ Expiration calendar
+ Bloomberg codes
+ Globex Reference Sheet
+ Block rules & minimums
+ Liquidity providers
+ Rates Recap
+T-BILL FUTURES
+PRECISE EXPOSURE AT THE SHORT END OF THE CURVE
+ About Three-Month SOFR
+CME SOFR futures offer the leading source of price discovery and liquidity on the Secured Overnight Financing Rate (SOFR), a broad measure of the cost of borrowing cash overnight collateralized by Treasury securities. Three-Month SOFR futures are cash settled and based on a business-day compounded SOFR per annum during contract Reference Quarter. 
+FedWatch
+Explore probabilities for FOMC rate moves, compare target ranges or view historical rate data.
+Treasury Analytics
+Analyze deliverable baskets, CTD/OTR securities, futures/cash yield curves, inter-commodity spreads, and more.
+TreasuryWatch
+Gain an in-depth view into the US Treasury market, including yields, volatility, auctions, coupon issuance projections, and more.
+STIR Analytics
+View historical fixings for EFFR and SOFR, and analyze basis spreads between Eurodollar, Fed Fund, and SOFR futures.
+Total Cost Analysis
+Analyze the all-in costs of managing interest rate exposure using listed futures versus over-the-counter (OTC) instruments like swaps.
+SOFRWatch
+Visualize the potential impacts of FOMC decisions on SOFR expectations.
+ Looking for more? Explore our additional resources
+ Resources
+ Margins
+ Daily Settlements
+ Final Settlements
+ Rulebooks
+ Expiration calendar
+ Bloomberg codes
+ Globex Reference Sheet
+ Block rules & minimums
+ Liquidity providers
+ Rates Recap
+T-BILL FUTURES
+PRECISE EXPOSURE AT THE SHORT END OF THE CURVE
+FedWatch
+Explore probabilities for FOMC rate moves, compare target ranges or view historical rate data.
+Treasury Analytics
+Analyze deliverable baskets, CTD/OTR securities, futures/cash yield curves, inter-commodity spreads, and more.
+TreasuryWatch
+Gain an in-depth view into the US Treasury market, including yields, volatility, auctions, coupon issuance projections, and more.
+STIR Analytics
+View historical fixings for EFFR and SOFR, and analyze basis spreads between Eurodollar, Fed Fund, and SOFR futures.
+Total Cost Analysis
+Analyze the all-in costs of managing interest rate exposure using listed futures versus over-the-counter (OTC) instruments like swaps.
+SOFRWatch
+Visualize the potential impacts of FOMC decisions on SOFR expectations.
+ Looking for more? Explore our additional resources
+ Resources
+ Margins
+ Daily Settlements
+ Final Settlements
+ Rulebooks
+ Expiration calendar
+ Bloomberg codes
+ Globex Reference Sheet
+ Block rules & minimums
+ Liquidity providers
+ Rates Recap
+T-BILL FUTURES
+PRECISE EXPOSURE AT THE SHORT END OF THE CURVE
+FedWatch
+Explore probabilities for FOMC rate moves, compare target ranges or view historical rate data.
+Treasury Analytics
+Analyze deliverable baskets, CTD/OTR securities, futures/cash yield curves, inter-commodity spreads, and more.
+TreasuryWatch
+Gain an in-depth view into the US Treasury market, including yields, volatility, auctions, coupon issuance projections, and more.
+STIR Analytics
+View historical fixings for EFFR and SOFR, and analyze basis spreads between Eurodollar, Fed Fund, and SOFR futures.
+Total Cost Analysis
+Analyze the all-in costs of managing interest rate exposure using listed futures versus over-the-counter (OTC) instruments like swaps.
+SOFRWatch
+Visualize the potential impacts of FOMC decisions on SOFR expectations.
+ Looking for more? Explore our additional resources
+ Resources
+ Margins
+ Daily Settlements
+ Final Settlements
+ Rulebooks
+ Expiration calendar
+ Bloomberg codes
+ Globex Reference Sheet
+ Block rules & minimums
+ Liquidity providers
+ Rates Recap
+T-BILL FUTURES
+PRECISE EXPOSURE AT THE SHORT END OF THE CURVE
+CME Group is the world’s leading derivatives marketplace. The company is comprised of four Designated Contract Markets (DCMs). 
+Further information on each exchange's rules and product listings can be found by clicking on the links to CME, CBOT, NYMEX and COMEX.
+© 2026 CME Group Inc. All rights reserved.
+Disclaimer | Privacy Notice | Cookie Notice | Terms of Use | Data Terms of Use | Modern Slavery Act Transparency Statement | Report a Security Concern

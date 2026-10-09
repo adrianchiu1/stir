@@ -37,7 +37,7 @@ def test_quoted_rules_appear_in_live_captures():
     m = load_manifest("usd")
     assert sources.check_quotes(m) == []
     # sources still to be captured by hand (cmegroup.com) or confirmed on the terminal
-    assert set(sources.pending(m)) == {"bbg_des", "cme_sr1_specs", "cme_sr3_specs", "cme_ed_fallback"}
+    assert set(sources.pending(m)) == {"bbg_des", "cme_sr1_specs", "cme_sr3_specs"}
 
 
 def test_tickers_and_columns():

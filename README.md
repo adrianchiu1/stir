@@ -150,10 +150,12 @@ python scripts/capture_exchange_specs.py --save-fixtures tests/fixtures/live
 python scripts/capture_exchange_specs.py --check
 ```
 
-cmegroup.com is never fetched by script (its terms forbid it and it answers 403). To add the
-CME contract-spec and calendar pages, save them from a browser as
-`cme_sr3_specs.html`, `cme_sr3_specs_calendar.html`, `cme_sr1_specs.html`, `cme_sr1_specs_calendar.html`,
-`cme_ff_calendar.html`, `cme_ed_fallback.pdf` and run
+cmegroup.com is never fetched by script (its terms forbid it and it answers 403). Its tables
+(contract specs, calendars) are loaded by JavaScript, so a saved .html misses them: open the
+page, wait for the table, then Ctrl+A, Ctrl+C and paste into a text file (or print to PDF),
+named after the manifest source, e.g.
+`cme_sr3_specs_table.txt`, `cme_sr3_specs_calendar.txt`, `cme_sr1_specs.txt`, `cme_sr1_specs_calendar.txt`,
+`cme_ff_calendar.txt`, and run
 `python scripts/capture_exchange_specs.py --from-saved <files> --save-fixtures tests/fixtures/live`.
 
 See `CLAUDE.md` for working rules and `docs/decisions.md` for the decision log and build plan.

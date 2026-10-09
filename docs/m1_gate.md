@@ -25,7 +25,9 @@ with zero unknown columns; windows match exchange calendars.*
 | `instruments.ff_fut.last_trade` | [cbot_ch22](https://www.cftc.gov/filings/ptc/ptc110917cmedcm002.pdf) | ✔ quoted passage found in `cftc_17-418_exhibit_a_20261008.txt` |
 | `instruments.ff_fut.final_settlement` | [cbot_ch22](https://www.cftc.gov/filings/ptc/ptc110917cmedcm002.pdf) | ✔ quoted passage found in `cftc_17-418_exhibit_a_20261008.txt` |
 | `instruments.ff_fut.listing[1]` | [cbot_20_321](https://www.cftc.gov/filings/ptc/ptc081020cbotdcm001.pdf) | ✔ quoted passage found in `cftc_20-321_20261008.txt` |
+| `instruments.sofr1m_fut.listing[1]` | [cme_sr3_page](https://www.cmegroup.com/markets/interest-rates/stirs/three-month-sofr.contractSpecs.html) | ✔ quoted passage found in `cme_sr3_specs_20261009.txt` |
 | `instruments.sofr3m_fut.reference_window` | [cme_19_366](https://www.cftc.gov/filings/ptc/ptc121919cmedcm015.pdf) | ✔ quoted passage found in `cftc_19-366_20261008.txt` |
+| `instruments.sofr3m_fut.reference_window.cme_page` | [cme_sr3_page](https://www.cmegroup.com/markets/interest-rates/stirs/three-month-sofr.contractSpecs.html) | ✔ quoted passage found in `cme_sr3_specs_20261009.txt` |
 | `instruments.sofr3m_fut.contract_month` | [cme_19_366](https://www.cftc.gov/filings/ptc/ptc121919cmedcm015.pdf) | ✔ quoted passage found in `cftc_19-366_20261008.txt` |
 | `instruments.sofr3m_fut.accrual` | [cme_19_366](https://www.cftc.gov/filings/ptc/ptc121919cmedcm015.pdf) | ✔ quoted passage found in `cftc_19-366_20261008.txt` |
 | `instruments.sofr3m_fut.daycount` | [cme_24_204](https://cftc.gov/filings/ptc/ptc0529241538.pdf) | ✔ quoted passage found in `cftc_24-204_20261008.txt` |
@@ -35,14 +37,15 @@ with zero unknown columns; windows match exchange calendars.*
 | `instruments.ed_fut.accrual` | [cme_ch452](https://www.cftc.gov/filings/ptc/ptc110917cmedcm002.pdf) | ✔ quoted passage found in `cftc_17-418_exhibit_a_20261008.txt` |
 | `instruments.ed_fut.daycount` | [cme_ch452](https://www.cftc.gov/filings/ptc/ptc110917cmedcm002.pdf) | ✔ quoted passage found in `cftc_17-418_exhibit_a_20261008.txt` |
 | `instruments.ed_fut.last_trade` | [cme_ch452](https://www.cftc.gov/filings/ptc/ptc110917cmedcm002.pdf) | ✔ quoted passage found in `cftc_17-418_exhibit_a_20261008.txt` |
+| `instruments.ed_fut.cessation` | [cme_ed_fallback](https://www.cmegroup.com/articles/files/2022/eurodollar-fallbacks-implementation-plan.pdf) | ✔ quoted passage found in `cme_ed_fallback_20261009.txt` |
+| `instruments.ed_fut.conversion_date` | [cme_ed_fallback](https://www.cmegroup.com/articles/files/2022/eurodollar-fallbacks-implementation-plan.pdf) | ✔ quoted passage found in `cme_ed_fallback_20261009.txt` |
 | `fixings.EFFR.publication` | [nyfed_refrates](https://www.newyorkfed.org/markets/reference-rates/additional-information-about-reference-rates) | ✔ quoted passage found in `nyfed_refrates_info_20261008.txt` |
 | `fixings.SOFR.publication` | [nyfed_refrates](https://www.newyorkfed.org/markets/reference-rates/additional-information-about-reference-rates) | ✔ quoted passage found in `nyfed_refrates_info_20261008.txt` |
 | `fixings.SOFR.first_date_source` | [nyfed_refrates](https://www.newyorkfed.org/markets/reference-rates/additional-information-about-reference-rates) | ✔ quoted passage found in `nyfed_refrates_info_20261008.txt` |
 | `fixings.USDLIBOR3M.last_date_source` | [fca_libor_cessation](https://www.fca.org.uk/publication/documents/future-cessation-loss-representativeness-libor-benchmarks.pdf) | ✔ quoted passage found in `fca_libor_cessation_20261008.txt` |
 | `instruments.ff_fut.bbg`, `instruments.sofr1m_fut.bbg`, `instruments.sofr3m_fut.bbg`, `instruments.ed_fut.bbg`, `instruments.ois_effr`, `instruments.ois_effr.bbg`, `instruments.ois_sofr`, `instruments.ois_sofr.bbg`, `instruments.swap_libor3m`, `instruments.swap_libor3m.bbg`, `policy_anchors.target_upper`, `policy_anchors.target_lower`, `policy_anchors.iorb` | [bbg_des](bloomberg://DES) | ⏳ to_confirm_on_terminal |
-| `instruments.sofr1m_fut.reference_window`, `instruments.sofr1m_fut.accrual`, `instruments.sofr1m_fut.daycount`, `instruments.sofr1m_fut.last_trade`, `instruments.sofr1m_fut.final_settlement`, `instruments.sofr1m_fut.listing[0]`, `instruments.sofr1m_fut.listing[1]` | [cme_sr1_specs](https://www.cmegroup.com/markets/interest-rates/stirs/one-month-sofr.contractSpecs.html) | ⏳ pending_capture |
+| `instruments.sofr1m_fut.reference_window`, `instruments.sofr1m_fut.accrual`, `instruments.sofr1m_fut.daycount`, `instruments.sofr1m_fut.last_trade`, `instruments.sofr1m_fut.final_settlement`, `instruments.sofr1m_fut.listing[0]` | [cme_sr1_specs](https://www.cmegroup.com/markets/interest-rates/stirs/one-month-sofr.contractSpecs.html) | ⏳ pending_capture |
 | `instruments.sofr3m_fut.last_trade`, `instruments.sofr3m_fut.final_settlement`, `instruments.sofr3m_fut.listing[0]` | [cme_sr3_specs](https://www.cmegroup.com/markets/interest-rates/stirs/three-month-sofr.contractSpecs.html) | ⏳ pending_capture |
-| `instruments.ed_fut.cessation` | [cme_ed_fallback](https://www.cmegroup.com/articles/files/2022/eurodollar-fallbacks-implementation-plan.pdf) | ⏳ pending_capture |
 
 ## Listing model vs the exchange filings
 
@@ -107,11 +110,7 @@ the IMM date is not a SOFR day (Juneteenth 2024 and 2030; open in the PR).
 
 ## Windows vs the exchange's published calendars
 
-No CME calendar captures yet: cmegroup.com refuses scripted access (HTTP 403, "This IP address is
-blocked due to suspected web scraping") and its terms of use forbid it. Save the four calendar pages
-from a browser and convert them (README, M1 section); the comparison parser is written against the
-first real capture, as for every M0 parser. Until then the generated windows rest on the rule text
-above and the full table is in `docs/m1_gate_contracts.csv` for a side-by-side check.
+Captured: cme_ed_fallback_20261009.txt, cme_sr3_specs_20261009.txt (comparison parser pending its first fixture).
 
 ## Loader report on real days
 
