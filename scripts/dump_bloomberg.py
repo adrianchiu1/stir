@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import logging
 import sys
 from pathlib import Path
 
@@ -60,4 +61,5 @@ def main(argv=None, read_bdh=None) -> int:
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s", datefmt="%H:%M:%S", stream=sys.stderr)
     sys.exit(main())

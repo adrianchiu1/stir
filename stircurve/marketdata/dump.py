@@ -15,7 +15,9 @@ is blocking (nothing is written, exit 2). Files are written only with
 from __future__ import annotations
 
 import datetime as dt
+import logging
 import re
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -25,6 +27,7 @@ import pandas as pd
 from .. import DATA_DIR
 from .manifest import Manifest, Series
 
+log = logging.getLogger("stircurve.dump")
 MARKET_DIR = DATA_DIR / "market"
 # seconds pdblp waits for each part of a Bloomberg response (pxts read_bdh ``timeout``).
 # It bounds the wait between messages, not the whole request, so a generous value costs
@@ -134,8 +137,10 @@ def fetch(m: Manifest, series: list[Series], start: dt.date, end: dt.date, as_of
     columns Bloomberg returned nothing for. One bulk read_bdh call per field.
     pxts raises KeyError when any ticker in the call has no data (common: the dump
     requests generously); pandas names the missing tickers in that error, so they
-    are dropped and the bulk call repeated (two calls, not one per ticker). Only an
-    error that names no tickers falls back to splitting the call in halves. A timeout is not
+    are dropped and the bulk call repeated. pdblp raises ValueError(rows so far) at
+    the first invalid security or field exception; the ticker after the last one
+    answered is tested alone and dropped (about two calls per bad ticker). Anything
+    else falls back to splitting the call in halves. A timeout is not
     'no data': the call is retried once, then the run stops (``DumpError``) rather
     than bisecting into hundreds of further timeouts."""
     fmt = m.column_format
@@ -172,23 +177,44 @@ def fetch(m: Manifest, series: list[Series], start: dt.date, end: dt.date, as_of
             bisect(items[:half], f)
             bisect(items[half:], f)
 
+    def drop(items: list[tuple[str, str]], bad: set[str], why: str) -> list[tuple[str, str]]:
+        for col, tkr in items:
+            if tkr in bad:
+                failed.append(f"{col} (requested {tkr})")
+                reasons[why] = reasons.get(why, 0) + 1
+        return [(c, t) for c, t in items if t not in bad]
+
     def bulk(items: list[tuple[str, str]], f: str) -> None:
-        for _ in range(3):
+        for _ in range(len(items) + 3):
             if not items:
                 return
             try:
                 frames.append(call(dict(items), f))
                 return
-            except KeyError as exc:
+            except KeyError as exc:      # valid tickers with no rows: pandas names them all
                 missing = missing_tickers(exc, {t for _, t in items})
                 if not missing:
                     break
-                for col, tkr in items:
-                    if tkr in missing:
-                        failed.append(f"{col} (requested {tkr})")
-                        reasons["no data from Bloomberg (named in pxts KeyError)"] = \
-                            reasons.get("no data from Bloomberg (named in pxts KeyError)", 0) + 1
-                items = [(c, t) for c, t in items if t not in missing]
+                items = drop(items, missing, "no data in range (named in the pxts KeyError)")
+            except ValueError as exc:
+                # pdblp stops at the first security with a securityError or fieldException and
+                # raises ValueError(rows received so far). Bloomberg answers in request order,
+                # so the suspect is the first ticker after the last one answered: test it alone.
+                rows = exc.args[0] if exc.args and isinstance(exc.args[0], list) else None
+                if rows is None:
+                    break
+                seen = {r[1] for r in rows if isinstance(r, (tuple, list)) and len(r) > 1}
+                last = max((i for i, (_, t) in enumerate(items) if t in seen), default=-1)
+                if last + 1 >= len(items):
+                    break
+                suspect = items[last + 1]
+                try:
+                    frames.append(call(dict([suspect]), f))     # not the culprit after all
+                    items = [x for x in items if x != suspect]
+                except Exception as single:
+                    if is_timeout(single):
+                        break
+                    items = drop(items, {suspect[1]}, "security error or field exception (pdblp ValueError)")
             except Exception:
                 break
         bisect(items, f)
@@ -262,6 +288,21 @@ def is_timeout(exc: Exception) -> bool:
     return isinstance(exc, TimeoutError) or "timeout" in str(exc).lower() or "timed out" in str(exc).lower()
 
 
+def timed(read_bdh):
+    """read_bdh that logs each call: size, range, seconds, outcome (the run's timing record)."""
+    def wrapper(tickers, start="2000-01-01", field="PX_LAST", end=None, timeout=TIMEOUT):
+        log.info("read_bdh %-9s %4d tickers %s..%s ...", field, len(tickers), start, end)
+        t0 = time.perf_counter()
+        try:
+            df = read_bdh(tickers, start=start, field=field, end=end, timeout=timeout)
+        except Exception as exc:
+            log.info("    %.1fs  %s: %s", time.perf_counter() - t0, type(exc).__name__, str(exc)[:200])
+            raise
+        log.info("    %.1fs  ok, %d rows x %d columns", time.perf_counter() - t0, len(df), df.shape[1])
+        return df
+    return wrapper
+
+
 def probe(m: Manifest, read_bdh, start: dt.date, end: dt.date, timeout: float) -> None:
     """One request for a ticker that always has data (EFFR) before the real run, so a
     missing pdblp or a refused connection stops the run with its own error instead of
@@ -302,11 +343,16 @@ def dump(m: Manifest, start: dt.date, end: dt.date, read_bdh=None, *, write_csv:
     if read_bdh is None:
         from pxts import read_bdh   # terminal machines only (pip install -e .[bloomberg])
     as_of = as_of or dt.date.today()
+    read_bdh = timed(read_bdh)
     probe(m, read_bdh, start, end, timeout)
     result = DumpResult()
     staged, requested = [], 0
     by_year: dict[int, list] = {}
-    for (year, group), (a, b, series) in sorted(plan(m, start, end, groups).items()):
+    t0 = time.perf_counter()
+    planned = plan(m, start, end, groups)
+    log.info("planned %d files, %d tickers in %.1fs", len(planned),
+             sum(len(v[2]) for v in planned.values()), time.perf_counter() - t0)
+    for (year, group), (a, b, series) in sorted(planned.items()):
         by_year.setdefault(year, []).append((group, a, b, series))
     for year, files in by_year.items():
         a, b = files[0][1], files[0][2]

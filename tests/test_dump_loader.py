@@ -47,10 +47,15 @@ class FakeBloomberg:
     def read_bdh(self, tickers, start="2000-01-01", field="PX_LAST", end=None, timeout=5):
         self.calls.append((dict(tickers), start, end, field))
         days = pd.bdate_range(start, end)
+        rows = []
+        for name, t in tickers.items():          # pdblp: invalid security -> ValueError(rows so far)
+            if t in self.dead:
+                raise ValueError(rows)
+            rows += [(d, t, field, self.value(name, t, field, d)) for d in days]
         # pxts does raw.loc[:, tickers]: pandas raises KeyError naming every ticker Bloomberg
         # had nothing for (dead, or a contract the generous dump horizon asks for before listing)
         missing = [t for name, t in tickers.items()
-                   if t in self.dead or all(np.isnan(self.value(name, t, field, d)) for d in days)]
+                   if all(np.isnan(self.value(name, t, field, d)) for d in days)]
         if missing and len(missing) == len(tickers):
             raise KeyError(f"None of [Index({missing!r}, dtype='object')] are in the [columns]")
         if missing:
@@ -195,7 +200,7 @@ def test_dump_requests_generously_and_isolates_unlisted_contracts():
         res = _dump(Path(tmp), day, day, fake)
         assert not res.blocking
         dead = [x for x in res.failed if x.startswith("SFR")]
-        assert dead and len(dead) % 3 == 0                    # unlisted SR3s, all three fields
+        assert dead
         # probe + per field (PX_LAST, OPEN_INT, PX_VOLUME): one bulk call naming the missing
         # tickers, one bulk call without them
         assert len(fake.calls) <= 1 + 3 * 2, len(fake.calls)
@@ -274,3 +279,27 @@ def test_timeouts_retry_once_then_stop_and_default_timeout_is_passed():
     with tempfile.TemporaryDirectory() as tmp:
         rc = dump_bloomberg.main(["--start", "2026-10-07", "--end", "2026-10-07", "--root", tmp], read_bdh=old_pxts)
         assert rc == 1
+
+
+def test_request_tickers_never_collide_and_far_contracts_skip_count_fields():
+    day, asof = D(2026, 10, 7), D(2026, 10, 9)
+    plan = [s for s in M.series(day, day) if M.group_of(s.instrument) in M.futures()]
+    req = [dumper.request_ticker(M, s, asof) for s in plan]
+    assert len(req) == len(set(req))                      # one Bloomberg ticker per contract
+    by = {s.ticker: (r, s.fields) for s, r in zip(plan, req)}
+    assert by["SFRU35 Comdty"][0] == "SFRU35 Comdty"       # 'SFRU5' would be Sep 2025 (AC's dump)
+    assert by["SFRZ26 Comdty"][0] == "SFRZ6 Comdty"
+    assert by["SFRZ26 Comdty"][1] == ("PX_LAST", "OPEN_INT", "PX_VOLUME")
+    assert by["SFRU35 Comdty"][1] == ("PX_LAST",)
+    assert by["FFF29 Comdty"][1] == ("PX_LAST",) and by["FFF28 Comdty"][1][1:] == ("OPEN_INT", "PX_VOLUME")
+
+
+def test_invalid_security_found_in_two_calls():
+    # pdblp raises ValueError(rows so far) at the first bad security; the next ticker is the suspect
+    with tempfile.TemporaryDirectory() as tmp:
+        fake = FakeBloomberg(dead={"USOSFR12 Curncy", "FFZ7 Comdty"})   # requested forms
+        res = _dump(Path(tmp), D(2026, 10, 7), D(2026, 10, 7), fake)
+        bad = {x.split("|")[0] for x in res.failed}
+        assert {"USOSFR12 Curncy", "FFZ27 Comdty"} <= bad
+        px = [c for c in fake.calls if c[3] == "PX_LAST" and c[1] == "2026-10-07"]
+        assert len(px) <= 7, len(px)      # 2 per bad ticker + the KeyError round + the final bulk

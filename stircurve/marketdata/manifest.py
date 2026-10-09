@@ -110,11 +110,16 @@ class Manifest:
         return f"{bbg['root']}{code}{y} {bbg['yellow_key']}"
 
     def request_ticker(self, instrument: str, year: int, month: int, last_trade: dt.date, as_of: dt.date) -> str:
-        """The form the dump asks Bloomberg for: one-digit year while the contract
-        trades, two digits once it has expired (``bbg.year_digits``)."""
+        """The form the dump asks Bloomberg for (``bbg.year_digits``): one-digit year
+        while the contract trades, two digits once it has expired, and two digits for
+        live contracts more than ``live_max_years_ahead`` years out. Bloomberg reads a
+        one-digit year as the nearest past decade: on 2026-10-07 'SFRU5' was Sep 2025
+        (expired), not Sep 2035 (AC's first dump)."""
         digits = self.instruments[instrument]["bbg"].get("year_digits", {"live": 2, "expired": 2})
         live = last_trade >= as_of
-        return self.future_ticker(instrument, year, month, two_digit=(digits["live" if live else "expired"] == 2))
+        far = year - as_of.year > digits.get("live_max_years_ahead", 8)
+        two = digits["live" if live else "expired"] == 2 or (live and far)
+        return self.future_ticker(instrument, year, month, two_digit=two)
 
     def swap_ticker(self, instrument: str, tenor: str) -> str:
         return self.instruments[instrument]["bbg"]["pattern"].format(code=self.raw["tenor_codes"][tenor])
@@ -129,6 +134,19 @@ class Manifest:
                 return name, 2000 + int(m.group(2)), self.month_codes[m.group(1)]
         return None
 
+    def contract_fields(self, instrument: str, ref_start: dt.date, end: dt.date) -> tuple[str, ...]:
+        """All fields for contracts starting within ``count_fields_months`` of ``end``;
+        the quote field (first listed) only beyond that. Far contracts have no open
+        interest or volume, and Bloomberg answers those fields with a field exception
+        that fails the whole bulk read_bdh call (pdblp raises ValueError)."""
+        ins = self.instruments[instrument]
+        months = ins.get("count_fields_months")
+        if months is None:
+            return tuple(ins["fields"])
+        y, mo = divmod(end.month - 1 + months, 12)
+        horizon = dt.date(end.year + y, mo + 1, 1)
+        return tuple(ins["fields"]) if ref_start < horizon else tuple(ins["fields"][:1])
+
     # --- column plan ------------------------------------------------------------
     def series(self, start: dt.date, end: dt.date) -> list[Series]:
         """Every ticker expected to have a value somewhere in [start, end]."""
@@ -138,8 +156,8 @@ class Manifest:
         table = contract_table(self, start, end, listing="dump_listing")   # lean to requesting too much
         for row in table.itertuples():
             ins = self.instruments[row.instrument]
-            out.append(Series(row.instrument, row.contract, row.bbg_ticker, tuple(ins["fields"]),
-                              row.first_quote, row.last_quote))
+            out.append(Series(row.instrument, row.contract, row.bbg_ticker,
+                              self.contract_fields(row.instrument, row.ref_start, end), row.first_quote, row.last_quote))
         for name, ins in self.swaps().items():
             first, last = _date(ins["first_date"]), _date(ins.get("last_date"))
             if _overlaps(first, last, start, end):
