@@ -1,7 +1,11 @@
 """Central-bank meeting schedules and the parcels they define.
 
 File: ``data/refdata/meetings/<bank>.csv`` with columns
-``decision_date, effective_date, scheduled, regime, synthetic, source_url, retrieved_at``.
+``decision_date, effective_date, scheduled, regime, synthetic, source_url, retrieved_at``
+and, where any row needs it, ``superseded_on``: the date on which an
+unscheduled decision replaced a scheduled meeting that never took place (Fed
+17-18 Mar 2020, cancelled after the 15 Mar emergency meeting). Such a meeting
+is a curve node for as-of dates before ``superseded_on`` only (AC, PR #4).
 Unscheduled decisions live in ``<bank>_unscheduled.csv`` with the same columns.
 
 Effective-date rules (see the design spec, "Reference data"):
@@ -37,6 +41,7 @@ from .calendars import Calendar
 BANKS = ("fed", "ecb", "boe", "boj")
 BANK_CALENDAR = {"fed": "us_fed", "ecb": "target", "boe": "uk", "boj": "jp"}
 COLUMNS = ["decision_date", "effective_date", "scheduled", "regime", "synthetic", "source_url", "retrieved_at"]
+OPTIONAL_COLUMNS = ["superseded_on"]      # written only when a row uses it (other files stay byte-identical)
 
 
 @dataclass(frozen=True)
@@ -49,6 +54,7 @@ class Meeting:
     synthetic: bool = False
     source_url: str = ""
     retrieved_at: str = ""
+    superseded_on: dt.date | None = None   # scheduled meeting cancelled by an unscheduled decision on this date
 
     def as_row(self) -> dict:
         return {
@@ -59,7 +65,12 @@ class Meeting:
             "synthetic": int(self.synthetic),
             "source_url": self.source_url,
             "retrieved_at": self.retrieved_at,
+            "superseded_on": self.superseded_on.isoformat() if self.superseded_on else "",
         }
+
+    def in_force_on(self, as_of: dt.date) -> bool:
+        """Was this meeting still expected on ``as_of``? (False from the supersession date on.)"""
+        return self.superseded_on is None or as_of < self.superseded_on
 
 
 @dataclass(frozen=True)
@@ -103,6 +114,7 @@ def load_meetings(bank: str, include_unscheduled: bool = True,
                     synthetic=_parse_bool(row.get("synthetic", "0")),
                     source_url=row.get("source_url", ""),
                     retrieved_at=row.get("retrieved_at", ""),
+                    superseded_on=(dt.date.fromisoformat(row["superseded_on"]) if row.get("superseded_on") else None),
                 ))
     return sorted(out, key=lambda m: m.decision_date)
 
@@ -111,8 +123,9 @@ def save_meetings(bank: str, meetings: list[Meeting], unscheduled: bool = False,
                   refdata_dir: Path = REFDATA_DIR) -> Path:
     p = meetings_path(bank, unscheduled, refdata_dir)
     p.parent.mkdir(parents=True, exist_ok=True)
+    cols = COLUMNS + [c for c in OPTIONAL_COLUMNS if any(getattr(m, c) for m in meetings)]
     with p.open("w", newline="", encoding="utf-8") as fh:
-        w = csv.DictWriter(fh, fieldnames=COLUMNS, lineterminator="\n")
+        w = csv.DictWriter(fh, fieldnames=cols, lineterminator="\n", extrasaction="ignore")
         w.writeheader()
         for m in sorted(meetings, key=lambda m: m.decision_date):
             w.writerow(m.as_row())
