@@ -11,7 +11,7 @@ with zero unknown columns; windows match exchange calendars.*
 | Windows: FF, ED, SR3 reference quarter and contract naming, FF/SR3 listing schedules | ✔ rule text captured live (cftc.gov filings) and quoted in the manifest |
 | Windows: SR3 last trade, SR1 (all rules), ED conversion | ⏳ CME pages only; cmegroup.com blocks scripted access |
 | Windows vs CME published calendars (dates) | ⏳ needs a browser capture of the CME calendar pages |
-| 2026-10-07: loads with zero unknown columns | ✔ 0 unknown of 430 columns, 301 values; other findings: missing_columns 1 |
+| 2026-10-07: loads with zero unknown columns | ✔ 0 unknown of 431 columns, 302 values |
 | 2019-06-12: loads with zero unknown columns | ✔ 0 unknown of 596 columns, 311 values |
 | Listing model vs the contracts Bloomberg quotes on those days | ✔ FF 36/60, SR1 7/13, SR3 20q / 39q+6s, ED 40q+4s (tests/test_contracts.py) |
 
@@ -117,20 +117,19 @@ Captured: cme_ed_fallback_20261009.txt, cme_sr3_specs_20261009.txt (comparison p
 ### 2026-10-07
 
 ```
-7 file(s), 430 columns, 301 values
+7 file(s), 431 columns, 302 values
 no_data: 0
 unknown_columns: 0
 malformed: 0
 out_of_range: 0
 outside_listing: 0
-missing_columns: 1 (warning)
-  data/market/usd/2026/policy_anchors.csv: IRRBIOER Index|PX_LAST
+missing_columns: 0
 stale: 0
 outside_listing_unverified: 0
 outside_dates: 0
 ```
 
-Unknown columns: **0**; tidy rows: 301.
+Unknown columns: **0**; tidy rows: 302.
 
 ### 2019-06-12
 
