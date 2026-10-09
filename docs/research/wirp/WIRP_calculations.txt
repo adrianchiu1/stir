@@ -1,0 +1,693 @@
+Calculations
+This document provides examples of how WIRP leverages futures and OIS asset prices to calculate the
+number of hikes and cuts expected by a Central Bank. You will also learn the assumptions WIRP relies on
+to make calculations, how WIRP generates forward rates (including the data used), and how WIRP uses
+these forward rates to calculate the implied data displayed in WIRP.
+
+Model Assumptions
+Both the Futures and the OIS model rely on the assumption that only a central bank action will impact
+the effective interest rate of an economy. This assumption allows the expected overnight rates to be
+pushed forward and backward through the chosen asset’s tenor structure, as shown in the following
+examples.
+
+
+
+
+Futures Model
+To perform the calculations for this model, WIRP collects price data for a list of assets from the Futures
+market and uses this data to derive interest rate projections for each upcoming CB meeting. WIRP
+assumes that for the current asset prices to exist the rate projections will hold true, as shown in greater
+detail in the following example.
+                       9/16/2019 Example
+
+
+                       The Effective Fed Funds Rate (EFFR) is the interest rate that is targeted by the Federal Reserve’s Federal
+                       Open Market Committee (FOMC) for its implementation of US monetary policy. Simply speaking, it is the
+                       unsecured overnight lending rate between Federal Reserve member banks and sets a floor for all
+                       interest rates prevailing in the United States. If you wanted to hedge an overnight rate exposure, you
+                       might purchase a CME 30 Day Fed Funds Future. A future is expressed as 100 – R where R is the
+                       expected arithmetic average overnight rate for the contract month and where the overnight rate is the
+                       expected value of EFFR referenced above. For example, the Dec2019 contract, as of 9/16/2019, had a
+                       quoted price of 98.295. This implies a monthly average expected overnight rate of 1.705. The following
+                       table shows an example of how this might look.
+
+
+                        Dec2019 Futures Contract Scenario 1
+                   Date     1     2      3     4     5      6   7     8     9    10    11    12    13    14    15    16    17    18    19    20    21    22    23    24    25    26    27    28    29    30    31
+Expected Effective Rate 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705 1.705
+   Month Average Rate                                                                                             1.705
+
+
+
+
+                       Legend
+                             2 Business Days
+                             1 Weekend Days
+                            11 FOMC Meeting Days
+
+
+
+
+                       The scenario above indicates that the rate is expected to be the same throughout the contract, even
+                       though there is an FOMC meeting expected on the 11th of the month. In reality, assuming a potential
+                       hike or cut, the contract would likely have one expected rate before the meeting and another expected
+                       rate after.
+
+                       Note: To see these securities, run FFA Comdty CT <GO>, or click Instrument at the top of the WIRP
+                       screen.
+
+                       Once we acquire the overnight rates for the futures contracts, we can start to make interest rate
+                       predictions. The following chart shows the eight Federal Open market Committee (FOMC) meetings held
+                       per year and the Federal Funds Futures (FFF) contracts for each month. The chart also indicates that the
+                       market expectation is that the FOMC will be cutting interest rates.
+                                               CME 30 Day Fed Funds Futures Rates vs FOMC Meetings (as of
+                                                                      9/16/2019)
+
+                             2.2
+                                                                                                                                                       FOMC Meeting
+
+                                2
+
+
+
+                             1.8
+
+
+
+                             1.6
+
+
+
+                             1.4
+
+
+
+                             1.2
+
+
+
+
+                          Focusing back on our December 2019 contract, we don’t know the interest rates expected both before
+                          and after a meeting. For instance, our December 2019 rate of 1.705 could imply a higher rate prior to
+                          the meeting and a lower rate following, as shown in the following scenario.
+                          Dec2019 Futures Contract Scenario 2
+                   Date       1     2      3     4     5      6 7 8   9   10   11    12    13    14    15    16    17    18    19    20    21    22    23    24    25    26    27    28    29    30    31
+Expected Effective Rate    1.78 1.78 1.78 1.78 1.78 1.78 1.78 1.78 1.78 1.78 1.78 1.664 1.664 1.664 1.664 1.664 1.664 1.664 1.664 1.664 1.664 1.664 1.664 1.664 1.664 1.664 1.664 1.664 1.664 1.664 1.664
+   Month Average Rate                                                                                     1.705
+                                                   Dec2019 Futures Scenario 2: Pre-Meeting Rate Greater than
+                                                                      Post-Meeting Rate
+                            1.8
+                                                                                                                                                                                                                                                                                                                                     FOMC Meeting
+
+                                                                                                                                                                                                                                                                                                                                     31 Days @ 1.705
+                           1.76
+                                                                                                                                                                                                                                                                                                                                     11 Days @ 1.780
+
+                                                                                                                                                                                                                                                                                                                                     20 Days @ 1.664
+                           1.72
+
+
+                           1.68
+
+
+                           1.64
+
+
+                            1.6
+                                   12/1/2019
+                                               12/2/2019
+                                                           12/3/2019
+                                                                       12/4/2019
+                                                                                   12/5/2019
+                                                                                               12/6/2019
+                                                                                                           12/7/2019
+                                                                                                                       12/8/2019
+                                                                                                                                   12/9/2019
+                                                                                                                                               12/10/2019
+                                                                                                                                                            12/11/2019
+                                                                                                                                                                         12/12/2019
+                                                                                                                                                                                      12/13/2019
+                                                                                                                                                                                                   12/14/2019
+                                                                                                                                                                                                                12/15/2019
+                                                                                                                                                                                                                             12/16/2019
+                                                                                                                                                                                                                                          12/17/2019
+                                                                                                                                                                                                                                                       12/18/2019
+                                                                                                                                                                                                                                                                    12/19/2019
+                                                                                                                                                                                                                                                                                 12/20/2019
+                                                                                                                                                                                                                                                                                              12/21/2019
+                                                                                                                                                                                                                                                                                                           12/22/2019
+                                                                                                                                                                                                                                                                                                                        12/23/2019
+                                                                                                                                                                                                                                                                                                                                     12/24/2019
+                                                                                                                                                                                                                                                                                                                                                  12/25/2019
+                                                                                                                                                                                                                                                                                                                                                               12/26/2019
+                                                                                                                                                                                                                                                                                                                                                                            12/27/2019
+                                                                                                                                                                                                                                                                                                                                                                                         12/28/2019
+                                                                                                                                                                                                                                                                                                                                                                                                      12/29/2019
+                                                                                                                                                                                                                                                                                                                                                                                                                   12/30/2019
+                                                                                                                                                                                                                                                                                                                                                                                                                                12/31/2019
+                          Or, our month average rate could imply a lower rate prior to the meeting and a higher rate following, as
+                          shown in the following scenario.
+                          Dec2019 Futures Contract Scenario 3
+                   Date       1     2      3     4     5      6 7 8   9   10   11   12   13   14   15    16  17   18   19   20   21   22   23   24   25   26   27   28   29   30   31
+Expected Effective Rate    1.64 1.64 1.64 1.64 1.64 1.64 1.64 1.64 1.64 1.64 1.64 1.74 1.74 1.74 1.74 1.74 1.74 1.74 1.74 1.74 1.74 1.74 1.74 1.74 1.74 1.74 1.74 1.74 1.74 1.74 1.74
+   Month Average Rate                                                                                 1.705
+           Dec2019 Futures Scenario 3: Pre-Meeting Rate Less than
+ 1.8                         Post-Meeting Rate
+
+
+1.76
+
+
+1.72
+
+
+1.68
+                                                                       FOMC Meeting
+
+                                                                       31 Days @ 1.705
+1.64                                                                   11 Days @ 1.640
+
+                                                                       20 Days @ 1.740
+ 1.6
+
+
+
+
+Taken individually, each contract that spanned a meeting month could be expressed as an equation such
+as, 31(1.705) = 11(𝑦𝑦) + 20(𝑥𝑥). Unfortunately, this is one equation with two unknowns. However,
+taken collectively we can see that there are contract months which do not span CB meetings.
+
+           CME 30 Day Fed Funds Futures Rates vs FOMC Meetings
+                            (as of 9/16/2019)
+   2.2
+
+
+       2
+
+
+   1.8
+
+
+   1.6
+
+
+   1.4
+
+
+   1.2
+                          Based on the assumption that an action by a Central Bank is the only thing that should noticeably impact
+                          the effective rate of a given economy and that no meeting is expected in the November 2019 contract
+                          month, we can carry the November rate forward into the Dec2019 contract. Doing so results in an
+                          equation such as, 31(1.705) = 11(1.790) + 20(𝑥𝑥) . Now, we simply need to solve for 𝑥𝑥 (our forward
+                          rate), which, in this case, is approximately equal to ~1.658.
+                          Dec2019 Futures Contract (9/16/2019)
+                   Date       1     2      3     4      5    6 7 8    9   10   11    12    13    14    15    16    17    18    19    20    21    22    23    24    25    26    27    28    29    30    31
+Expected Effective Rate    1.79 1.79 1.79 1.79 1.79 1.79 1.79 1.79 1.79 1.79 1.79 1.658 1.658 1.658 1.658 1.658 1.658 1.658 1.658 1.658 1.658 1.658 1.658 1.658 1.658 1.658 1.658 1.658 1.658 1.658 1.658
+   Month Average Rate                                                                                     1.705
+
+
+
+                                                             Reality: Pre-Meeting Rate (Nov2019) Expected at 1.790
+                           1.8
+
+
+
+                          1.76
+
+
+
+                          1.72
+                                                                            FOMC Meeting
+
+                                                                            Nov. 2019 Avg. Rate @ 1.790
+                          1.68
+                                                                            Dec. 2019 Avg. Rate @ 1.705
+
+                                                                            11 Days @ 1.790
+                          1.64
+                                                                            20 Days @ 1.658
+
+
+                           1.6
+                                  11/1/2019
+                                              11/3/2019
+                                                          11/5/2019
+                                                                      11/7/2019
+                                                                                  11/9/2019
+                                                                                              11/11/2019
+                                                                                                           11/13/2019
+                                                                                                                        11/15/2019
+                                                                                                                                     11/17/2019
+                                                                                                                                                  11/19/2019
+                                                                                                                                                               11/21/2019
+                                                                                                                                                                            11/23/2019
+                                                                                                                                                                                         11/25/2019
+                                                                                                                                                                                                      11/27/2019
+                                                                                                                                                                                                                   11/29/2019
+                                                                                                                                                                                                                                12/1/2019
+                                                                                                                                                                                                                                            12/3/2019
+                                                                                                                                                                                                                                                        12/5/2019
+                                                                                                                                                                                                                                                                    12/7/2019
+                                                                                                                                                                                                                                                                                12/9/2019
+                                                                                                                                                                                                                                                                                            12/11/2019
+                                                                                                                                                                                                                                                                                                         12/13/2019
+                                                                                                                                                                                                                                                                                                                      12/15/2019
+                                                                                                                                                                                                                                                                                                                                   12/17/2019
+                                                                                                                                                                                                                                                                                                                                                12/19/2019
+                                                                                                                                                                                                                                                                                                                                                             12/21/2019
+                                                                                                                                                                                                                                                                                                                                                                          12/23/2019
+                                                                                                                                                                                                                                                                                                                                                                                       12/25/2019
+                                                                                                                                                                                                                                                                                                                                                                                                    12/27/2019
+                                                                                                                                                                                                                                                                                                                                                                                                                 12/29/2019
+                                                                                                                                                                                                                                                                                                                                                                                                                              12/31/2019
+
+
+
+
+                          After solving for the post-meeting rate, implied by the November and December contracts, we would
+                          work our way through the available contract prices and CB meeting dates to solve for all available
+                          forward rates.
+         FOMC Meeting Dates and WIRP Implied Overnight
+  2.5            Rates through January 2021
+
+    2
+                                                             FOMC Meeting
+
+  1.5
+
+
+    1
+
+
+  0.5
+
+
+    0
+
+
+
+
+Finally, we would take the data from curve that we constructed and express it in one of two categories:
+the Current Implied Overnight Rate, and the Post-Meeting Implied Overnight Rate. In this example, the
+Current Implied O/N Rate, the overnight rate expected to prevail up until the first meeting, is ~2.160.
+You can see the Post-Meeting Implied Overnight Rates, the interest rates that are expected to follow
+each FOMC meeting, for each meeting in the Implied Rate column.
+Once we have these implied overnight rates, additional calculations are performed to estimate the
+extended WIRP data. For more information about the additional calculations, see Implied Data.
+
+OIS Model
+This methodology exploits the relationship between the fixed and floating sides of monthly Overnight
+Index Swaps (OIS) to imply the rates surrounding CB meeting dates.
+
+For this calculation, WIRP assumes that the following equation must be in balance for the market to be
+in equilibrium.
+                                                        𝑛𝑛
+                                            𝑟𝑟 ∗ 𝑛𝑛          𝑟𝑟𝑖𝑖 ∗ 𝑑𝑑𝑖𝑖
+                                         1+         = � �1 +             �
+                                             360               360
+                                                       𝑖𝑖=1
+
+Here the left side represents the fixed portion, and the right side represents the float. Where:
+
+𝑟𝑟 = The fixed interest rate (quoted OIS Price)
+
+𝑟𝑟𝑖𝑖 = The expected floating interest rate on the 𝑖𝑖th day
+
+𝑑𝑑𝑖𝑖 = The number of days that 𝑟𝑟𝑖𝑖 applies (1 for weekdays, 3 for weekends)
+
+𝑛𝑛 = The total number of days for the swap
+
+
+
+A fictional one-week example might look like:
+
+
+
+                                𝑟𝑟 ∗ 7        𝑟𝑟 ∗ 1 2     𝑟𝑟 ∗ 2        𝑟𝑟 ∗ 3
+                             1+        = �1 +       � �1 +        � �1 +        �                  (1)
+                                 360           360          360           360
+
+
+Where:
+
+
+
+                    Term                                     Represents
+                                             2               Monday and Tuesday
+                                   𝑟𝑟 ∗ 1
+                               �1 +       �
+                                    360
+                                    𝑟𝑟 ∗ 2                   Wednesday and Thursday
+                               �1 +        �
+                                     360                     assuming Thursday is a market
+                                                             holiday and the rate carries
+                                                             over.
+                                      𝑟𝑟 ∗ 3                 Friday, Saturday, and Sunday
+                               �1 +          �
+                                       360
+
+
+Given that 𝑟𝑟, 𝑛𝑛, and 𝑑𝑑𝑖𝑖 are known, the only unknowns in the equation are the 𝑟𝑟s. As we have one
+equation with potentially many unknowns (the different 𝑟𝑟s) we cannot solve for this algebraically. In
+WIRP, we assume that these rates are the same and employ Newton’s method to solve for a single
+representative value of 𝑟𝑟, yielding what we refer to as the average expected variable rate over the
+period under scrutiny.
+
+Using this assumption, we can solve for an average expected overnight rate associated with each tenor,
+paying specific attention to the tenors before and after Central Bank meetings. The following example
+from the United States illustrates this in more detail.
+
+9/13/2018 Example
+
+The following chart shows the US OIS curve as found at {ICVS 42<GO>}, as of 9/13/2018. The upward
+sloping curve indicates that the market expects that the Central Bank will be holding or hiking rates, not
+cutting.
+
+Note: To view the securities shown in the chart, run ICVS 42 <GO> or click Instrument at the top of the
+WIRP screen.
+
+             US OIS Curve (ICVS 42) to 1 Yr as of 9/13/2018
+
+2.5
+
+2.4
+
+2.3
+
+2.2
+
+2.1
+
+  2
+
+1.9
+
+
+
+
+Solving for the settlement dates and injecting the Federal Reserve meeting dates would result in the
+following chart:
+              1 Yr OIS Curve and Fed Meeting Dates as of
+  2.5                         9/13/2018
+
+  2.4
+
+  2.3
+
+  2.2
+
+  2.1
+
+   2
+
+  1.9
+
+
+
+
+                                 Fed Meeting Dates     OIS
+
+
+Zooming into the upcoming Fed meeting should result in the following chart:
+
+          Fed Meeting and Surrounding OIS Contracts as of 9/13/2018
+  2.2
+                                                             Fed Meeting Dates   OIS
+
+
+
+
+  2.1
+
+
+
+
+    2
+
+
+
+
+  1.9
+While we could use the one-week and two-week securities for our calculations, we'll select the one
+week (to estimate the rate expected before the meeting) and one month (to estimate the rate expected
+after the meeting). In this example, we select the monthly tenor as it tends to have more liquidity than
+the similar three-week security. This leaves us with the following chart:
+
+            Fed Meeting and Selected OIS Contracts as of 9/13/2018
+  2.2
+                                                     Fed Meeting Dates     7 Day & 1 Month OIS
+
+
+
+
+  2.1
+
+
+
+
+    2
+
+
+
+
+  1.9
+
+
+
+
+Calculating the Average Expected Rate before a Meeting
+
+We can now begin making the calculations necessary to estimate the overnight rate expected by the
+market, both before and after the meeting of the Federal Reserve.
+
+Note: Spot lag may create may create issues. Spot lag is the difference between when the contract is
+entered into and the first date of the floating side of the equation or fixing. While spot lag varies from
+market to market, it is generally regarded as two days in the OIS market. This is the convention followed
+in WIRP. If this lag lands the start of the contract on a weekend, accrual begins on the following business
+day. These dates can be referenced on the Bloomberg Swap Manager at SWPM –OIS R09/13/2018
+<GO>.
+
+The quoted BGN price of a one-week OIS contract as of Sept. 13 was 1.9195. (For the purposes of fixing,
+accrual will begin on the 17th.) A two-day delay puts the start day on Saturday the 15th which implies that
+interest accrual starts on Monday the 17th and continues through the 23rd. Knowing that this period has
+four trading days and three weekend days, our equation now looks like:
+                                  0.01920 ∗ 7        𝑟𝑟 ∗ 1 4     𝑟𝑟 ∗ 3
+                             1+               = �1 +       � �1 +        �                         (2)
+                                      360             360          360
+
+
+
+
+Where the first term on the right hand side represents the weekdays, and the second represents the
+weekend days. We assume that all unknown 𝑟𝑟s are the same and solve for this ‘average expected’ value
+via Newton's method. On the close of business on the 13th, 𝑟𝑟 ≈ 0.01918, so we can say that from the
+13th through the 23rd of September the expected overnight rate should be 0.01918 as expressed in
+equation 4.
+
+
+
+                          0.01920 ∗ 7        0.01918 ∗ 1 4     0.01918 ∗ 3
+                     1+               = �1 +            � �1 +             �                       (3)
+                              360                360               360
+
+
+
+Again, invoking our assumption that only a Central Bank Meeting decision should impact expected
+overnight rates, we carry this rate forward until the meeting.
+
+
+
+                       Expected Overnight Rate from OIS
+  2.2
+                                                    Fed Meeting Dates
+                                                    7 Day & 1 Month OIS
+                                                    Expected Overnight Rate from OIS
+                                                    Expected Overnight Rate Carried Forward
+  2.1
+
+
+
+
+    2
+
+
+
+
+  1.9
+
+
+
+
+Once we have this calculated value, we can calculate the implied forward rate expected after the
+meeting.
+Calculating the Average Expected Rate after a Meeting
+
+The quoted BGN price of a one month OIS contract as of Sept. 13 was 2.0830. Given spot lag, interest
+accrual begins on the 17th and continues through Oct. 16th. We can now fit this information into our
+equation along with the information we calculated above, as shown in the following equation.
+                                                   0.02083 ∗ 30
+                                             1+
+                                                         360
+                            0.01918 ∗ 1 4            0.01918 ∗ 3            0.01918 ∗ 1 3
+                    = �1 +                 � �1 +                  � �1 +                �
+                                 360                      360                   360                       (4)
+                         𝑟𝑟 ∗ 1        𝑟𝑟 ∗ 3         𝑟𝑟 ∗ 1 4       𝑟𝑟 ∗ 4        𝑟𝑟 ∗ 1 3
+                    �1 +        � �1 +       � �1 +         � �1 +          � �1 +       �
+                          360           360            360            360           360
+                                               𝑟𝑟 ∗ 3        𝑟𝑟 ∗ 1 2
+                                         �1 +         � �1 +       �
+                                                360           360
+
+
+Note that we substitute in the average expected rate from our previous calculation for the 𝑟𝑟 of the first
+two terms and include the same rate for the third term (the period between the end of accrual on the
+one-week security and the Fed Meeting). The following table describes the terms on the float side of the
+equation with our ‘average expected’ 𝑟𝑟 replacing the 𝑟𝑟𝑖𝑖 s from equation 1.
+
+
+
+ 9/17 - 9/20                                    Weekdays                                0.01918 ∗ 1 4
+                                                                                    �1 +            �
+                                              (same as Eq 4)                                360
+ 9/21 - 9/23                                 Weekend Days                                0.01918 ∗ 3
+                                                                                    �1 +             �
+                                              (same as Eq 4)                                 360
+ 9/24 - 9/26                            Weekdays Through Meeting                        0.01918 ∗ 1 3
+                                                                                    �1 +              �
+                                            (Implied by Eq 4)                                360
+ 9/27                                    Weekday After Meeting                               𝑟𝑟 ∗ 1
+                                                                                       �1 +         �
+                                                                                              360
+ 9/28 - 9/30                                   Weekend Days                                  𝑟𝑟 ∗ 3
+                                                                                       �1 +         �
+                                                                                              360
+ 10/1 - 10/4                                      Weekdays                                  𝑟𝑟 ∗ 1 4
+                                                                                       �1 +        �
+                                                                                             360
+ 10/5 - 10/8                                   Weekend Days                                  𝑟𝑟 ∗ 4
+                                                                                       �1 +         �
+                                            (incl. Columbus Day)                              360
+ 10/9 - 10/11                                     Weekdays                                  𝑟𝑟 ∗ 1 3
+                                                                                       �1 +        �
+                                                                                             360
+ 10/12 - 10/14                                 Weekend Days                                  𝑟𝑟 ∗ 3
+                                                                                       �1 +         �
+                                                                                              360
+ 10/15 - 10/16                                    Weekdays                                  𝑟𝑟 ∗ 1 2
+                                                                                       �1 +        �
+                                                                                             360
+
+
+We then employ Newton's method to calculate an average expected 𝑟𝑟 ≈ 0.02165. This implies that the
+market has priced in a forward rate of approximately 2.165% after the Federal Reserve’s upcoming
+meeting.
+                      Pre & Post Average Expected Overnight Rates
+  2.2
+             Fed Meeting Dates
+
+             7 Day & 1 Month OIS
+
+             Expected Overnight Rate from OIS
+  2.1
+             Expected Overnight Rate Carried
+             Forward
+             Post-Meeting Average Expected
+             Overnight Rate
+
+
+    2
+
+
+
+
+  1.9
+
+
+
+
+Having solved for the one-month contract, we work our way through the available contract prices and
+CB meeting dates to solve for all available forward rates.
+
+Finally, we take the data from curve that we constructed and express it in one of two categories: the
+Current Implied Overnight Rate or the Post-Meeting Implied Overnight Rate. In this example, the
+Current Implied O/N Rate, the overnight rate expected to prevail up until the Sep. 26th 2018 meeting is
+~1.919. You can see the Post-Meeting Implied Overnight Rates, the interest rates that are expected to
+follow an FOMC meeting, for each meeting in the Implied Rate column.
+Implied Data
+The implied data in WIRP is the data displayed in the data grid and Current Implied O/N Rate data
+directly above the grid. The implied data consists of five related data items, three interest rate
+expressions and two estimates of CB movements based on those expressions.
+
+Interest Rate Expressions
+In the previous sections, we saw how one can estimate forward rates expected before and after a
+meeting that would solve out to the individual rates surrounding CB meetings. In the interest rate
+expressions, we are simply labeling the data in a slightly different manner.
+
+Current Implied Overnight Rate
+The forward rate that is estimated before the first (upcoming) meeting is labeled as the ‘Current Implied
+Overnight Rate.’ This interest rate becomes the starting point for our other calculations.
+
+Note: The generic tickers for these data do not have meeting-specific counterparts, as there is only one
+for each model.
+
+Post-Meeting Implied Overnight Rate
+The forward rates that are estimated for each CB meeting are labeled as the ‘Post-Meeting Implied
+Overnight Rates.’ These are the overnight rates which are expected to prevail after each corresponding
+CB meeting. A generic ticker references the front meeting, while all other meeting-specific data are
+referenced via a virtual tail in the MMMYYYY form (e.g., US0AFR DEC2019 Index).
+Implied Overnight Rate Change
+The spread between the Current Implied Overnight Rate and the Post-Meeting Implied Overnight Rate.
+These indicate the total change in the overnight rate expected from today until the conclusion of the
+corresponding CB meeting.
+
+                            𝑃𝑃𝑃𝑃𝑠𝑠𝑡𝑡 𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀 𝐼𝐼𝐼𝐼𝐼𝐼 𝑅𝑅𝑅𝑅𝑅𝑅𝑒𝑒𝑡𝑡 − 𝐶𝐶𝐶𝐶𝐶𝐶 𝐼𝐼𝐼𝐼𝐼𝐼 𝑂𝑂𝑂𝑂 𝑅𝑅𝑅𝑅𝑅𝑅𝑅𝑅 = 𝐼𝐼𝐼𝐼𝐼𝐼 𝑅𝑅𝑅𝑅𝑅𝑅𝑅𝑅 ∆
+A generic ticker references the front meeting, while all other meeting-specific data are referenced via a
+virtual tail in the MMMYYYY form (e.g., US0ACH DEC2019 Index).
+
+CB Estimates
+Once we have the interest rate expressions, we can create estimates of how the CB movement ‘priced
+into’ the chosen instrument’s curve.
+
+Number of Single Hikes or Cuts
+The total, cumulative number of single hikes or cuts expected by the conclusion of a corresponding CB
+meeting. This is calculated as:
+                             𝐼𝐼𝐼𝐼𝐼𝐼𝐼𝐼𝐼𝐼𝐼𝐼𝐼𝐼 𝑅𝑅𝑅𝑅𝑅𝑅𝑅𝑅 𝐶𝐶𝐶𝐶𝐶𝐶𝐶𝐶𝑒𝑒𝑡𝑡
+                                                                  = 𝑁𝑁𝑁𝑁𝑁𝑁𝑁𝑁𝑁𝑁𝑁𝑁 𝑜𝑜𝑜𝑜 𝑆𝑆𝑆𝑆𝑆𝑆𝑆𝑆𝑆𝑆𝑆𝑆 𝐻𝐻𝐻𝐻𝐻𝐻𝐻𝐻𝐻𝐻 𝑜𝑜𝑜𝑜 𝐶𝐶𝐶𝐶𝐶𝐶𝑠𝑠𝑡𝑡
+                              𝐴𝐴𝐴𝐴𝐴𝐴𝐴𝐴𝐴𝐴𝐴𝐴𝐴𝐴 𝑅𝑅𝑅𝑅𝑅𝑅𝑅𝑅 𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀
+A generic ticker references the front meeting, while all other meeting-specific data are referenced via a
+virtual tail in the MMMYYYY form (e.g., US0ANM DEC2019 Index).
+
+Percent of a Single Hike or Cut
+The marginal percent of a single hike or a cut priced in at a specific CB meeting. This number is not
+cumulative. Rather than always referencing the Current Implied Overnight Rate, this number looks at
+the spread of the implied overnight rates immediately preceding and following a specific central bank
+meeting, expressed as a percentage of a single CB move.
+
+
+   𝑃𝑃𝑃𝑃𝑃𝑃𝑃𝑃 𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀 𝐼𝐼𝐼𝐼𝐼𝐼 𝑅𝑅𝑅𝑅𝑅𝑅𝑒𝑒𝑡𝑡 − 𝑃𝑃𝑃𝑃𝑃𝑃𝑃𝑃 𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀 𝐼𝐼𝐼𝐼𝐼𝐼 𝑅𝑅𝑅𝑅𝑅𝑅𝑒𝑒𝑡𝑡−1
+                                                                                           ∗ 100 = 𝑃𝑃𝑃𝑃𝑃𝑃𝑃𝑃𝑃𝑃𝑃𝑃𝑃𝑃 𝑆𝑆𝑆𝑆𝑆𝑆𝑆𝑆𝑆𝑆𝑆𝑆 𝐻𝐻𝐻𝐻𝐻𝐻𝐻𝐻 𝑜𝑜𝑜𝑜 𝐶𝐶𝐶𝐶𝐶𝐶
+                              𝐴𝐴𝐴𝐴𝐴𝐴𝐴𝐴𝐴𝐴𝐴𝐴𝐴𝐴 𝑅𝑅𝑅𝑅𝑅𝑅𝑅𝑅 𝑀𝑀𝑀𝑀𝑀𝑀𝑀𝑀
+
+
+A generic ticker references the front meeting, while all other meeting-specific data are referenced via a
+virtual tail in the MMMYYYY form (e.g., US0APR DEC2019 Index).
+
+
+
+The following example from the US Futures model will illustrate.
+
+On September 13th 2018, the US Federal Reserve was expected by markets to hike rates at its upcoming
+meeting on the 26th. However, even though markets had priced in 3.5 more hikes through the end of the
+next year, the percent of a single hike or cut for the November meeting only had 1.4% of a hike priced
+in. Looking back on how the hikes were distributed on that day illustrates why. We can see by looking at
+the Implied Rate column that markets were expecting a hike to take rates from ~1.918 to ~2.165 on the
+26th. However, markets were only implying a rate of ~2.168 after the November meeting. This is
+because, at the time, a dogma persisted that the Fed would only move rates at every other (‘big’)
+meeting. Therefore, the percent of a single hike priced for the 11/8/2018 meeting was very small and
+would have been calculated as:
+
+
+                                    2.168 − 2.165
+                                                  ∗ 100 = 1.4%
+                                        0.25
+

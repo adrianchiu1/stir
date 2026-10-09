@@ -1,0 +1,247 @@
+WIRP – Estimating the Path of Central Bank Hikes and Cuts
+
+
+
+
+Given the popularity of the WIRP function, we wanted to explain why we decided to change some key
+elements of the function. The goal of this document is to outline several of the challenges surrounding
+the previous WIRP functionality and to give users a brief look at what we’ve decided to display in the
+new screen – and explain why the newer version gives a more complete picture.
+
+Let’s start by stating the goal of the WIRP screen; WIRP displays the path of Central Bank (CB) hikes or
+cuts that are expected by (or priced into) markets. We do this by estimating interest rate levels before
+and after a CB meeting, and comparing the spread between these two to the standard size of a CB rate
+hike or cut (e.g., 25 bps for the Federal Reserve). In this way, we can determine the percentage of a hike
+or cut ‘priced in’ to markets for a specific meeting. For both the old WIRP and new WIRP, these
+calculations are the same. A simple example of this might resemble the following:
+
+
+
+The current overnight interest rate is 1.00.
+
+The overnight rate expected after the CB meeting is 1.125.
+
+The assumed rate move size of the central bank is 0.25.
+Here, we would subtract the current overnight rate before from the rate expected after the meeting.
+
+                                         1.125 − 1.00 = 0.125
+We would divide what remains by the assumed move size.
+                                              0.125
+                                                    = 0.50
+                                              0.25
+We could then report that 50% of a hike was priced in for that particular meeting.
+
+
+
+Old WIRP and the Conditional Probability Matrix
+
+
+
+In the previous version of WIRP, we used a conditional probability grid to illustrate the potential future
+path of interest rates. In that matrix, we would take the ‘percentages’ that we had calculated above, and
+multiply them out across a matrix of values and meeting dates – in a similar manner to what is seen at
+the CME’s FedWatch Webpage. We have moved away from this display for several reasons.
+
+The Conditional Probability display assumes that we have probability information (like that taken from a
+distribution) to draw from. As we have seen above, we do not. The percent of a hike/cut is not the same
+as a probability of a hike/cut. A percent value can be greater than 100 – a probability cannot. In fact, we
+have the price level of a traded instrument expressed as the ‘percentage’ of a Central Bank hike or cut.
+When we try to squeeze this into a ‘probability’ mold, we introduce several errors and are no longer
+displaying the data in its true fidelity. Several examples will serve to illustrate why.
+
+
+
+Conditional Probability is Inaccurate
+
+How does this impact future probability calculations? Let’s first look at a theoretical example of how a
+conditional probability grid could be inaccurate. Let’s suppose that a fictional central bank, which raises
+or lowers rates by 25 bp increments had futures market data that implied an interest rate of 1.125 after
+their first meeting, and 1.25 after their second meeting. Let’s also imagine that the overnight rate today
+is 1.0.
+
+Our calculation for the first meeting’s percentage would have been:
+                                        1.125 − 1.0
+                                                    ∗ 100 = 50%
+                                           0.25
+Our calculation for the second meeting’s percentage would have been:
+                                        1.25 − 1.125
+                                                     ∗ 100 = 50%
+                                            0.25
+And our probability plot that we would have displayed would resemble the following:
+This would have indicated three potential paths to a rate hike by the second meeting, as seen below.
+
+
+
+
+1) No hike at the first meeting with a hike at the second               50% ∗ 50% = 25%
+2) A hike at the first meeting with no hike at the second               50% ∗ 50% = 25%
+3) A hike at both the first and the second meeting                      50% ∗ 50% = 25%
+
+We would have assigned 1 and 2 to the 1.25 rate band (as they were the two ways of potentially
+reaching the 1.25 rate level by the second meeting) and we would have assigned a total probability of
+50% to that band. In addition, we would have assigned 3 to the 1.5 rate band for a value of 25%. The
+final Hike Probability displayed in WIRP would have been 75% of a hike (the sum of all probabilities
+above the current rate band) and would have been displayed as below.
+
+Based on Rate: 1.0
+
+Meeting              Hike Prob        1.0      1.25      1.5    Fwd Rate
+        𝑀𝑀1                50%          50%      50%            1.125
+        𝑀𝑀2                75%          25%      50%        25% 1.25
+Users would have then concluded that there was a 75% chance of a hike priced into markets. Was this as
+precise as it could be? To find out, let’s review what the new WIRP would have displayed on this date.
+
+Current O/N Rate: 1.0
+
+Meeting         Num of hikes      % of a hike per      Implied Rate
+                                  meeting
+      𝑀𝑀1               0.5               50%          1.125
+      𝑀𝑀2               1.0               50%          1.25
+
+
+The new WIRP client would have seen in the Number of Hikes column that markets had indeed priced in
+a full hike by the second meeting. Moreover, they would have seen that market was roughly split on
+when they expected the hike. Finally, the new WIRP client would have been confident that market
+participants had not priced in rate movement into the 1.50 rate band, as we were not forced by the
+conditional probability matrix to calculate a probability for that rate. Simply put, the new WIRP
+information is more accurate and informative in every way.
+
+We can see real-world examples of this today in Sweden. On 11/26/2019, the previous version of WIRP
+communicated that there was 58.9% of a hike priced in at the December meeting and 82.6% of a hike by
+the Feb 12th meeting. The 82.6% was from the conditional probability calculation of:
+
+                         59% ∗ 58% + 59% ∗ 42% + 41% ∗ 58% = ~82.6%
+Consumed as a probability, this stated that there was an 82.6% of a hike from Sweden’s central bank by
+their second meeting.
+
+
+
+
+Unfortunately, this was not as accurate as it could have been. As the new WIRP shows, by February 2020
+markets had priced in a full 1.166 hikes (or 116.6% of a hike) by the Swedish CB. In fact, conditional
+probability was underrepresenting the cumulative amount of a hike priced into markets by over 30%. In
+other words, markets had priced in a full hike, they were just undecided as to when they were going to
+get it – December 2019 (58.9%) or February 2020 (57.7%). Clients who are using the new WIRP, would
+have had access to more accurate (116%, not 83%), more influential (a full cut was certainly priced), and
+more informative (markets were still undecided on when the hike would come) information.
+
+
+
+
+Conditional Probability is Misleading
+
+While it’s not inaccurate, the conditional probability grid can still hide useful information. This can come
+in many forms, but those that are most often referenced are: the missing percentages of a hike or cut, a
+‘phantom’ hike or cut, or missing information about which meeting is the one that the markets are
+betting on. Again, examples illustrate how these have materialized recently.
+
+On August 15th 2019, the Futures market was pricing in 141% of a single, 25 bps, cut from the Fed. The
+WIRP conditional probability grid reported that there was a 41% probability of 2 cuts, and a 59%
+probability of one cut. What the futures market was really telling us was that it had priced in 41% of two
+cuts, and 100% of a single cut. However, because we’re trying to use percentages as probabilities, we
+said there were 100 – 41 or a 59% of a single cut. In thinking about the theoretical example we discussed
+earlier, we would further multiply this incomplete value across the entire grid – impacting all future
+values.
+On November 25th 2019, the US futures market was pricing a small percent of a hike at the first meeting
+– approximately 4.1% of one. This was most likely due to noise within the market, as the same noise
+didn’t occur in the OIS market. Under the conditional probability view, the function would have pushed
+this small percentage forward into the matrix and reported a small chance of a hike by every meeting
+going forward – our phantom hike. In the new version, we isolate this potential errata to the first
+meeting, and correctly show cuts at every meeting from January 2020 until January 2021. Here, we see
+that the conditional probability grid induces unnecessary noise into the interpretation of the data. A
+user of the new WIRP would be able to see that the ‘hike probability’ was not expected to persist, and
+would have been able to more quickly dismiss the small deviation as it was not expected to persist past
+the first meeting.
+On September 25th 2018, the Fed was in a hiking mode. The conditional probability view in the old WIRP
+displayed that there was an equal chance of a hike in interest rates by the September or November
+meeting. However, more information was available. At the time, the Fed only adjusted rates at ‘big’ or
+‘announcement’ meetings. In new WIRP, a user could clearly see that the bulk of the pricing was
+indicating a September hike, followed by the Fed holding rates steady in November. We can see in this
+example that by removing the conditional probability grid, the function more clearly communicates the
+information available (markets were pricing 0% of hike at the November meeting).
+
+
+
+
+More than any of our other examples, this one illustrates the real reason why a conditional probability
+grid isn’t appropriate for this data. Those ‘conditions’ (how one hike or cut impacts another) have
+already been priced into the markets directly. And solving for the rates that they indicate at the
+associated meeting, gives the user a full view of their expectations. There’s little need to bootstrap new
+probabilities that will lead to inaccuracies or misleading information. At the end of the day, that’s the
+problem with conditional probability grids. They act as a constraint to the interest rate conversation in
+markets. In other words, it is quite common for a Bloomberg client who does not work in rates, to cite a
+WIRP probability to someone who works very closely with these markets. In those cases, the rates
+participant is left explaining one or all of the above-mentioned deficiencies to the non-rates client.
+
+
+
+New WIRP and Higher Data Fidelity
+
+With new WIRP, we wanted to change the conversation surrounding CB rates, to one that makes sense
+to everyone involved – from equity analysts to rates traders – so that we could all understand what
+markets were implying. In effect, this meant solving for only the data that we could really solve for, and
+displaying it in the simplest way possible. That way, we’ve accurately conveyed what the markets are
+telling us about expectations surrounding these important rates. So let’s take a look at what we can
+calculate in WIRP and what we can then convey to the user.
+
+As we said earlier, in WIRP, we calculate the difference between the overnight rate today and the
+overnight rate expected after a CB meeting. We then express this difference as a percentage of a
+standard CB move. Let’s walk through a couple examples so you can see how we do it.
+
+
+
+
+On September 18th 2018, the overnight rate that was prevailing in the futures market was 1.921.
+Further, the market had priced in a rate of 2.168 after the Fed’s 9/26 meeting. This implied a rate
+differential of 0.247. If we expressed that as a percentage of 0.25 (the standard Fed hike or cut size), we
+would say that 98.7% of a hike had been priced in. If we expressed that as a ratio, we would say that
+0.987 hikes had been priced in. While either way would be accurate, it’s common practice among
+market participants to express the first upcoming meeting’s number as the percentage of a hike priced,
+and report the future meetings’ figures as the number of hikes or cuts expected by the meeting –
+stating, “we see 1.82 hikes” instead of, “we see 182% of a hike.”
+
+What about November? As in the September example, the rate on that day was 1.921, and the rate
+expected after the November meeting was 2.174. The difference between the two was 0.253. Expressed
+as a percentage of 0.25, we would say that 101.4% of a hike was priced in by the November meeting.
+However, as market participants typically speak about the number of hikes expected after the first
+meeting, we’ll do the same here, and say that the market had priced in 1.014 cumulative hikes by
+November.
+In addition to the cumulative number, we can look at the difference in rates between meetings to tell us
+when market participants have priced in a move. In the example above, markets were sure that we
+would have a full hike either by September or November. But which month was their money on? The
+answer to that lies in our marginal (or per-meeting) calculation where, instead of referencing ‘today’s’
+overnight rate, we reference the rate expected before and after a CB meeting. In this example,
+September’s calculation stays the same (as the rate before the September meeting was ‘today’s’ rate)
+but November’s calculation changes slightly. Instead of referencing ‘today’s’ rate, we’ll reference the
+rate expected by markets directly before the November meeting – the rate expected after the
+September meeting. 2.174 – 2.168 = 0.006. Expressed as a percentage of a standard 0.25 hike, we would
+say that it’s between 2%-3% of a hike priced in at that meeting. In other words, while the market was
+expecting a full hike by September or November, the bulk of it was priced in for September.
+
+In this way we, can communicate the cumulative percent (or number) of hikes or cuts by the conclusion
+of a particular meeting, or we can communicate how much of a hike is priced in on a per-meeting basis.
+In addition, we can communicate the interest rate expected after the meeting, and the change that’s
+expected from today until that point in time. That’s what the data tells us, so that’s what we tell you.
+
+We’ll close by reiterating that we’ve left the conditional probability matrix behind for some very good
+reasons. In addition, we’ve replaced it with data that comes straight from the overnight markets – data
+that rates-markets participants would understand. This not only gives us more transparency into
+markets expectations of rates (odds greater than 100%, the amount of a hike or cut priced into a specific
+month), but allows all of us to speak the same language (an equity analyst citing WIRP will understand
+the data in the same way as a rates trader). We hope this has helped to explain the reasons for the
+drastic change.
+
+With that said, you should know that while we were busy making adjustments, we decided to build in a
+few other frequently requested features. WIRP now monitors the underlying data (updating once per
+minute) so that you don’t need to constantly refresh the screen. WIRP also now allows you to customize
+our inputs. This means that in situations like December 2018’s 0.20 adjustment to IOER, you can quickly
+adjust WIRP to account for the smaller-than-expected change. Finally, all of the WIRP data is now
+tickerized, and clicking on a cell in the grid will load that data and plot it in a chart – allowing you to start
+thinking about how external events impact market expectations.
+
+We thank you for your time, and look forward to a smoother interest-rate conversation.
+
+Thank you,
+
+The WIRP Team
+
