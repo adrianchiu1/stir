@@ -293,7 +293,7 @@ instruments:
     payment_lag: {days: 2, calendar: us_sofr}
     roll: modified_following
     source: bbg_des
-    first_date: "2018-07-01"        # QUESTION (PR): first usable USOSFR history
+    first_date: "2018-11-28"        # first USOSFR value in AC's dump of 2018-2019; all 30 tenors from 2018-12-11
     last_date: null
     valid_range: [-1.0, 25.0]
     stale_days: 5
