@@ -11,7 +11,9 @@ with zero unknown columns; windows match exchange calendars.*
 | Windows: FF, ED, SR3 reference quarter and contract naming, FF/SR3 listing schedules | ✔ rule text captured live (cftc.gov filings) and quoted in the manifest |
 | Windows: SR3 last trade, SR1 (all rules), ED conversion | ⏳ CME pages only; cmegroup.com blocks scripted access |
 | Windows vs CME published calendars (dates) | ⏳ needs a browser capture of the CME calendar pages |
-| One real day loads with zero unknown columns | ⏳ needs AC's dump (commands below) |
+| 2026-10-07: loads with zero unknown columns | ✔ 0 unknown of 431 columns, 302 values; other findings: out_of_range 1 |
+| 2019-06-12: loads with zero unknown columns | ✔ 0 unknown of 596 columns, 311 values |
+| Listing model vs the contracts Bloomberg quotes on those days | ✔ FF 36/60, SR1 7/13, SR3 20q / 39q+6s, ED 40q+4s (tests/test_contracts.py) |
 
 ## Rule sources
 
@@ -38,7 +40,7 @@ with zero unknown columns; windows match exchange calendars.*
 | `fixings.SOFR.first_date_source` | [nyfed_refrates](https://www.newyorkfed.org/markets/reference-rates/additional-information-about-reference-rates) | ✔ quoted passage found in `nyfed_refrates_info_20261008.txt` |
 | `fixings.USDLIBOR3M.last_date_source` | [fca_libor_cessation](https://www.fca.org.uk/publication/documents/future-cessation-loss-representativeness-libor-benchmarks.pdf) | ✔ quoted passage found in `fca_libor_cessation_20261008.txt` |
 | `instruments.ff_fut.bbg`, `instruments.sofr1m_fut.bbg`, `instruments.sofr3m_fut.bbg`, `instruments.ed_fut.bbg`, `instruments.ois_effr`, `instruments.ois_effr.bbg`, `instruments.ois_sofr`, `instruments.ois_sofr.bbg`, `instruments.swap_libor3m`, `instruments.swap_libor3m.bbg`, `policy_anchors.target_upper`, `policy_anchors.target_lower`, `policy_anchors.iorb` | [bbg_des](bloomberg://DES) | ⏳ to_confirm_on_terminal |
-| `instruments.sofr1m_fut.reference_window`, `instruments.sofr1m_fut.accrual`, `instruments.sofr1m_fut.daycount`, `instruments.sofr1m_fut.last_trade`, `instruments.sofr1m_fut.final_settlement`, `instruments.sofr1m_fut.listing[0]` | [cme_sr1_specs](https://www.cmegroup.com/markets/interest-rates/stirs/one-month-sofr.contractSpecs.html) | ⏳ pending_capture |
+| `instruments.sofr1m_fut.reference_window`, `instruments.sofr1m_fut.accrual`, `instruments.sofr1m_fut.daycount`, `instruments.sofr1m_fut.last_trade`, `instruments.sofr1m_fut.final_settlement`, `instruments.sofr1m_fut.listing[0]`, `instruments.sofr1m_fut.listing[1]` | [cme_sr1_specs](https://www.cmegroup.com/markets/interest-rates/stirs/one-month-sofr.contractSpecs.html) | ⏳ pending_capture |
 | `instruments.sofr3m_fut.last_trade`, `instruments.sofr3m_fut.final_settlement`, `instruments.sofr3m_fut.listing[0]` | [cme_sr3_specs](https://www.cmegroup.com/markets/interest-rates/stirs/three-month-sofr.contractSpecs.html) | ⏳ pending_capture |
 | `instruments.ed_fut.cessation` | [cme_ed_fallback](https://www.cmegroup.com/articles/files/2022/eurodollar-fallbacks-implementation-plan.pdf) | ⏳ pending_capture |
 
@@ -53,7 +55,7 @@ with zero unknown columns; windows match exchange calendars.*
 
 ## Generated windows
 
-Full table (`docs/m1_gate_contracts.csv`): ed_fut 203, ff_fut 275, sofr1m_fut 122, sofr3m_fut 127 contracts (FF 2010-2027, SR1/SR3 2018-2027, ED 2010-2023, each counted if quoted in its range).
+Full table (`docs/m1_gate_contracts.csv`): ed_fut 203, ff_fut 275, sofr1m_fut 128, sofr3m_fut 125 contracts (FF 2010-2027, SR1/SR3 2018-2027, ED 2010-2023, each counted if quoted in its range).
 Windows are [start, end); last trade and final settlement on the manifest calendars.
 
 | Instrument | Contract | Ticker | Start (incl.) | End (excl.) | Days | Last trade | Final settlement | First listed | Last quote |
@@ -68,7 +70,7 @@ Windows are [start, end); last trade and final settlement on the manifest calend
 | sofr1m_fut | 2020-03 | SERH20 Comdty | 2020-03-01 | 2020-04-01 | 31 | Tue 2020-03-31 | Wed 2020-04-01 | 2019-09-03 | 2020-03-31 |
 | sofr1m_fut | 2024-03 | SERH24 Comdty | 2024-03-01 | 2024-04-01 | 31 | Fri 2024-03-29 | Mon 2024-04-01 | 2023-09-01 | 2024-03-29 |
 | sofr1m_fut | 2026-10 | SERV26 Comdty | 2026-10-01 | 2026-11-01 | 31 | Fri 2026-10-30 | Mon 2026-11-02 | 2026-04-01 | 2026-10-30 |
-| sofr1m_fut | 2027-12 | SERZ27 Comdty | 2027-12-01 | 2028-01-01 | 31 | Fri 2027-12-31 | Mon 2028-01-03 | 2027-06-01 | 2027-12-31 |
+| sofr1m_fut | 2027-12 | SERZ27 Comdty | 2027-12-01 | 2028-01-01 | 31 | Fri 2027-12-31 | Mon 2028-01-03 | 2026-12-01 | 2027-12-31 |
 | sofr3m_fut | 2018-06 | SFRM18 Comdty | 2018-06-20 | 2018-09-19 | 91 | Tue 2018-09-18 | Wed 2018-09-19 | 2018-05-07 | 2018-09-18 |
 | sofr3m_fut | 2022-08 | SFRQ22 Comdty | 2022-08-17 | 2022-11-16 | 91 | Tue 2022-11-15 | Wed 2022-11-16 | 2022-07-25 | 2022-11-15 |
 | sofr3m_fut | 2023-12 | SFRZ23 Comdty | 2023-12-20 | 2024-03-20 | 91 | Tue 2024-03-19 | Wed 2024-03-20 | 2019-03-20 | 2024-03-19 |
@@ -121,29 +123,11 @@ no_data: 0
 unknown_columns: 0
 malformed: 0
 out_of_range: 1 (BLOCKING)
-  C:\Users\adria\Desktop\stir\data\market\usd\2026\policy_anchors.csv: 2026-10-07 IORB Index|PX_LAST = 91.45 outside [0.0, 25.0]
+  data/market/usd/2026/policy_anchors.csv: 2026-10-07 IORB Index|PX_LAST = 91.45 outside [0.0, 25.0]
 outside_listing: 0
 missing_columns: 0
 stale: 0
-outside_listing_unverified: 18 (warning)
-  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERK27 Comdty|PX_LAST quoted from 2026-10-07, modelled first listing after 2026-10-07
-  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERM27 Comdty|PX_LAST quoted from 2026-10-07, modelled first listing after 2026-10-07
-  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERN27 Comdty|PX_LAST quoted from 2026-10-07, modelled first listing after 2026-10-07
-  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERQ27 Comdty|PX_LAST quoted from 2026-10-07, modelled first listing after 2026-10-07
-  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERU27 Comdty|PX_LAST quoted from 2026-10-07, modelled first listing after 2026-10-07
-  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERV27 Comdty|PX_LAST quoted from 2026-10-07, modelled first listing after 2026-10-07
-  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERK27 Comdty|OPEN_INT quoted from 2026-10-07, modelled first listing after 2026-10-07
-  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERM27 Comdty|OPEN_INT quoted from 2026-10-07, modelled first listing after 2026-10-07
-  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERN27 Comdty|OPEN_INT quoted from 2026-10-07, modelled first listing after 2026-10-07
-  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERQ27 Comdty|OPEN_INT quoted from 2026-10-07, modelled first listing after 2026-10-07
-  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERU27 Comdty|OPEN_INT quoted from 2026-10-07, modelled first listing after 2026-10-07
-  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERV27 Comdty|OPEN_INT quoted from 2026-10-07, modelled first listing after 2026-10-07
-  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERK27 Comdty|PX_VOLUME quoted from 2026-10-07, modelled first listing after 2026-10-07
-  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERM27 Comdty|PX_VOLUME quoted from 2026-10-07, modelled first listing after 2026-10-07
-  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERN27 Comdty|PX_VOLUME quoted from 2026-10-07, modelled first listing after 2026-10-07
-  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERQ27 Comdty|PX_VOLUME quoted from 2026-10-07, modelled first listing after 2026-10-07
-  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERU27 Comdty|PX_VOLUME quoted from 2026-10-07, modelled first listing after 2026-10-07
-  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERV27 Comdty|PX_VOLUME quoted from 2026-10-07, modelled first listing after 2026-10-07
+outside_listing_unverified: 0
 outside_dates: 0
 ```
 

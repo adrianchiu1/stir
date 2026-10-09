@@ -111,3 +111,19 @@ def test_contract_table_is_deterministic_and_unique():
     assert a.equals(b)
     assert not a.duplicated(["instrument", "contract"]).any()
     assert (a.first_quote <= D(2019, 6, 12)).all() and (a.last_quote >= D(2019, 6, 12)).all()
+
+
+def test_listing_model_matches_bloomberg_dumps():
+    # contracts with a PX_LAST in AC's dumps (data/market/usd): FF 36 then 60 months, SR1 7 then 13,
+    # SR3 20 quarterly then 39 quarterly + 6 serial (incl. two in their Reference Quarter), ED 40 + 4
+    def counts(ins, day):
+        listed = _listed_on(ins, day)
+        q = sum(int(c[5:]) % 3 == 0 for c in listed)
+        return q, len(listed) - q
+    assert len(_listed_on("ff_fut", D(2019, 6, 12))) == 36 and len(_listed_on("ff_fut", D(2026, 10, 7))) == 60
+    assert len(_listed_on("sofr1m_fut", D(2019, 6, 12))) == 7 and len(_listed_on("sofr1m_fut", D(2026, 10, 7))) == 13
+    assert counts("sofr3m_fut", D(2019, 6, 12)) == (20, 0)
+    assert counts("sofr3m_fut", D(2026, 10, 7)) == (39, 6)
+    assert {"2026-07", "2026-08", "2027-01", "2027-02"} <= _listed_on("sofr3m_fut", D(2026, 10, 7))
+    assert not {"2027-04", "2027-05"} & _listed_on("sofr3m_fut", D(2026, 10, 7))
+    assert counts("ed_fut", D(2019, 6, 12)) == (40, 4)

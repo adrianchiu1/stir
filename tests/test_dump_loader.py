@@ -406,3 +406,13 @@ def test_pdblp_backend_one_session_one_request_per_field():
             assert rep.exit_code == 0 and rep.found["unknown_columns"] == [], rep.report()
     finally:
         del sys.modules["pdblp"]
+
+
+def test_committed_bloomberg_days_have_zero_unknown_columns():
+    # the M1 gate on AC's real dumps (data/market/usd)
+    for day in (D(2026, 10, 7), D(2019, 6, 12)):
+        frame, rep = loader.load(M, day, day)
+        if not rep.files:
+            continue
+        assert rep.values > 250 and rep.found["unknown_columns"] == [] and rep.found["no_data"] == [], rep.report()
+        assert rep.found["outside_listing"] == [] and rep.found["outside_listing_unverified"] == []

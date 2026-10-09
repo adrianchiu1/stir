@@ -9,8 +9,9 @@ nothing here assumes ACT/360, IMM dates or a US calendar.
 Listing: on any day the exchange lists the nearest N contracts of the cycle
 that have not passed their last trade date (N from the listing schedule in
 force that day: ``months`` for monthly cycles, ``quarterly`` + ``serial`` for
-the March cycle plus serial months; with ``serial_listed_until: reference_start``
-the nearest serials are those whose reference period has not started). A contract is first listed on the first
+the March cycle plus the nearest unexpired serial months; with
+``serial_listed_until: reference_start`` a serial is only newly listed before its
+reference period starts). A contract is first listed on the first
 such day it is among them: the business day after a contract expires, or a
 schedule change. Contracts already listed when the first schedule row starts
 get that date as a lower bound (``first_listed_lower_bound``) unless that row is
@@ -145,8 +146,10 @@ def listed_contracts(m: Manifest, instrument: str, until: dt.date, listing: str 
         if ins["cycle"] == "monthly":
             return alive[: row["months"]]
         q = [c for c in alive if c[1] in QUARTERLY_MONTHS][: row["quarterly"]]
-        serial = [(y, mo) for y, mo, w, lt in cand if mo not in QUARTERLY_MONTHS
-                  and (w[0] >= day if serial_by_start else lt >= day)]
+        # nearest unexpired serials; with reference_start, a serial is only newly listed
+        # before its reference period starts (one already listed stays to its last trade)
+        serial = [(y, mo) for y, mo, w, lt in cand if mo not in QUARTERLY_MONTHS and lt >= day
+                  and (not serial_by_start or w[0] >= day or (y, mo) in first_seen)]
         return q + serial[: row.get("serial", 0)]
 
     def row_on(day: dt.date) -> dict:

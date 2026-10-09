@@ -122,6 +122,23 @@ def exchange_comparison(m) -> list[str]:
     return [f"Captured: {', '.join(p.name for p in caps)} (comparison parser pending its first fixture)."]
 
 
+def real_day_status(m) -> list[str]:
+    out = []
+    for day in GATE_DAYS:
+        frame, rep = loader.load(m, day, day)
+        if not rep.values:
+            out.append(f"| {day}: loads with zero unknown columns | ⏳ needs AC's dump (commands below) |")
+            continue
+        unknown = len(rep.found["unknown_columns"])
+        others = {k: len(v) for k, v in rep.found.items() if v and k != "unknown_columns"}
+        extra = "; other findings: " + ", ".join(f"{k} {n}" for k, n in others.items()) if others else ""
+        out.append(f"| {day}: loads with zero unknown columns | {'✔' if unknown == 0 else '✘'} {unknown} unknown "
+                   f"of {rep.columns} columns, {rep.values} values{extra} |")
+    out.append("| Listing model vs the contracts Bloomberg quotes on those days | ✔ FF 36/60, SR1 7/13, SR3 20q / 39q+6s, "
+               "ED 40q+4s (tests/test_contracts.py) |")
+    return out
+
+
 def loader_section(m) -> list[str]:
     out = []
     for day in GATE_DAYS:
@@ -134,7 +151,7 @@ def loader_section(m) -> list[str]:
                     f"python scripts/dump_bloomberg.py --start {day} --end {day} --write-csv",
                     f"python scripts/check_market_data.py --start {day} --end {day}", "```", ""]
             continue
-        out += [f"### {day}", "", "```", rep.report(), "```", "",
+        out += [f"### {day}", "", "```", rep.report().replace(str(ROOT) + "/", ""), "```", "",
                 f"Unknown columns: **{len(rep.found['unknown_columns'])}**; tidy rows: {len(frame)}.", ""]
     return out
 
@@ -160,7 +177,7 @@ def main() -> int:
         "| Windows: FF, ED, SR3 reference quarter and contract naming, FF/SR3 listing schedules | ✔ rule text captured live (cftc.gov filings) and quoted in the manifest |",
         "| Windows: SR3 last trade, SR1 (all rules), ED conversion | ⏳ CME pages only; cmegroup.com blocks scripted access |",
         "| Windows vs CME published calendars (dates) | ⏳ needs a browser capture of the CME calendar pages |",
-        "| One real day loads with zero unknown columns | ⏳ needs AC's dump (commands below) |",
+        *real_day_status(m),
         "",
         "## Rule sources",
         "",
