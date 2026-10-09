@@ -352,4 +352,4 @@ fixings:
 policy_anchors:                     # primary values: data/refdata/policy_rates/fed.csv (M0); Bloomberg is a cross-check only
   target_upper: {refdata_anchor: target_upper, ticker: FDTR Index, fields: [PX_LAST], first_date: "2010-01-01", valid_range: [0.0, 25.0], stale_days: null, source: bbg_des}
   target_lower: {refdata_anchor: target_lower, ticker: FDTRFTRL Index, fields: [PX_LAST], first_date: "2010-01-01", valid_range: [0.0, 25.0], stale_days: null, source: bbg_des}
-  iorb:         {refdata_anchor: iorb, ticker: IORB Index, fields: [PX_LAST], first_date: "2021-07-29", valid_range: [0.0, 25.0], stale_days: null, source: bbg_des}
+  iorb:         {refdata_anchor: iorb, ticker: IRRBIOER Index, fields: [PX_LAST], first_date: "2021-07-29", valid_range: [0.0, 25.0], stale_days: null, source: bbg_des}
