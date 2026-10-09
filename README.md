@@ -4,18 +4,21 @@ Meeting-date aware STIR / OIS curve construction for central-bank policy pricing
 (Fed, ECB, BoE, BoJ first; built so the next 18 currencies fit). Design spec and
 decision log live in the team doc *STIR Policy-Pricing Tool — Design Spec v0.1*.
 
-**Status: M1 in review (USD market data) on top of M0 (reference data).** M0: business-day
-calendars, meeting schedules with effective-date rules and cadence extrapolation, ECB
-reserve maintenance periods, policy-rate histories for all four banks, deterministic
-updaters and tests. M1: USD market-data manifest, contract-table generator, Bloomberg
-dump script and CSV loader/validator (see below). No curve code yet. Nothing in the
+**Status: M2 in review (USD EFFR front end) on top of M1 (USD market data) and M0
+(reference data).** M0: business-day calendars, meeting schedules with effective-date rules
+and cadence extrapolation, ECB reserve maintenance periods, policy-rate histories for all
+four banks, deterministic updaters and tests. M1: USD market-data manifest, contract-table
+generator, Bloomberg dump script and CSV loader/validator. M2: FF futures and EFFR OIS
+models, flat-forward front end with robust IRLS and the OIS-split prior, policy spread,
+per-meeting outputs, quality battery and the WIRP gate (see below). Nothing in the
 package calls Bloomberg or any AI service at runtime; `scripts/dump_bloomberg.py` is the
 only Bloomberg caller and runs on a terminal machine.
 
 ## Layout
 
 ```
-stircurve/            package (config/, refdata/ live; other modules are stubs for M1+)
+stircurve/            package (config/, refdata/, marketdata/, instruments/, curves/, policy/,
+                      quality/ live; convexity/, store/, viz/ are stubs for M3+)
 data/refdata/         committed reference data (CSV) — the source of truth at runtime
   holidays/           us_fed, us_sifma, target, uk, jp  (rules, overridden by official sources)
   meetings/           <bank>.csv, <bank>_unscheduled.csv
@@ -25,7 +28,8 @@ data/market/usd/<YYYY>/<group>.csv  Bloomberg dumps (M1): one column per <ticker
 data/curves/          local parquet store, git-ignored
 exports/              analytics shared with the team
 scripts/              update_refdata.py, run_tests.py, dump_bloomberg.py, check_market_data.py,
-                      contract_table.py, capture_exchange_specs.py, m0_gate.py, m1_gate.py
+                      contract_table.py, capture_exchange_specs.py, front_end.py, m0_gate.py,
+                      m1_gate.py, m2_gate.py
 tests/                fixtures/live: pages captured by --save-fixtures on 8 Oct 2026
 ```
 
@@ -157,5 +161,35 @@ named after the manifest source, e.g.
 `cme_sr3_specs_table.txt`, `cme_sr3_specs_calendar.txt`, `cme_sr1_specs.txt`, `cme_sr1_specs_calendar.txt`,
 `cme_ff_calendar.txt`, and run
 `python scripts/capture_exchange_specs.py --from-saved <files> --save-fixtures tests/fixtures/live`.
+
+## M2: USD EFFR front end
+
+| Piece | What it does |
+| --- | --- |
+| `stircurve/instruments/daycount.py` | Day counts by name (ACT/360, ACT/365F, 30/360, BUS/252 with its calendar); nothing assumes one. |
+| `stircurve/curves/flat_forward.py` | `ParcelGrid` (parcels between effective dates, past fixings) and `FlatForwardCurve`. A window is mapped once to the rate date each piece uses on the instrument's fixing calendar (a non-publication day takes the last published rate), so pricing is a vectorised lookup. |
+| `stircurve/instruments/futures.py` | Average-rate futures from the manifest: arithmetic (FF, SR1) or compounded (SR3) over the contract table's window, day-count weighted, `100 - rate` quotes. |
+| `stircurve/instruments/ois.py` | OIS from the manifest: spot and payment lags and their calendars, roll, schedule (`ois_effr.schedule`, new), fixed/float day counts; compounded overnight leg, self-discounted par rate. |
+| `stircurve/curves/front_end.py` | One as-of date: the day's quotes (open interest, volume, staleness runs, the loader's listing findings), meeting nodes (published effective dates win, D15-D18; synthetic meetings to 3y flagged, D2; unscheduled decisions from their announcement date, D11), the OIS-split prior (D4; stub = anchor + spread) and the fit. |
+| `stircurve/curves/robust.py` | Huber IRLS (Gauss-Newton) with liquidity/staleness weights and a Gaussian prior per parcel; drop list by refit; identification share per parcel; leverage per quote. |
+| `stircurve/policy/spread.py` | D7 spread: EFFR - target midpoint in effect, month-end turn days dropped, trailing 63 us_fed business days before the as-of date, winsorised 10/90 mean (median alternative); `turn_effects` for the D8 question. |
+| `stircurve/policy/outputs.py` | Per meeting: implied EFFR, implied policy rate (minus the spread), step vs the previous meeting, cumulative change vs the current target, number of 25bp moves, synthetic/unscheduled flags, identification. |
+| `stircurve/quality/battery.py` | Residuals in bp per instrument (D10), drop list with reasons, high-leverage quotes, stale and outside-listing inputs used or skipped, prior vs fitted for under-identified parcels, the one-page report. |
+| `stircurve/quality/wirp.py` | WIRP text parser (pinned to AC's captures `tests/fixtures/live/wirp_usd_<YYYYMMDD>.txt`) and the per-meeting comparison. |
+| `stircurve/policy/export.py`, `scripts/front_end.py` | `exports/usd/effr/<as_of>/` (meetings.csv, parcels.csv, instruments.csv, report.md, shared); `--store` writes the parcels to the local, git-ignored `data/curves/`. |
+| `scripts/m2_gate.py` -> `docs/m2_gate.md` | Gate evidence: the ten WIRP dates, per-date comparison, drop lists, residuals, EFFR turn evidence. |
+
+Settings live in `stircurve/config/usd.yaml` under `front_end` (horizon, spread, quote noise,
+Huber threshold, drop threshold, liquidity weights, prior width).
+
+```
+python scripts/front_end.py --as-of 2026-10-07            # exports/usd/effr/2026-10-07/
+python scripts/front_end.py --as-of 2026-10-07 --store    # + local curve store
+python scripts/m2_gate.py                                 # refresh docs/m2_gate.md
+```
+
+Tests use synthetic market files written to a temporary directory by
+`tests/synthetic_market.py` (priced from a known curve; nothing synthetic is written
+under `data/`).
 
 See `CLAUDE.md` for working rules and `docs/decisions.md` for the decision log and build plan.

@@ -93,3 +93,22 @@ def test_synthetic_meetings_reach_the_outputs():
     assert mt["synthetic"].any()
     assert "(synthetic)" in " ".join(fe.grid.labels)
     assert np.isfinite(mt["implied_rate"]).all()
+
+
+def test_quote_outside_the_listing_is_skipped_with_the_loaders_reason():
+    """FFK24 (last trade 31 May 2024) quoted on 12 Jun 2024: the loader removes it (blocking);
+    the front end lists it as skipped and the report flags the blocking data."""
+    import pandas as pd
+    as_of = D(2024, 6, 12)
+    root = Path(tempfile.mkdtemp())
+    write_synthetic_market(root, as_of)
+    p = root / "usd" / "2024" / "ff_fut.csv"
+    df = pd.read_csv(p, dtype=str)
+    df["FFK24 Comdty|PX_LAST"] = "94.67"
+    df.to_csv(p, index=False, lineterminator="\n")
+    fe = build(as_of, root=root)
+    sk = [s for s in fe.inputs.skipped if s.contract == "2024-05"]
+    assert len(sk) == 1 and sk[0].ticker == "FFK24 Comdty" and "after last quote date" in sk[0].reason
+    assert fe.inputs.loader_report.blocking and "blocking problems" in battery.report(fe)
+    flags = battery.input_flags(fe)
+    assert ((flags["flag"] == "outside_listing") & (flags["status"] == "skipped")).any()

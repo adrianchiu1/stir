@@ -174,9 +174,8 @@ def market_inputs(m: Manifest, cfg: dict, as_of: dt.date, root: Path = MARKET_DI
     # quotes the loader removed (blocking: quoted outside a verified listing) on the as-of date
     for msg in findings["outside_listing"]:
         if as_of.isoformat() in msg:
-            col = msg.split(as_of.isoformat(), 1)[1].strip().split(" ", 1)
-            tk = col[0].split("|")[0] if col else ""
-            hit = m.parse_future_ticker(tk) if tk else None
+            tk = msg.split(as_of.isoformat(), 1)[1].strip().split("|", 1)[0]     # '<ticker>|<field> after ...'
+            hit = m.parse_future_ticker(tk)
             if hit and hit[0] in fe["fit"]["instruments"]:
                 skipped.append(Skipped(hit[0], f"{hit[1]}-{hit[2]:02d}", tk, "loader: " + msg.split(": ", 1)[-1]))
 

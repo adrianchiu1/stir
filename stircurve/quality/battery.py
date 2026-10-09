@@ -60,7 +60,7 @@ def high_leverage(fe: FrontEnd, threshold: float = 0.9) -> pd.DataFrame:
 def input_flags(fe: FrontEnd) -> pd.DataFrame:
     t = instrument_table(fe)
     stale = t[t["stale"] == True]  # noqa: E712
-    listing = t[t["notes"].fillna("").str.contains("listing") | t["reason"].fillna("").str.contains("listing")]
+    listing = t[t["notes"].fillna("").str.contains("listing") | t["reason"].fillna("").str.startswith("loader:")]
     rows = [{"flag": "stale", "instrument": r.instrument, "contract": r.contract, "status": r.status,
              "detail": f"unchanged {int(r.stale_run)} observations"} for r in stale.itertuples()]
     rows += [{"flag": "outside_listing", "instrument": r.instrument, "contract": r.contract, "status": r.status,
