@@ -115,20 +115,53 @@ above and the full table is in `docs/m1_gate_contracts.csv` for a side-by-side c
 
 ### 2026-10-07
 
-Dumped, but the files hold no rows (every Bloomberg request failed and the old dump wrote headers only). Re-run on the terminal machine:
+```
+7 file(s), 431 columns, 302 values
+no_data: 0
+unknown_columns: 0
+malformed: 0
+out_of_range: 1 (BLOCKING)
+  C:\Users\adria\Desktop\stir\data\market\usd\2026\policy_anchors.csv: 2026-10-07 IORB Index|PX_LAST = 91.45 outside [0.0, 25.0]
+outside_listing: 0
+missing_columns: 0
+stale: 0
+outside_listing_unverified: 18 (warning)
+  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERK27 Comdty|PX_LAST quoted from 2026-10-07, modelled first listing after 2026-10-07
+  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERM27 Comdty|PX_LAST quoted from 2026-10-07, modelled first listing after 2026-10-07
+  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERN27 Comdty|PX_LAST quoted from 2026-10-07, modelled first listing after 2026-10-07
+  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERQ27 Comdty|PX_LAST quoted from 2026-10-07, modelled first listing after 2026-10-07
+  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERU27 Comdty|PX_LAST quoted from 2026-10-07, modelled first listing after 2026-10-07
+  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERV27 Comdty|PX_LAST quoted from 2026-10-07, modelled first listing after 2026-10-07
+  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERK27 Comdty|OPEN_INT quoted from 2026-10-07, modelled first listing after 2026-10-07
+  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERM27 Comdty|OPEN_INT quoted from 2026-10-07, modelled first listing after 2026-10-07
+  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERN27 Comdty|OPEN_INT quoted from 2026-10-07, modelled first listing after 2026-10-07
+  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERQ27 Comdty|OPEN_INT quoted from 2026-10-07, modelled first listing after 2026-10-07
+  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERU27 Comdty|OPEN_INT quoted from 2026-10-07, modelled first listing after 2026-10-07
+  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERV27 Comdty|OPEN_INT quoted from 2026-10-07, modelled first listing after 2026-10-07
+  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERK27 Comdty|PX_VOLUME quoted from 2026-10-07, modelled first listing after 2026-10-07
+  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERM27 Comdty|PX_VOLUME quoted from 2026-10-07, modelled first listing after 2026-10-07
+  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERN27 Comdty|PX_VOLUME quoted from 2026-10-07, modelled first listing after 2026-10-07
+  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERQ27 Comdty|PX_VOLUME quoted from 2026-10-07, modelled first listing after 2026-10-07
+  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERU27 Comdty|PX_VOLUME quoted from 2026-10-07, modelled first listing after 2026-10-07
+  C:\Users\adria\Desktop\stir\data\market\usd\2026\sofr1m_fut.csv: SERV27 Comdty|PX_VOLUME quoted from 2026-10-07, modelled first listing after 2026-10-07
+outside_dates: 0
+```
 
-```
-python scripts/dump_bloomberg.py --start 2026-10-07 --end 2026-10-07            # dry run
-python scripts/dump_bloomberg.py --start 2026-10-07 --end 2026-10-07 --write-csv
-python scripts/check_market_data.py --start 2026-10-07 --end 2026-10-07
-```
+Unknown columns: **0**; tidy rows: 302.
 
 ### 2019-06-12
 
-Dumped, but the files hold no rows (every Bloomberg request failed and the old dump wrote headers only). Re-run on the terminal machine:
+```
+9 file(s), 596 columns, 311 values
+no_data: 0
+unknown_columns: 0
+malformed: 0
+out_of_range: 0
+outside_listing: 0
+missing_columns: 0
+stale: 0
+outside_listing_unverified: 0
+outside_dates: 0
+```
 
-```
-python scripts/dump_bloomberg.py --start 2019-06-12 --end 2019-06-12            # dry run
-python scripts/dump_bloomberg.py --start 2019-06-12 --end 2019-06-12 --write-csv
-python scripts/check_market_data.py --start 2019-06-12 --end 2019-06-12
-```
+Unknown columns: **0**; tidy rows: 311.
