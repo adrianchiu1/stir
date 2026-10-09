@@ -20,18 +20,18 @@ def _listed_on(ins, day):
 
 def test_ff_windows_2010_2027():
     t = _table("ff_fut", 2010, 2027)
-    fed = M.calendar("us_fed")
+    fed, sifma = M.calendar("us_fed"), M.calendar("us_sifma")
     assert t.contract.str[:4].astype(int).between(2010, 2032).all()
     for r in t.itertuples():
         assert r.ref_start.day == 1 and r.ref_end.day == 1 and r.ref_end.month % 12 == (r.ref_start.month + 1) % 12
-        assert r.last_trade.month == r.ref_start.month and fed.is_business_day(r.last_trade)
-        assert not any(fed.is_business_day(r.last_trade + dt.timedelta(days=k))
+        assert r.last_trade.month == r.ref_start.month and sifma.is_business_day(r.last_trade)
+        assert not any(sifma.is_business_day(r.last_trade + dt.timedelta(days=k))
                        for k in range(1, (r.ref_end - r.last_trade).days))
         assert fed.is_business_day(r.final_settlement) and r.final_settlement >= r.ref_end_inclusive
     by = t.set_index("contract")
-    # Good Friday month-ends are us_fed business days (AC, PR #2)
-    assert by.loc["2024-03", "last_trade"] == D(2024, 3, 29)
-    assert by.loc["2018-03", "last_trade"] == D(2018, 3, 30)
+    # Good Friday month-ends: CME closed, last trade the Thursday (us_sifma; AC, PR #2, matching CME's calendar)
+    assert by.loc["2024-03", "last_trade"] == D(2024, 3, 28)
+    assert by.loc["2018-03", "last_trade"] == D(2018, 3, 29)
     assert by.loc["2024-03", "final_settlement"] == D(2024, 4, 1)
     assert by.loc["2026-10", "last_trade"] == D(2026, 10, 30)
 
@@ -45,7 +45,7 @@ def test_ff_listing_36_then_60_months():
 
 def test_sr3_windows_2018_2027():
     t = _table("sofr3m_fut", 2018, 2027)
-    fed = M.calendar("us_fed")
+    fed = M.calendar("us_sifma")
     for r in t.itertuples():
         y, mo = map(int, r.contract.split("-"))
         assert r.ref_start == third_wednesday(y, mo)       # named for the month its Reference Quarter starts (19-366)
@@ -79,7 +79,7 @@ def test_sr3_listed_set_25_jul_2022_matches_cme_22_199():
 
 def test_sr1_windows_2018_2027():
     t = _table("sofr1m_fut", 2018, 2027)
-    fed = M.calendar("us_fed")
+    fed = M.calendar("us_sifma")
     for r in t.itertuples():
         assert r.ref_start.day == 1 and r.ref_end.day == 1
         assert r.last_trade == fed.previous_business_day(r.ref_end)
@@ -141,12 +141,10 @@ def test_generated_dates_match_cme_calendars():
         assert len(rows) == n
         df = compare(M, ins, rows, D(2026, 10, 9))
         assert df.settlement_ok.all() and df.first_trade_ok.all() and df.first_comparable.all()
-        bad = df[~df.last_trade_ok]
-        if ins == "ff_fut":    # Good Friday 30 Mar 2029: CME last trade Thu 29 Mar; us_fed (AC) gives Fri 30 Mar
-            assert list(bad.contract) == ["2029-03"]
-        else:
-            assert bad.empty, bad
+        assert df.last_trade_ok.all(), df[~df.last_trade_ok]
     # spot checks straight from the pages
     sr3 = {r["contract"]: r for r in parse_cme_calendar(open(sorted(glob.glob("tests/fixtures/live/cme_sr3_calendar_*.txt"))[-1]).read())}
     assert (sr3["2029-03"]["last_trade"], sr3["2029-03"]["settlement"]) == (D(2029, 6, 18), D(2029, 6, 20))   # Juneteenth
     assert sr3["2029-03"]["first_trade"] == D(2019, 9, 30)          # 20 -> 39 quarterly
+    ff = {r["contract"]: r for r in parse_cme_calendar(open(sorted(glob.glob("tests/fixtures/live/cme_ff_calendar_*.txt"))[-1]).read())}
+    assert ff["2029-03"]["last_trade"] == D(2029, 3, 29)            # Good Friday 30 Mar 2029: CME closed

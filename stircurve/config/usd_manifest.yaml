@@ -113,7 +113,7 @@ instruments:
       source: cbot_ch22
       quote: "the rate for such day shall be the rate for the last preceding day for which a rate was published"
     daycount: {name: ACT/360, source: cbot_ch22, quote: "the actual number of days spanned by the one-month term of such deposit, divided by a 360-day year"}
-    exchange_calendar: us_fed        # AC, PR #2: Good Friday month-ends (2013-03-29, 2018-03-30, 2024-03-29) count; nobody trades them
+    exchange_calendar: us_sifma      # AC, PR #2: matches CME's calendar (CME closed on Good Friday: FF Mar 2029 last trade Thu 29 Mar)
     last_trade:
       rule: last_business_day_of_month
       calendar: exchange
@@ -152,7 +152,7 @@ instruments:
       source: cme_sr1_specs
       quote: "based on the arithmetic average of daily SOFR values during the contract delivery month"
     daycount: {name: ACT/360, source: cme_sr1_specs}
-    exchange_calendar: us_fed
+    exchange_calendar: us_sifma
     last_trade: {rule: last_business_day_of_month, calendar: exchange, source: cme_sr1_specs, quote: "Trading terminates on the last business day of the contract month."}
     final_settlement: {rule: publication_of_last_day_rate, calendar: us_sofr, source: cme_sr1_calendar}
     listing:
@@ -195,7 +195,7 @@ instruments:
       source: cme_19_366
       quote: "rate per annum of daily compounded SOFR interest"
     daycount: {name: ACT/360, source: cme_24_204, quote: "360 days per year / 91 days"}
-    exchange_calendar: us_fed
+    exchange_calendar: us_sifma
     last_trade:
       rule: business_days_before_window_end   # business day before the 3rd Wed ending the Reference Quarter
       n: 1
@@ -244,7 +244,7 @@ instruments:
       source: cme_ch452
       quote: "as first published on the second London bank business day immediately preceding the third Wednesday"
     daycount: {name: ACT/360, source: cme_ch452, quote: "the actual number of days spanned by the three-month term of such deposit, divided by a 360-day year"}
-    exchange_calendar: us_fed
+    exchange_calendar: us_sifma
     last_trade:
       rule: business_days_before_imm
       n: 2

@@ -12,8 +12,8 @@ with zero unknown columns; windows match exchange calendars.*
 | ED conversion (14 Apr 2023, ED expiring after 30 Jun 2023) | ✔ CME pages saved by AC, quoted; ED last prices confirmed by AC (EDU23 HP) |
 | Windows: SR3 last trade, SR1 window / accrual / last trade, listing schedules | ✔ CME spec pages (copied text), quoted |
 | SR3 on non-SOFR IMM dates (Juneteenth 2024, 2030) | ✔ AC: SFRH24 last trade 18 Jun, settlement 20 Jun 2024 |
-| Windows vs CME published calendars (FF, SR1, SR3) | ⚠ 131/132 contracts match on first trade, last trade and settlement (see Differences) |
-| 2026-10-07: loads with zero unknown columns | ✔ 0 unknown of 431 columns, 302 values; other findings: missing_columns 13 |
+| Windows vs CME published calendars (FF, SR1, SR3) | ✔ 132/132 contracts match on first trade, last trade and settlement |
+| 2026-10-07: loads with zero unknown columns | ✔ 0 unknown of 444 columns, 314 values |
 | 2019-06-12: loads with zero unknown columns | ✔ 0 unknown of 596 columns, 311 values; other findings: missing_columns 13 |
 | Listing model vs the contracts Bloomberg quotes on those days | ✔ FF 36/60, SR1 7 / 25 (the 2026 dump asked for 13), SR3 20q / 39q+6s, ED 40q+4s (tests/test_contracts.py) |
 
@@ -69,13 +69,13 @@ Windows are [start, end); last trade and final settlement on the manifest calend
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | ff_fut | 2010-01 | FFF10 Comdty | 2010-01-01 | 2010-02-01 | 31 | Fri 2010-01-29 | Mon 2010-02-01 | 2010-01-01 (lower bound) | 2010-01-29 |
 | ff_fut | 2015-12 | FFZ15 Comdty | 2015-12-01 | 2016-01-01 | 31 | Thu 2015-12-31 | Mon 2016-01-04 | 2013-01-02 | 2015-12-31 |
-| ff_fut | 2018-03 | FFH18 Comdty | 2018-03-01 | 2018-04-01 | 31 | Fri 2018-03-30 | Mon 2018-04-02 | 2015-04-01 | 2018-03-30 |
-| ff_fut | 2024-03 | FFH24 Comdty | 2024-03-01 | 2024-04-01 | 31 | Fri 2024-03-29 | Mon 2024-04-01 | 2020-09-21 | 2024-03-29 |
+| ff_fut | 2018-03 | FFH18 Comdty | 2018-03-01 | 2018-04-01 | 31 | Thu 2018-03-29 | Mon 2018-04-02 | 2015-04-01 | 2018-03-29 |
+| ff_fut | 2024-03 | FFH24 Comdty | 2024-03-01 | 2024-04-01 | 31 | Thu 2024-03-28 | Mon 2024-04-01 | 2020-09-21 | 2024-03-28 |
 | ff_fut | 2026-10 | FFV26 Comdty | 2026-10-01 | 2026-11-01 | 31 | Fri 2026-10-30 | Mon 2026-11-02 | 2021-11-01 | 2026-10-30 |
 | ff_fut | 2027-12 | FFZ27 Comdty | 2027-12-01 | 2028-01-01 | 31 | Fri 2027-12-31 | Mon 2028-01-03 | 2023-01-03 | 2027-12-31 |
 | sofr1m_fut | 2018-05 | SERK18 Comdty | 2018-05-01 | 2018-06-01 | 31 | Thu 2018-05-31 | Fri 2018-06-01 | 2018-05-07 | 2018-05-31 |
 | sofr1m_fut | 2020-03 | SERH20 Comdty | 2020-03-01 | 2020-04-01 | 31 | Tue 2020-03-31 | Wed 2020-04-01 | 2019-09-03 | 2020-03-31 |
-| sofr1m_fut | 2024-03 | SERH24 Comdty | 2024-03-01 | 2024-04-01 | 31 | Fri 2024-03-29 | Mon 2024-04-01 | 2023-09-01 | 2024-03-29 |
+| sofr1m_fut | 2024-03 | SERH24 Comdty | 2024-03-01 | 2024-04-01 | 31 | Thu 2024-03-28 | Mon 2024-04-01 | 2023-09-01 | 2024-03-28 |
 | sofr1m_fut | 2026-10 | SERV26 Comdty | 2026-10-01 | 2026-11-01 | 31 | Fri 2026-10-30 | Mon 2026-11-02 | 2025-05-05 | 2026-10-30 |
 | sofr1m_fut | 2027-12 | SERZ27 Comdty | 2027-12-01 | 2028-01-01 | 31 | Fri 2027-12-31 | Mon 2028-01-03 | 2025-12-01 | 2027-12-31 |
 | sofr3m_fut | 2018-06 | SFRM18 Comdty | 2018-06-20 | 2018-09-19 | 91 | Tue 2018-09-18 | Wed 2018-09-19 | 2018-05-07 | 2018-09-18 |
@@ -93,17 +93,17 @@ Windows are [start, end); last trade and final settlement on the manifest calend
 
 ### Contracts where a holiday moves a date
 
-Exchange business days are `us_fed` (AC, PR #2). SR3 Reference Quarters keep their IMM boundaries when
+Exchange business days are `us_sifma`, as CME's calendar (AC, PR #2). SR3 Reference Quarters keep their IMM boundaries when
 the IMM date is not a SOFR day (Juneteenth 2024 and 2030; open in the PR).
 
 | Instrument | Contract | Ticker | Window [start, end) | Last trade | Final settlement | Why |
 | --- | --- | --- | --- | --- | --- | --- |
-| ff_fut | 2013-03 | FFH13 Comdty | 2013-03-01–2013-04-01 | Fri 2013-03-29 | Mon 2013-04-01 | Good Friday month-end: SIFMA closed, last trade on the us_fed day (AC, PR #2) |
-| ff_fut | 2018-03 | FFH18 Comdty | 2018-03-01–2018-04-01 | Fri 2018-03-30 | Mon 2018-04-02 | Good Friday month-end: SIFMA closed, last trade on the us_fed day (AC, PR #2) |
-| ff_fut | 2024-03 | FFH24 Comdty | 2024-03-01–2024-04-01 | Fri 2024-03-29 | Mon 2024-04-01 | Good Friday month-end: SIFMA closed, last trade on the us_fed day (AC, PR #2) |
-| ff_fut | 2029-03 | FFH29 Comdty | 2029-03-01–2029-04-01 | Fri 2029-03-30 | Mon 2029-04-02 | Good Friday month-end: SIFMA closed, last trade on the us_fed day (AC, PR #2) |
-| sofr1m_fut | 2024-03 | SERH24 Comdty | 2024-03-01–2024-04-01 | Fri 2024-03-29 | Mon 2024-04-01 | Good Friday month-end: SIFMA closed, last trade on the us_fed day (AC, PR #2) |
-| sofr1m_fut | 2029-03 | SERH29 Comdty | 2029-03-01–2029-04-01 | Fri 2029-03-30 | Mon 2029-04-02 | Good Friday month-end: SIFMA closed, last trade on the us_fed day (AC, PR #2) |
+| ff_fut | 2013-03 | FFH13 Comdty | 2013-03-01–2013-04-01 | Thu 2013-03-28 | Mon 2013-04-01 | Good Friday month-end: CME closed, last trade the Thursday (us_sifma; AC, PR #2; CME calendar FF Mar 2029: 29 Mar) |
+| ff_fut | 2018-03 | FFH18 Comdty | 2018-03-01–2018-04-01 | Thu 2018-03-29 | Mon 2018-04-02 | Good Friday month-end: CME closed, last trade the Thursday (us_sifma; AC, PR #2; CME calendar FF Mar 2029: 29 Mar) |
+| ff_fut | 2024-03 | FFH24 Comdty | 2024-03-01–2024-04-01 | Thu 2024-03-28 | Mon 2024-04-01 | Good Friday month-end: CME closed, last trade the Thursday (us_sifma; AC, PR #2; CME calendar FF Mar 2029: 29 Mar) |
+| ff_fut | 2029-03 | FFH29 Comdty | 2029-03-01–2029-04-01 | Thu 2029-03-29 | Mon 2029-04-02 | Good Friday month-end: CME closed, last trade the Thursday (us_sifma; AC, PR #2; CME calendar FF Mar 2029: 29 Mar) |
+| sofr1m_fut | 2024-03 | SERH24 Comdty | 2024-03-01–2024-04-01 | Thu 2024-03-28 | Mon 2024-04-01 | Good Friday month-end: CME closed, last trade the Thursday (us_sifma; AC, PR #2; CME calendar FF Mar 2029: 29 Mar) |
+| sofr1m_fut | 2029-03 | SERH29 Comdty | 2029-03-01–2029-04-01 | Thu 2029-03-29 | Mon 2029-04-02 | Good Friday month-end: CME closed, last trade the Thursday (us_sifma; AC, PR #2; CME calendar FF Mar 2029: 29 Mar) |
 | sofr3m_fut | 2024-03 | SFRH24 Comdty | 2024-03-20–2024-06-19 | Tue 2024-06-18 | Thu 2024-06-20 | Reference Quarter ends on a non-SOFR day (Wed 2024-06-19) |
 | sofr3m_fut | 2024-06 | SFRM24 Comdty | 2024-06-19–2024-09-18 | Tue 2024-09-17 | Wed 2024-09-18 | Reference Quarter starts on a non-SOFR day (Wed 2024-06-19) |
 | sofr3m_fut | 2030-03 | SFRH30 Comdty | 2030-03-20–2030-06-19 | Tue 2030-06-18 | Thu 2030-06-20 | Reference Quarter ends on a non-SOFR day (Wed 2030-06-19) |
@@ -120,47 +120,28 @@ settlement against the generator (`stircurve/marketdata/cme.py`, `tests/test_con
 
 | Product | Capture | Contracts | Last trade | Settlement | First trade |
 | --- | --- | --- | --- | --- | --- |
-| ff_fut | `cme_ff_calendar_20261009.txt` | 60 (2026-10 .. 2031-09) | 59/60 | 60/60 | 60/60 |
+| ff_fut | `cme_ff_calendar_20261009.txt` | 60 (2026-10 .. 2031-09) | 60/60 | 60/60 | 60/60 |
 | sofr1m_fut | `cme_sr1_calendar_20261009.txt` | 26 (2026-10 .. 2028-11) | 26/26 | 26/26 | 26/26 |
 | sofr3m_fut | `cme_sr3_calendar_20261009.txt` | 46 (2026-07 .. 2036-03) | 46/46 | 46/46 | 46/46 |
-
-Differences:
-
-| Product | Contract | CME first / last / settlement | Generated | Why |
-| --- | --- | --- | --- | --- |
-| ff_fut | 2029-03 | 2024-04-01 / Thu 2029-03-29 / Mon 2029-04-02 | 2024-04-01 / Fri 2029-03-30 / Mon 2029-04-02 | Good Friday month-end: CME closed; manifest uses `us_fed` (AC, PR #2), `us_sifma` would match |
 
 ## Loader report on real days
 
 ### 2026-10-07
 
 ```
-7 file(s), 431 columns, 302 values
+7 file(s), 444 columns, 314 values
 no_data: 0
 unknown_columns: 0
 malformed: 0
 out_of_range: 0
 outside_listing: 0
-missing_columns: 13 (warning)
-  data/market/usd/2026/sofr1m_fut.csv: SERF28 Comdty|PX_LAST
-  data/market/usd/2026/sofr1m_fut.csv: SERG28 Comdty|PX_LAST
-  data/market/usd/2026/sofr1m_fut.csv: SERH28 Comdty|PX_LAST
-  data/market/usd/2026/sofr1m_fut.csv: SERJ28 Comdty|PX_LAST
-  data/market/usd/2026/sofr1m_fut.csv: SERK28 Comdty|PX_LAST
-  data/market/usd/2026/sofr1m_fut.csv: SERM28 Comdty|PX_LAST
-  data/market/usd/2026/sofr1m_fut.csv: SERN28 Comdty|PX_LAST
-  data/market/usd/2026/sofr1m_fut.csv: SERQ28 Comdty|PX_LAST
-  data/market/usd/2026/sofr1m_fut.csv: SERU28 Comdty|PX_LAST
-  data/market/usd/2026/sofr1m_fut.csv: SERV28 Comdty|PX_LAST
-  data/market/usd/2026/sofr1m_fut.csv: SERX27 Comdty|PX_LAST
-  data/market/usd/2026/sofr1m_fut.csv: SERX28 Comdty|PX_LAST
-  data/market/usd/2026/sofr1m_fut.csv: SERZ27 Comdty|PX_LAST
+missing_columns: 0
 stale: 0
 outside_listing_unverified: 0
 outside_dates: 0
 ```
 
-Unknown columns: **0**; tidy rows: 302.
+Unknown columns: **0**; tidy rows: 314.
 
 ### 2019-06-12
 

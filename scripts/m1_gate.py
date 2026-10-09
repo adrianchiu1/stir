@@ -74,13 +74,14 @@ def calendar_sensitive(m) -> list[str]:
     """Contracts where a holiday moves a date away from the plain rule."""
     rows = ["| Instrument | Contract | Ticker | Window [start, end) | Last trade | Final settlement | Why |",
             "| --- | --- | --- | --- | --- | --- | --- |"]
-    sifma, sofr = m.calendar("us_sifma"), m.calendar("us_sofr")
+    fed, sofr = m.calendar("us_fed"), m.calendar("us_sofr")
     for ins, (a, b) in RANGES.items():
         t = contract_table(m, D(a, 1, 1), D(b, 12, 31), [ins])
         for r in t.itertuples():
             why = []
-            if ins in ("ff_fut", "sofr1m_fut") and sifma.previous_business_day(r.ref_end) != r.last_trade:
-                why.append("Good Friday month-end: SIFMA closed, last trade on the us_fed day (AC, PR #2)")
+            if ins in ("ff_fut", "sofr1m_fut") and fed.previous_business_day(r.ref_end) != r.last_trade:
+                why.append("Good Friday month-end: CME closed, last trade the Thursday (us_sifma; AC, PR #2; "
+                           "CME calendar FF Mar 2029: 29 Mar)")
             if ins == "sofr3m_fut":
                 why += [f"Reference Quarter {label} on a non-SOFR day ({_wd(d)})"
                         for label, d in (("starts", r.ref_start), ("ends", r.ref_end)) if not sofr.is_business_day(d)]
@@ -142,8 +143,7 @@ def exchange_comparison(m) -> list[str]:
     if bad:
         lines += ["", "Differences:", "", "| Product | Contract | CME first / last / settlement | Generated | Why |", "| --- | --- | --- | --- | --- |"]
         for ins, r in bad:
-            why = ("Good Friday month-end: CME closed; manifest uses `us_fed` (AC, PR #2), `us_sifma` would match"
-                   if ins == "ff_fut" and r.cme_last_trade != r.gen_last_trade else "")
+            why = ""
             lines.append(f"| {ins} | {r.contract} | {r.cme_first_trade} / {_wd(r.cme_last_trade)} / {_wd(r.cme_settlement)} | "
                          f"{r.gen_first_listed} / {_wd(r.gen_last_trade)} / {_wd(r.gen_final_settlement)} | {why} |")
     return lines
@@ -237,7 +237,7 @@ def main() -> int:
         "",
         "### Contracts where a holiday moves a date",
         "",
-        "Exchange business days are `us_fed` (AC, PR #2). SR3 Reference Quarters keep their IMM boundaries when",
+        "Exchange business days are `us_sifma`, as CME's calendar (AC, PR #2). SR3 Reference Quarters keep their IMM boundaries when",
         "the IMM date is not a SOFR day (Juneteenth 2024 and 2030; open in the PR).",
         "",
         *calendar_sensitive(m),
