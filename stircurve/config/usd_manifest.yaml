@@ -87,7 +87,7 @@ instruments:
     description: CBOT 30-Day Federal Funds futures (ZQ)
     family: effr
     index: EFFR
-    bbg: {root: FF, yellow_key: Comdty, year_digits: {live: 1, expired: 2, live_max_years_ahead: 8}, source: bbg_des}
+    bbg: {root: FF, yellow_key: Comdty, year_digits: {live: 1, expired: 2, live_max_months_ahead: 18}, source: bbg_des}
     fields: [PX_LAST, OPEN_INT, PX_VOLUME]
     count_fields_months: 24         # OPEN_INT/PX_VOLUME only for contracts starting within this many months (AC's first dump: far contracts raise field exceptions)
     quote: {convention: price, formula: 100 - rate, units: percent, mid: true}
@@ -129,7 +129,7 @@ instruments:
     description: CME One-Month SOFR futures (SR1)
     family: sofr
     index: SOFR
-    bbg: {root: SER, yellow_key: Comdty, year_digits: {live: 1, expired: 2, live_max_years_ahead: 8}, source: bbg_des}
+    bbg: {root: SER, yellow_key: Comdty, year_digits: {live: 1, expired: 2, live_max_months_ahead: 18}, source: bbg_des}
     fields: [PX_LAST, OPEN_INT, PX_VOLUME]
     count_fields_months: 13         # OPEN_INT/PX_VOLUME only for contracts starting within this many months (AC's first dump: far contracts raise field exceptions)
     quote: {convention: price, formula: 100 - rate, units: percent, mid: true}
@@ -158,7 +158,7 @@ instruments:
     description: CME Three-Month SOFR futures (SR3); contract named for the month its Reference Quarter starts
     family: sofr
     index: SOFR
-    bbg: {root: SFR, yellow_key: Comdty, year_digits: {live: 1, expired: 2, live_max_years_ahead: 8}, source: bbg_des}
+    bbg: {root: SFR, yellow_key: Comdty, year_digits: {live: 1, expired: 2, live_max_months_ahead: 18}, source: bbg_des}
     fields: [PX_LAST, OPEN_INT, PX_VOLUME]
     count_fields_months: 60         # OPEN_INT/PX_VOLUME only for contracts starting within this many months (AC's first dump: far contracts raise field exceptions)
     quote: {convention: price, formula: 100 - rate, units: percent, mid: true}
@@ -207,7 +207,7 @@ instruments:
     description: CME Three-Month Eurodollar futures (ED/GE), 3M USD LIBOR
     family: libor3m
     index: USDLIBOR3M
-    bbg: {root: ED, yellow_key: Comdty, year_digits: {live: 1, expired: 2, live_max_years_ahead: 8}, source: bbg_des}
+    bbg: {root: ED, yellow_key: Comdty, year_digits: {live: 1, expired: 2, live_max_months_ahead: 18}, source: bbg_des}
     fields: [PX_LAST, OPEN_INT, PX_VOLUME]
     count_fields_months: 60         # OPEN_INT/PX_VOLUME only for contracts starting within this many months (AC's first dump: far contracts raise field exceptions)
     quote: {convention: price, formula: 100 - rate, units: percent, mid: true}

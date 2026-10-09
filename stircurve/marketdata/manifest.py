@@ -112,12 +112,13 @@ class Manifest:
     def request_ticker(self, instrument: str, year: int, month: int, last_trade: dt.date, as_of: dt.date) -> str:
         """The form the dump asks Bloomberg for (``bbg.year_digits``): one-digit year
         while the contract trades, two digits once it has expired, and two digits for
-        live contracts more than ``live_max_years_ahead`` years out. Bloomberg reads a
-        one-digit year as the nearest past decade: on 2026-10-07 'SFRU5' was Sep 2025
-        (expired), not Sep 2035 (AC's first dump)."""
+        live contracts more than ``live_max_months_ahead`` months out. AC's dumps of
+        2026-10-07: 'SFRU5' was Sep 2025, not Sep 2035; 'SFRM8' (Jun 2028) worked but
+        'SFRU8'..'SFRZ4' (Sep 2028 - Dec 2034) did not; 'SFRH36 Comdty' worked. The dump
+        retries any one-digit request that fails in its two-digit form."""
         digits = self.instruments[instrument]["bbg"].get("year_digits", {"live": 2, "expired": 2})
         live = last_trade >= as_of
-        far = year - as_of.year > digits.get("live_max_years_ahead", 8)
+        far = (year - as_of.year) * 12 + (month - as_of.month) > digits.get("live_max_months_ahead", 18)
         two = digits["live" if live else "expired"] == 2 or (live and far)
         return self.future_ticker(instrument, year, month, two_digit=two)
 

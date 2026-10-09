@@ -23,7 +23,7 @@ dependencies = [
 [project.optional-dependencies]
 quantlib = ["QuantLib>=1.31"]
 plot = ["plotly>=5", "pxts[plot] @ git+https://github.com/adrianchiu1/pxts"]
-bloomberg = ["pxts[bloomberg] @ git+https://github.com/adrianchiu1/pxts"]
+bloomberg = ["pdblp>=0.1.8", "pxts[bloomberg] @ git+https://github.com/adrianchiu1/pxts"]   # + blpapi from Bloomberg's index
 dev = ["pytest>=7"]
 
 [tool.setuptools.packages.find]

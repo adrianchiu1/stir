@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 """Dump the manifest's market data from Bloomberg to wide CSVs.
 
-Run on a Bloomberg terminal machine (pip install -e .[bloomberg]); pxts.read_bdh
-is the only network call. Writes data/market/<ccy>/<YYYY>/<group>.csv, one
+Run on a Bloomberg terminal machine (pip install -e .[bloomberg]); Bloomberg via
+pdblp (one session, bad securities skipped; --backend pxts uses pxts.read_bdh) is
+the only network call. Writes data/market/<ccy>/<YYYY>/<group>.csv, one
 column per <ticker>|<field>, ISO dates, NaN for missing. Nothing is written
 without --write-csv; a run that would change or remove a value already in a file
 writes nothing and exits 2. Re-running the same range is a no-op.
@@ -37,6 +38,8 @@ def main(argv=None, read_bdh=None) -> int:
     ap.add_argument("--root", type=Path, default=dumper.MARKET_DIR, help="market-data root (default data/market)")
     ap.add_argument("--timeout", type=float, default=dumper.TIMEOUT,
                     help=f"seconds pdblp waits for each part of a response (default {dumper.TIMEOUT:g})")
+    ap.add_argument("--backend", choices=["pdblp", "pxts"], default="pdblp",
+                    help="pdblp (default): one Bloomberg session, bad securities skipped; pxts: pxts.read_bdh")
     ap.add_argument("--write-csv", action="store_true", help="write the CSV files when the diff is non-blocking (git add/commit is separate)")
     ap.add_argument("--dry-run", action="store_true", help="(default) show the diff only")
     args = ap.parse_args(argv)
@@ -45,7 +48,8 @@ def main(argv=None, read_bdh=None) -> int:
     m = load_manifest(args.ccy)
     try:
         res = dumper.dump(m, args.start, args.end, read_bdh, write_csv=args.write_csv and not args.dry_run,
-                          as_of=args.as_of, root=args.root, groups=args.group, timeout=args.timeout)
+                          as_of=args.as_of, root=args.root, groups=args.group, timeout=args.timeout,
+                          backend=args.backend)
     except dumper.DumpError as exc:
         print(f"ERROR: {exc}")
         return 1

@@ -120,7 +120,7 @@ each parser's row count on it.
 | `stircurve/marketdata/manifest.py` | Loads and validates the manifest against `usd.yaml`; ticker naming; the column plan for any date range. |
 | `stircurve/marketdata/contracts.py`, `scripts/contract_table.py` | Contract table: every listed future in a range with reference window [start, end), last trade, final settlement, first listed, last quote, settlement rule. |
 | `stircurve/marketdata/sources.py`, `scripts/capture_exchange_specs.py` | Captures the rule documents (CME/CBOT filings on cftc.gov, NY Fed, FCA) into `tests/fixtures/live`; every quoted rule passage must appear in its capture. |
-| `stircurve/marketdata/dump.py`, `scripts/dump_bloomberg.py` | Terminal machine only: manifest -> `pxts.read_bdh` -> wide CSVs. Dry run by default; `--write-csv` writes the files (committing them to git is a separate step); a changed or vanished value blocks (exit 2); re-runs are no-ops. |
+| `stircurve/marketdata/dump.py`, `scripts/dump_bloomberg.py` | Terminal machine only: manifest -> Bloomberg via pdblp (one session, one bulk request per field, bad securities skipped; `--backend pxts` for `pxts.read_bdh`) -> wide CSVs. Dry run by default; `--write-csv` writes the files (committing them to git is a separate step); a changed or vanished value blocks (exit 2); re-runs are no-ops. |
 | `stircurve/marketdata/loader.py`, `scripts/check_market_data.py` | Tidy frame keyed by (date, instrument, contract, field) plus a report: unknown columns, malformed files, out-of-range values and quotes outside a contract's listing window block (exit 2); missing columns, stale values and values outside first/last dates warn. |
 | `scripts/m1_gate.py` -> `docs/m1_gate.md` | Gate evidence: rule sources, listing checks against the filings, generated windows, the loader report on real days. |
 
@@ -133,7 +133,7 @@ Column names: `<ticker>|<field>`, e.g. `SFRZ26 Comdty|PX_LAST`, `USOSFR2 Curncy|
 `SOFRRATE Index|PX_LAST`. Futures columns always carry the two-digit year; the dump asks
 Bloomberg for the one-digit form while a contract trades (`SFRZ6 Comdty`).
 
-On a Bloomberg terminal machine (`pip install -e .[bloomberg]`):
+On a Bloomberg terminal machine (`pip install -e .[bloomberg]`, plus `blpapi` from Bloomberg's index). Every Bloomberg request is logged with its size, time and outcome:
 
 ```
 python scripts/dump_bloomberg.py --start 2026-10-07 --end 2026-10-07              # dry run: diff only

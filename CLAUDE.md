@@ -12,7 +12,8 @@ daily history from 2010). Owner: AC. Users: AC's team, via Jupyter notebooks.
 ## Hard rules
 - No AI and no Bloomberg calls at runtime. The curve code reads CSVs under
   `data/` only. Bloomberg pulls happen in `scripts/dump_bloomberg.py` via
-  `pxts.read_bdh` on a terminal machine; reference-data pulls happen in
+  pdblp (one session, bad securities skipped; `--backend pxts` for
+  `pxts.read_bdh`; AC, PR #2) on a terminal machine; reference-data pulls happen in
   `scripts/update_refdata.py` on a machine with internet. Both write files.
 - Committed CSVs under `data/refdata/` are the source of truth. Updaters diff
   and never overwrite silently; a blocking diff exits 2. Never hand-edit a

@@ -31,8 +31,18 @@ WINDOWS = {c.bbg_ticker: (pd.Timestamp(c.first_listed), pd.Timestamp(c.last_trad
 class FakeBloomberg:
     """Futures have values only while listed, like Bloomberg."""
 
-    def __init__(self, dead=(), bump=None):
+    def __init__(self, dead=(), bump=None, one_digit_until=None):   # (year, month) of the last one-digit contract Bloomberg resolves
         self.dead, self.bump, self.calls = set(dead), bump or {}, []
+        self.one_digit_until = one_digit_until    # last contract year Bloomberg resolves in one-digit form
+
+    def invalid(self, column, ticker):
+        if ticker in self.dead:
+            return True
+        canon = column.split("|")[0]
+        if self.one_digit_until and ticker != canon and canon.endswith("Comdty"):
+            _, y, mo = M.parse_future_ticker(canon)
+            return (y, mo) > self.one_digit_until
+        return False
 
     def value(self, column, ticker, field, day):
         first, last = WINDOWS.get(column.split("|")[0], (pd.Timestamp.min, pd.Timestamp.max))
@@ -49,7 +59,7 @@ class FakeBloomberg:
         days = pd.bdate_range(start, end)
         rows = []
         for name, t in tickers.items():          # pdblp: invalid security -> ValueError(rows so far)
-            if t in self.dead:
+            if self.invalid(name, t):
                 raise ValueError(rows)
             rows += [(d, t, field, self.value(name, t, field, d)) for d in days]
         # pxts does raw.loc[:, tickers]: pandas raises KeyError naming every ticker Bloomberg
@@ -62,6 +72,16 @@ class FakeBloomberg:
             raise KeyError(f"{missing!r} not in index")
         return pd.DataFrame({name: [self.value(name, t, field, d) for d in days] for name, t in tickers.items()},
                             index=pd.DatetimeIndex(days))
+
+
+class FakeBloombergIgnore(FakeBloomberg):
+    """pxts with errors="ignore": bad securities come back as NaN columns, never an exception."""
+
+    def read_bdh(self, tickers, start="2000-01-01", field="PX_LAST", end=None, timeout=5, errors="raise"):
+        self.calls.append((dict(tickers), start, end, field))
+        days = pd.bdate_range(start, end)
+        return pd.DataFrame({name: [np.nan if self.invalid(name, t) else self.value(name, t, field, d) for d in days]
+                             for name, t in tickers.items()}, index=pd.DatetimeIndex(days))
 
 
 def _dump(root, start, end, fake, write_csv=True, as_of=D(2026, 10, 8)):
@@ -203,7 +223,7 @@ def test_dump_requests_generously_and_isolates_unlisted_contracts():
         assert dead
         # probe + per field (PX_LAST, OPEN_INT, PX_VOLUME): one bulk call naming the missing
         # tickers, one bulk call without them
-        assert len(fake.calls) <= 1 + 3 * 2, len(fake.calls)
+        assert len(fake.calls) <= 1 + 3 * 2 * 2, len(fake.calls)   # + one two-digit retry round per field
         df = dumper.read_wide(Path(tmp) / "usd/2018/sofr3m_fut.csv")
         assert df["SFRM18 Comdty|PX_LAST"].notna().all() and df["SFRH28 Comdty|PX_LAST"].isna().all()
         _, rep = loader.load(M, root=Path(tmp))
@@ -288,18 +308,101 @@ def test_request_tickers_never_collide_and_far_contracts_skip_count_fields():
     assert len(req) == len(set(req))                      # one Bloomberg ticker per contract
     by = {s.ticker: (r, s.fields) for s, r in zip(plan, req)}
     assert by["SFRU35 Comdty"][0] == "SFRU35 Comdty"       # 'SFRU5' would be Sep 2025 (AC's dump)
+    assert by["SFRZ27 Comdty"][0] == "SFRZ7 Comdty" and by["SFRU28 Comdty"][0] == "SFRU28 Comdty"
     assert by["SFRZ26 Comdty"][0] == "SFRZ6 Comdty"
     assert by["SFRZ26 Comdty"][1] == ("PX_LAST", "OPEN_INT", "PX_VOLUME")
     assert by["SFRU35 Comdty"][1] == ("PX_LAST",)
     assert by["FFF29 Comdty"][1] == ("PX_LAST",) and by["FFF28 Comdty"][1][1:] == ("OPEN_INT", "PX_VOLUME")
 
 
-def test_invalid_security_found_in_two_calls():
-    # pdblp raises ValueError(rows so far) at the first bad security; the next ticker is the suspect
+def test_invalid_securities_isolated_by_halving():
+    # pdblp raises ValueError (naming nothing) at the first bad security: halving finds them
     with tempfile.TemporaryDirectory() as tmp:
-        fake = FakeBloomberg(dead={"USOSFR12 Curncy", "FFZ7 Comdty"})   # requested forms
+        fake = FakeBloomberg(dead={"USOSFR12 Curncy", "FFZ7 Comdty", "FFZ27 Comdty"})
         res = _dump(Path(tmp), D(2026, 10, 7), D(2026, 10, 7), fake)
         bad = {x.split("|")[0] for x in res.failed}
         assert {"USOSFR12 Curncy", "FFZ27 Comdty"} <= bad
-        px = [c for c in fake.calls if c[3] == "PX_LAST" and c[1] == "2026-10-07"]
-        assert len(px) <= 7, len(px)      # 2 per bad ticker + the KeyError round + the final bulk
+        df = dumper.read_wide(Path(tmp) / "usd/2026/ois_sofr.csv")
+        assert df["USOSFR10 Curncy|PX_LAST"].notna().all()
+
+
+def test_one_digit_years_bloomberg_rejects_are_retried_in_two_digits():
+    # Bloomberg resolved SFRH8/SFRM8 (2028) but not SFRU8..SFRZ4 (Sep 2028 - 2034) on 2026-10-07
+    with tempfile.TemporaryDirectory() as tmp:
+        fake = FakeBloomberg(one_digit_until=(2028, 6))
+        res = _dump(Path(tmp), D(2026, 10, 7), D(2026, 10, 7), fake)
+        df = dumper.read_wide(Path(tmp) / "usd/2026/sofr3m_fut.csv")
+        assert df["SFRU30 Comdty|PX_LAST"].notna().all()                # recovered as 'SFRU30 Comdty'
+        assert "SFRU30 Comdty" in {t for c in fake.calls for t in c[0].values()}
+        assert not any(x.startswith("SFRU30") for x in res.failed)
+
+
+def test_pxts_errors_ignore_means_one_call_per_field():
+    with tempfile.TemporaryDirectory() as tmp:
+        fake = FakeBloombergIgnore(dead={"USOSFR12 Curncy"}, one_digit_until=(2028, 6))
+        res = _dump(Path(tmp), D(2026, 10, 7), D(2026, 10, 7), fake)
+        main = [c for c in fake.calls if c[1] == "2026-10-07"]
+        assert len(main) <= 3 * 2, len(main)      # one per field + one two-digit retry per field
+        assert any(x.startswith("USOSFR12 Curncy|PX_LAST") for x in res.failed)
+        df = dumper.read_wide(Path(tmp) / "usd/2026/sofr3m_fut.csv")
+        assert df["SFRU30 Comdty|PX_LAST"].notna().all()
+
+
+
+class _FakeBCon:
+    """The slice of pdblp.BCon the PdblpReader uses, answering like Bloomberg: one
+    message per security; invalid ones carry securityError, missing fields a fieldException."""
+    starts = stops = 0
+
+    def __init__(self, port=8194, timeout=5000):
+        self.timeout, self._identity, self.fake, self.requests = timeout, None, _FakeBCon.fake, []
+        self._session = self
+
+    def start(self):
+        _FakeBCon.starts += 1
+
+    def stop(self):
+        _FakeBCon.stops += 1
+
+    def _create_req(self, rtype, tickers, flds, ovrds, setvals):
+        return {"tickers": tickers, "field": flds[0], **dict(setvals)}
+
+    def sendRequest(self, request, identity=None):
+        self.requests.append(request)
+
+    def _receive_events(self):
+        req = self.requests[-1]
+        days = pd.bdate_range(req["startDate"], req["endDate"])
+        self.fake.calls.append(({t: t for t in req["tickers"]}, req["startDate"], req["endDate"], req["field"]))
+        for t in req["tickers"]:
+            sd = {"security": t, "fieldExceptions": [], "fieldData": []}
+            canon = {r: c for c, r in _FakeBCon.columns.items()}.get(t, t)
+            if self.fake.invalid(canon + "|", t):
+                sd["securityError"] = {"message": "Unknown/Invalid security"}
+            else:
+                vals = [(d, self.fake.value(canon + "|" + req["field"], t, req["field"], d)) for d in days]
+                sd["fieldData"] = [{"fieldData": {"date": d.date(), req["field"]: v}} for d, v in vals if not np.isnan(v)]
+            yield {"element": {"HistoricalDataResponse": {"securityData": sd}}}
+
+
+def test_pdblp_backend_one_session_one_request_per_field():
+    import sys, types
+    fake = FakeBloomberg(dead={"USOSFR12 Curncy"}, one_digit_until=(2028, 6))
+    day, asof = D(2026, 10, 7), D(2026, 10, 9)
+    _FakeBCon.fake, _FakeBCon.starts, _FakeBCon.stops = fake, 0, 0
+    _FakeBCon.columns = {s.ticker: dumper.request_ticker(M, s, asof) for s in M.series(day, day)}
+    sys.modules["pdblp"] = types.SimpleNamespace(BCon=_FakeBCon)
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            res = dumper.dump(M, day, day, write_csv=True, root=Path(tmp), as_of=asof, backend="pdblp")
+            assert _FakeBCon.starts == 1 and _FakeBCon.stops == 1           # one session for the run
+            main = [c for c in fake.calls if c[1] == "20261007"]
+            assert len(main) <= 3 * 2, len(main)        # one request per field (+ one two-digit retry each)
+            assert any(x.startswith("USOSFR12 Curncy|PX_LAST") for x in res.failed)
+            assert "security error / field exception (skipped)" in res.reasons
+            df = dumper.read_wide(Path(tmp) / "usd/2026/sofr3m_fut.csv")
+            assert df["SFRZ26 Comdty|PX_LAST"].notna().all() and df["SFRU30 Comdty|PX_LAST"].notna().all()
+            _, rep = loader.load(M, day, day, root=Path(tmp))
+            assert rep.exit_code == 0 and rep.found["unknown_columns"] == [], rep.report()
+    finally:
+        del sys.modules["pdblp"]
