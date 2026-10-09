@@ -15,6 +15,7 @@ is blocking (nothing is written, exit 2). Files are written only with
 from __future__ import annotations
 
 import datetime as dt
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -30,7 +31,7 @@ MARKET_DIR = DATA_DIR / "market"
 # nothing on calls that succeed: 120 s covers a 50-ticker request over 16 years of daily
 # history on a busy terminal.
 TIMEOUT = 120
-CHUNK = 50          # tickers per read_bdh call
+CHUNK = 1000        # tickers per read_bdh call (bulk calls are much faster than many small ones)
 REL_TOL = 1e-12
 
 
@@ -130,9 +131,11 @@ def fetch(m: Manifest, series: list[Series], start: dt.date, end: dt.date, as_of
           timeout: float = TIMEOUT, chunk: int = CHUNK, reasons: dict[str, int] | None = None
           ) -> tuple[pd.DataFrame, list[str]]:
     """One wide frame (index: dates, columns: canonical ``ticker|field``) and the
-    columns Bloomberg returned nothing for. pxts raises when any ticker in a call
-    has no data (the dump requests generously, so this is common): a failing
-    chunk is split in halves until the dead tickers are isolated. A timeout is not
+    columns Bloomberg returned nothing for. One bulk read_bdh call per field.
+    pxts raises KeyError when any ticker in the call has no data (common: the dump
+    requests generously); pandas names the missing tickers in that error, so they
+    are dropped and the bulk call repeated (two calls, not one per ticker). Only an
+    error that names no tickers falls back to splitting the call in halves. A timeout is not
     'no data': the call is retried once, then the run stops (``DumpError``) rather
     than bisecting into hundreds of further timeouts."""
     fmt = m.column_format
@@ -169,10 +172,31 @@ def fetch(m: Manifest, series: list[Series], start: dt.date, end: dt.date, as_of
             bisect(items[:half], f)
             bisect(items[half:], f)
 
+    def bulk(items: list[tuple[str, str]], f: str) -> None:
+        for _ in range(3):
+            if not items:
+                return
+            try:
+                frames.append(call(dict(items), f))
+                return
+            except KeyError as exc:
+                missing = missing_tickers(exc, {t for _, t in items})
+                if not missing:
+                    break
+                for col, tkr in items:
+                    if tkr in missing:
+                        failed.append(f"{col} (requested {tkr})")
+                        reasons["no data from Bloomberg (named in pxts KeyError)"] = \
+                            reasons.get("no data from Bloomberg (named in pxts KeyError)", 0) + 1
+                items = [(c, t) for c, t in items if t not in missing]
+            except Exception:
+                break
+        bisect(items, f)
+
     for f, cols in by_field.items():
         items = list(cols.items())
         for i in range(0, len(items), chunk):
-            bisect(items[i:i + chunk], f)
+            bulk(items[i:i + chunk], f)
     wide = pd.concat(frames, axis=1) if frames else pd.DataFrame()
     wide.index = pd.DatetimeIndex(wide.index).normalize() if len(wide) else pd.DatetimeIndex([])
     wide = wide.loc[(wide.index >= pd.Timestamp(start)) & (wide.index <= pd.Timestamp(end))]
@@ -227,6 +251,12 @@ def market_path(root: Path, ccy: str, year: int, group: str) -> Path:
     return root / ccy.lower() / f"{year}" / f"{group}.csv"
 
 
+def missing_tickers(exc: KeyError, requested: set[str]) -> set[str]:
+    """Tickers a pandas KeyError names ("['X Comdty'] not in index" or "None of
+    [Index([...])] are in the [columns]"), restricted to those requested."""
+    return set(re.findall(r"'([^']+)'", str(exc))) & requested
+
+
 def is_timeout(exc: Exception) -> bool:
     """pdblp raises RuntimeError('Timeout ...') when no response arrives in time."""
     return isinstance(exc, TimeoutError) or "timeout" in str(exc).lower() or "timed out" in str(exc).lower()
@@ -253,6 +283,19 @@ def probe(m: Manifest, read_bdh, start: dt.date, end: dt.date, timeout: float) -
         raise DumpError(f"Bloomberg probe ({ticker} PX_LAST) returned no rows for {start - dt.timedelta(days=14)}..{end}")
 
 
+def staged_file(m: Manifest, root: Path, year: int, group: str, new: pd.DataFrame,
+                result: DumpResult, staged: list) -> None:
+    path = market_path(root, m.currency, year, group)
+    if new.empty:
+        result.empty.append(path)
+        return
+    existing = read_wide(path) if path.exists() else None
+    merged, diff = merge(existing, new, path)
+    result.diffs.append(diff)
+    if not diff.empty:
+        staged.append((merged, path))
+
+
 def dump(m: Manifest, start: dt.date, end: dt.date, read_bdh=None, *, write_csv: bool = False,
          as_of: dt.date | None = None, root: Path = MARKET_DIR, groups: list[str] | None = None,
          timeout: float = TIMEOUT, chunk: int = CHUNK) -> DumpResult:
@@ -262,19 +305,19 @@ def dump(m: Manifest, start: dt.date, end: dt.date, read_bdh=None, *, write_csv:
     probe(m, read_bdh, start, end, timeout)
     result = DumpResult()
     staged, requested = [], 0
+    by_year: dict[int, list] = {}
     for (year, group), (a, b, series) in sorted(plan(m, start, end, groups).items()):
-        new, failed = fetch(m, series, a, b, as_of, read_bdh, timeout=timeout, chunk=chunk, reasons=result.reasons)
+        by_year.setdefault(year, []).append((group, a, b, series))
+    for year, files in by_year.items():
+        a, b = files[0][1], files[0][2]
+        everything = [s for *_, series in files for s in series]
+        wide, failed = fetch(m, everything, a, b, as_of, read_bdh, timeout=timeout, chunk=chunk, reasons=result.reasons)
         result.failed += failed
-        requested += sum(len(s.fields) for s in series)
-        path = market_path(root, m.currency, year, group)
-        if new.empty:
-            result.empty.append(path)
-            continue
-        existing = read_wide(path) if path.exists() else None
-        merged, diff = merge(existing, new, path)
-        result.diffs.append(diff)
-        if not diff.empty:
-            staged.append((merged, path))
+        requested += sum(len(s.fields) for s in everything)
+        for group, _, _, series in files:
+            cols = [c for s in series for c in s.columns(m.column_format)]
+            new = wide.reindex(columns=cols).dropna(how="all") if len(wide) else wide.reindex(columns=cols)
+            staged_file(m, root, year, group, new, result, staged)
     if requested and len(result.failed) == requested:
         top = max(result.reasons, key=result.reasons.get) if result.reasons else "unknown"
         raise DumpError(f"Bloomberg returned nothing for any of {requested} ticker-fields; nothing written. "

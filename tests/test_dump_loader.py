@@ -47,11 +47,14 @@ class FakeBloomberg:
     def read_bdh(self, tickers, start="2000-01-01", field="PX_LAST", end=None, timeout=5):
         self.calls.append((dict(tickers), start, end, field))
         days = pd.bdate_range(start, end)
-        for name, t in tickers.items():
-            # pxts raises when Bloomberg has nothing for a ticker in the range (dead, or a
-            # contract the generous dump horizon asks for before it was listed)
-            if t in self.dead or all(np.isnan(self.value(name, t, field, d)) for d in days):
-                raise KeyError(t)
+        # pxts does raw.loc[:, tickers]: pandas raises KeyError naming every ticker Bloomberg
+        # had nothing for (dead, or a contract the generous dump horizon asks for before listing)
+        missing = [t for name, t in tickers.items()
+                   if t in self.dead or all(np.isnan(self.value(name, t, field, d)) for d in days)]
+        if missing and len(missing) == len(tickers):
+            raise KeyError(f"None of [Index({missing!r}, dtype='object')] are in the [columns]")
+        if missing:
+            raise KeyError(f"{missing!r} not in index")
         return pd.DataFrame({name: [self.value(name, t, field, d) for d in days] for name, t in tickers.items()},
                             index=pd.DatetimeIndex(days))
 
@@ -193,8 +196,9 @@ def test_dump_requests_generously_and_isolates_unlisted_contracts():
         assert not res.blocking
         dead = [x for x in res.failed if x.startswith("SFR")]
         assert dead and len(dead) % 3 == 0                    # unlisted SR3s, all three fields
-        sr3_calls = [c for c in fake.calls if any(t.startswith("SFR") for t in c[0].values())]
-        assert len(sr3_calls) < 3 * len(sr3)                   # bisection, not one call per ticker
+        # probe + per field (PX_LAST, OPEN_INT, PX_VOLUME): one bulk call naming the missing
+        # tickers, one bulk call without them
+        assert len(fake.calls) <= 1 + 3 * 2, len(fake.calls)
         df = dumper.read_wide(Path(tmp) / "usd/2018/sofr3m_fut.csv")
         assert df["SFRM18 Comdty|PX_LAST"].notna().all() and df["SFRH28 Comdty|PX_LAST"].isna().all()
         _, rep = loader.load(M, root=Path(tmp))
