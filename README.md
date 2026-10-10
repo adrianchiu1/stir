@@ -4,7 +4,7 @@ Meeting-date aware STIR / OIS curve construction for central-bank policy pricing
 (Fed, ECB, BoE, BoJ first; built so the next 18 currencies fit). Design spec and
 decision log live in the team doc *STIR Policy-Pricing Tool — Design Spec v0.1*.
 
-**Status: M1 in review (USD market data) on top of M0 (reference data).** M0: business-day
+**Status: M2 in progress (USD EFFR front end) on top of M1 (USD market data) and M0 (reference data).** M0: business-day
 calendars, meeting schedules with effective-date rules and cadence extrapolation, ECB
 reserve maintenance periods, policy-rate histories for all four banks, deterministic
 updaters and tests. M1: USD market-data manifest, contract-table generator, Bloomberg
@@ -15,7 +15,7 @@ only Bloomberg caller and runs on a terminal machine.
 ## Layout
 
 ```
-stircurve/            package (config/, refdata/ live; other modules are stubs for M1+)
+stircurve/            package (config/, refdata/, marketdata/, instruments/, curves/, policy/, quality/ live)
 data/refdata/         committed reference data (CSV) — the source of truth at runtime
   holidays/           us_fed, us_sifma, target, uk, jp  (rules, overridden by official sources)
   meetings/           <bank>.csv, <bank>_unscheduled.csv
@@ -23,9 +23,9 @@ data/refdata/         committed reference data (CSV) — the source of truth at 
   policy_rates/       <bank>.csv with a confidence column (primary | derived | memory:<how to verify>)
 data/market/usd/<YYYY>/<group>.csv  Bloomberg dumps (M1): one column per <ticker>|<field>
 data/curves/          local parquet store, git-ignored
-exports/              analytics shared with the team
+exports/<ccy>/<family>/<as_of>/  analytics shared with the team (M2: meetings, parcels, instruments, basis, report)
 scripts/              update_refdata.py, run_tests.py, dump_bloomberg.py, check_market_data.py,
-                      contract_table.py, capture_exchange_specs.py, m0_gate.py, m1_gate.py
+                      contract_table.py, capture_exchange_specs.py, front_end.py, m0_gate.py, m1_gate.py, m2_gate.py
 tests/                fixtures/live: pages captured by --save-fixtures on 8 Oct 2026
 ```
 
@@ -159,3 +159,32 @@ named after the manifest source, e.g.
 `python scripts/capture_exchange_specs.py --from-saved <files> --save-fixtures tests/fixtures/live`.
 
 See `CLAUDE.md` for working rules and `docs/decisions.md` for the decision log and build plan.
+
+## M2: USD EFFR front end
+
+Design: `docs/research/front_end_curve.md` (the state-of-the-art review AC decided from) and the Bloomberg
+WIRP documents in `docs/research/wirp/` (the gate standard); decisions D20-D23. Gate evidence:
+`docs/m2_gate.md` (`python scripts/m2_gate.py`).
+
+| Piece | What it does |
+| --- | --- |
+| `stircurve/instruments/` | Day counts by name; average-rate futures (FF arithmetic; SR1/SR3 later) and overnight-index swaps priced from a flat-forward curve, every convention from the manifest and the contract table. A switchable, measured month-end adjustment lives in the FF model (off by default; never a curve node). |
+| `stircurve/curves/flat_forward.py`, `nodes.py` | Parcels between effective dates (D2) with past fixings; nodes: published, synthetic (flagged), decided unscheduled meetings from their decision date, superseded meetings (`superseded_on`) until their supersession. |
+| `stircurve/curves/wirp_replica.py` | WIRP's two models (futures, OIS) as a sequential bootstrap: one quote per parcel, a later more direct quote overrides, joint solve when a month holds two unknowns, nothing beyond the instruments' reach. The gate reference. |
+| `stircurve/curves/robust.py`, `front_end.py` | Per instrument (`front_end.curves`: `effr_fut`, `effr_ois`): global weighted least squares on the step levels, Huber IRLS, weights from open interest / volume / staleness, exclusion of FF prices with no open interest and no volume (derived settlement prices), a very weak step prior with equal-step ties where nothing in the data tells two meetings apart and flat steps beyond the last instrument, drops by Huber weight and by leave-one-out residual, identification, leverage and posterior sigma per parcel. |
+| `stircurve/policy/spread.py`, `outputs.py`, `export.py` | D7 policy spread; per meeting the WIRP columns (Current Implied O/N Rate, Post-Meeting Implied Rate, Imp. Rate Δ, #Hikes/Cuts, %Hike/Cut), the replica's values, the implied policy rate and the cumulative change vs the current target, flags; FF/OIS basis; exports and the local curve store. |
+| `stircurve/quality/battery.py`, `wirp.py` | Residuals in bp, drop list with reasons, high-leverage quotes with their leave-one-out residuals, stale / outside-listing inputs, parcel identification, the replica's inputs, a one-page report; the WIRP capture parser (checks the capture's own identities) and the three-layer comparison. |
+| `scripts/front_end.py`, `scripts/m2_gate.py` | Build and export any as-of date; the gate document (replica vs capture, fit vs replica, fit vs capture, basis, drop lists, residuals, month-end evidence). |
+
+```
+python scripts/front_end.py --as-of 2026-10-07            # exports/usd/effr/2026-10-07/
+python scripts/front_end.py --as-of 2026-10-07 --store    # + data/curves/ (local)
+python scripts/m2_gate.py --exports                       # docs/m2_gate.md and the exports for every gate date
+```
+
+WIRP captures: one per gate date and model, `tests/fixtures/live/wirp_us_fut_<YYYYMMDD>.txt` (WIRP US,
+Fed Funds Futures) and `wirp_us_ois_<YYYYMMDD>.txt` (WIRP US OIS): the header lines (Instrument, Target
+Rate, Effective Rate, Pricing Date, Cur. Imp. O/N Rate) and the meeting table. The 7 Oct 2026 captures are
+AC's screenshots (`.png` alongside) transcribed by hand; the parser checks the capture's own identities.
+
+Settings: `stircurve/config/usd.yaml` `front_end` (curves, horizon, spread, month-end adjustment, fit, wirp).

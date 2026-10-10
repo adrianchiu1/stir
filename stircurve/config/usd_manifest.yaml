@@ -282,6 +282,7 @@ instruments:
     spot_lag: {days: 2, calendar: us_fed}
     payment_lag: {days: 2, calendar: us_fed}
     roll: modified_following
+    schedule: {generation: backward, stub: short_front, eom: false, source: bbg_des}   # period schedule for tenors over a year (18M: short front stub); QUESTION (PR #4): confirm on SWPM
     source: bbg_des
     first_date: "2010-01-01"
     last_date: null
