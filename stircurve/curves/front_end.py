@@ -42,7 +42,7 @@ from ..instruments import AverageRateFuture, OvernightIndexSwap
 from . import robust
 from .flat_forward import FlatForwardCurve, ParcelGrid
 from .nodes import build_grid, meeting_nodes
-from .wirp_replica import ReplicaResult, sequential_bootstrap
+from .wirp_replica import ReplicaResult, _priced, sequential_bootstrap
 
 HISTORY_DAYS = 130            # calendar days of history loaded before the as-of date (63bd spread window, staleness)
 CURVE_TAIL_DAYS = 7           # the last parcel runs this far past the last instrument date
@@ -286,6 +286,10 @@ def build_curve(name: str, cfg: dict, m: Manifest, inputs: MarketInputs, spread:
     # metadata exclusions and weights
     used, excluded, liq = [], [], []
     for q in quotes:
+        lo, hi = m.instruments[q.instrument]["valid_range"]
+        if not (lo <= q.px <= hi):
+            excluded.append((q, f"quote {q.px} outside the manifest's valid range [{lo}, {hi}]: not a price"))
+            continue
         w, why = liquidity_weight(q, fit_cfg.get("liquidity", {}).get(q.instrument))
         if why:
             excluded.append((q, why))
@@ -309,7 +313,7 @@ def build_curve(name: str, cfg: dict, m: Manifest, inputs: MarketInputs, spread:
     rq = _replica_quotes(cfg, name, used)
     replica = sequential_bootstrap(spec["wirp_model"], grid,
                                    [(q.key, q.model.bind(grid), q.rate, q.end) for q in rq],
-                                   min_sensitivity=fe["wirp"].get("min_sensitivity", 0.01))
+                                   min_sensitivity=fe["wirp"].get("min_sensitivity", 0.025))
 
     # prior: weak steps, weak stub level (anchor + spread, else the last fixing)
     if anchor_now is not None and spread.value is not None:
@@ -332,6 +336,7 @@ def build_curve(name: str, cfg: dict, m: Manifest, inputs: MarketInputs, spread:
     sig = np.array([fit_cfg["quote_sigma_bp"][q.instrument] for q in used], dtype=float)
     obs = [robust.Observation(q.key, b.value, q.rate, s, w) for q, b, s, w in zip(used, bound, sig, liq * stale)]
     kw = dict(huber_k=fit_cfg["huber_k"], max_iter=fit_cfg["max_iter"], tol_bp=fit_cfg["tol_bp"])
+    priced = [set(_priced(b, grid.n, fe["wirp"].get("min_sensitivity", 0.025))) for b in bound]
     active = list(range(len(obs)))
     loo_dropped: list[int] = []
     loo_at_drop: dict[int, float] = {}
@@ -344,13 +349,20 @@ def build_curve(name: str, cfg: dict, m: Manifest, inputs: MarketInputs, spread:
         # good neighbours show large leave-one-out residuals too (masking), so among the candidates (standardised
         # by the quote's effective noise) the one whose removal leaves the smallest robust loss on the rest is
         # the culprit
-        cands = [i for i in active if np.isfinite(loo[i]) and abs(loo[i]) / scale[i] > fit_cfg["loo_drop_z"]]
+        cands = [i for i in active if np.isfinite(loo[i]) and abs(loo[i]) / scale[i] > fit_cfg["loo_drop_z"]
+                 and _others_cover(i, active, priced)]
         if not cands or len(loo_dropped) >= MAX_LOO_DROPS:
             break
-        rest_loss = {i: robust.loss(obs, [j for j in active if j != i],
-                                    robust.refit_without(obs, prior, res.x, active, i, **kw), fit_cfg["huber_k"])
-                     for i in cands}
-        worst = min(cands, key=rest_loss.get)
+        rest_loss = {}
+        for i in cands:
+            x_wo, ident_wo = robust.refit_without(obs, prior, res.x, active, i, **kw)
+            # once the quote is out its parcels must still be pinned by data; if the prior takes over, the
+            # leave-one-out residual measured the prior's shape, not the quote (a lone 2Y OIS is not an outlier)
+            if all(ident_wo[k] >= fit_cfg["identified_threshold"] for k in priced[i]):
+                rest_loss[i] = robust.loss(obs, [j for j in active if j != i], x_wo, fit_cfg["huber_k"])
+        if not rest_loss:
+            break
+        worst = min(rest_loss, key=rest_loss.get)
         loo_dropped.append(worst)
         loo_at_drop[worst] = float(loo[worst])
         active = [i for i in active if i != worst]
@@ -359,6 +371,13 @@ def build_curve(name: str, cfg: dict, m: Manifest, inputs: MarketInputs, spread:
         loo[i] = v
     return CurveFit(name, list(spec["instruments"]), as_of, meetings, grid, FlatForwardCurve(grid, res.x), curve_end,
                     prior, stub, src, res, used, excluded, liq * stale, liq, sig, loo, replica, rq, missing, loo_dropped)
+
+
+def _others_cover(i: int, active: list[int], priced: list[set]) -> bool:
+    """Is every parcel quote ``i`` prices also priced by another active quote? If not, its leave-one-out
+    residual measures the prior's extrapolation, not the quote's error (a lone 2Y OIS is not an outlier)."""
+    others = set().union(*(priced[j] for j in active if j != i)) if len(active) > 1 else set()
+    return bool(priced[i]) and priced[i] <= others
 
 
 def prior_structure(grid: ParcelGrid, ends: list[dt.date]) -> tuple[list[tuple[int, int]], int | None]:

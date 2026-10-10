@@ -188,13 +188,19 @@ def load(m: Manifest, start: dt.date | None = None, end: dt.date | None = None,
         wide = _read(path, report)
         if wide is None:
             continue
+        if wide.empty:
+            report.add("no_data", f"{path}: no rows")
+            continue
+        # the file's own range decides which contracts its columns may name (a day read out of a yearly file
+        # still sees the file's expired columns); the requested window only selects rows
+        f0, f1 = wide.index[0].date(), wide.index[-1].date()
         if start or end:
             wide = wide.loc[(wide.index >= pd.Timestamp(start or dt.date.min)) &
                             (wide.index <= pd.Timestamp(end or dt.date.max))]
         if wide.empty:
             report.add("no_data", f"{path}: no rows" + (f" in {start or '...'}..{end or '...'}" if start or end else ""))
             continue
-        d0, d1 = wide.index[0].date(), wide.index[-1].date()
+        d0, d1 = f0, f1
         # columns map against what the dump requests (generous horizon); listing dates come
         # from the exchange schedule (a contract not yet listed there by d1 has none)
         ctab = contract_table(m, d0, d1, [group], listing="dump_listing") if group in m.futures() else None

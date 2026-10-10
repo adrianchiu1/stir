@@ -61,6 +61,6 @@ front_end:                          # M2: EFFR-family front end (D2, D4, D7, D11
     leverage_threshold: 0.9         # quotes at or above: alone pin a parcel (leave-one-out residual reported)
   wirp:                             # the replica of Bloomberg's two models (docs/research/wirp): gate reference
     arm: 0.25
-    min_sensitivity: 0.01           # a quote prices a parcel when d(rate)/d(parcel) exceeds this (share of its window)
+    min_sensitivity: 0.025          # a quote prices a parcel when d(rate)/d(parcel) exceeds this share of its window (~9 days of a 1Y OIS; 4 days of a 1Y swap once produced a 53bp jump)
     futures: {instrument: ff_fut, require_activity: true}      # contracts with open interest or volume only (WIRP's reach)
     ois: {instrument: ois_effr, max_tenor_months: 12, skip_tenors: [2W, 3W]}   # 1W then the monthly tenors ("1M over 3W")

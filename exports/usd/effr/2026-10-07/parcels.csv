@@ -1,6 +1,6 @@
 curve,parcel,start,end,identification,under_identified,posterior_sigma_bp,fitted_rate,step_bp,replica_rate,fit_minus_replica_bp,beyond_wirp_reach
-effr_fut,stub,2026-10-07,2026-10-29,1.0,False,0.006,3.880602,,3.880714,-0.011,False
-effr_fut,2026-10-28,2026-10-29,2026-12-10,1.0,False,0.005,3.926063,4.546,3.925,0.106,False
+effr_fut,stub,2026-10-07,2026-10-29,1.0,False,0.007,3.880766,,3.880909,-0.014,False
+effr_fut,2026-10-28,2026-10-29,2026-12-10,1.0,False,0.005,3.926063,4.53,3.925,0.106,False
 effr_fut,2026-12-09,2026-12-10,2027-01-28,1.0,False,0.005,4.116696,19.063,4.122273,-0.558,False
 effr_fut,2027-01-27,2027-01-28,2027-03-18,1.0,False,0.004,4.204069,8.737,4.205,-0.093,False
 effr_fut,2027-03-17,2027-03-18,2027-04-29,1.0,False,0.005,4.36341,15.934,4.36,0.341,False

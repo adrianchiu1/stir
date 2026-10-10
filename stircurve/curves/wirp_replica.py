@@ -132,7 +132,7 @@ def _filled(x: np.ndarray, default: float) -> np.ndarray:
 
 def sequential_bootstrap(model: str, grid: ParcelGrid,
                          instruments: list[tuple[str, BoundInstrument, float, dt.date]],
-                         min_sensitivity: float = 0.01) -> ReplicaResult:
+                         min_sensitivity: float = 0.025) -> ReplicaResult:
     """``instruments``: (key, bound model, quoted rate in percent, window end), any order;
     they are taken in order of window end (a contract month, an OIS maturity)."""
     eqs = [Equation(k, b, q, _priced(b, grid.n, min_sensitivity), end) for k, b, q, end in instruments]
@@ -176,9 +176,14 @@ def sequential_bootstrap(model: str, grid: ParcelGrid,
         skipped.append((p.key, "left unsolved: more unknown parcels than instruments after it"))
     if np.isnan(x[0]):
         known = np.where(~np.isnan(x))[0]
-        if len(known):
+        if grid.fixings:
+            last = max(grid.fixings)
+            x[0] = grid.fixings[last]
+            notes.append(f"stub parcel not priced by any instrument (the first one starts after the next effective "
+                         f"date): set to the last fixing {x[0]:.4f} ({last})")
+        elif len(known):
             x[0] = x[known[0]]
-            notes.append("stub parcel not identified by any instrument: set to the first solved parcel")
+            notes.append("stub parcel not priced by any instrument: set to the first solved parcel")
     return ReplicaResult(model, grid, x, used, skipped, solved_by, notes)
 
 

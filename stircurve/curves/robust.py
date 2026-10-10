@@ -190,10 +190,12 @@ def loss(obs: list[Observation], active: list[int], x: np.ndarray, huber_k: floa
     return float(tot)
 
 
-def refit_without(obs: list[Observation], prior: Prior, x0: np.ndarray, active: list[int], drop: int, **kw) -> np.ndarray:
-    """Parcel rates refitted with ``drop`` left out (no drop rounds)."""
+def refit_without(obs: list[Observation], prior: Prior, x0: np.ndarray, active: list[int], drop: int,
+                  **kw) -> tuple[np.ndarray, np.ndarray]:
+    """(parcel rates, identification per parcel) refitted with ``drop`` left out (no drop rounds)."""
     others = [j for j in active if j != drop]
-    return _solve(obs, others, x0, prior, kw.get("huber_k", 1.345), kw.get("max_iter", 50), kw.get("tol_bp", 1e-5))[0]
+    r = _solve(obs, others, x0, prior, kw.get("huber_k", 1.345), kw.get("max_iter", 50), kw.get("tol_bp", 1e-5))
+    return r[0], identification(r[4], len(x0))
 
 
 def leave_one_out(obs: list[Observation], prior: Prior, res: FitResult, active: list[int] | None = None,

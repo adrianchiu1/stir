@@ -1,5 +1,5 @@
 curve,instrument,contract,ticker,start,end,quote,quote_rate,model_rate,residual_bp,loo_residual_bp,sigma_bp,open_interest,volume,liquidity_weight,stale,stale_run,weight,huber_weight,leverage,in_replica,status,reason,notes
-effr_fut,ff_fut,2026-10,FFV26 Comdty,2026-10-01,2026-11-01,96.115,3.885,3.885001,-0.0,-0.191,0.5,683894.0,16106.0,1.0,False,1.0,1.0,1.0,0.999,True,used,,
+effr_fut,ff_fut,2026-10,FFV26 Comdty,2026-10-01,2026-11-01,96.115,3.885,3.885001,-0.0,-0.138,0.5,683894.0,16106.0,1.0,False,1.0,1.0,1.0,0.999,True,used,,
 effr_fut,ff_fut,2026-11,FFX26 Comdty,2026-11-01,2026-12-01,96.075,3.925,3.926063,-0.106,-2.213,0.5,563226.0,78897.0,1.0,False,1.0,1.0,1.0,0.952,True,used,,
 effr_fut,ff_fut,2026-12,FFZ26 Comdty,2026-12-01,2027-01-01,95.935,4.065,4.061351,0.365,0.641,0.5,225651.0,36651.0,1.0,False,1.0,1.0,1.0,0.431,True,used,,
 effr_fut,ff_fut,2027-01,FFF27 Comdty,2027-01-01,2027-02-01,95.875,4.125,4.12797,-0.297,-0.786,0.5,384857.0,50741.0,1.0,False,1.0,1.0,1.0,0.622,True,used,,
