@@ -371,10 +371,10 @@ def build_curve(name: str, cfg: dict, m: Manifest, inputs: MarketInputs, spread:
             break
         rest_loss = {}
         for i in cands:
-            x_wo, ident_wo = robust.refit_without(obs, prior, res.x, active, i, **kw)
-            # once the quote is out its parcels must still be pinned by data; if the prior takes over, the
-            # leave-one-out residual measured the prior's shape, not the quote (a lone 2Y OIS is not an outlier)
-            if all(ident_wo[k] >= fit_cfg["identified_threshold"] for k in priced[i]):
+            x_wo, pred_sigma = robust.refit_without(obs, prior, res.x, active, i, **kw)
+            # the residual is evidence against the quote only relative to what the rest knows about it: a lone
+            # 2Y OIS, or a contract whose parcel the others see for two days, is not an outlier
+            if abs(loo[i]) / np.sqrt(scale[i] ** 2 + pred_sigma ** 2) > fit_cfg["loo_drop_z"]:
                 rest_loss[i] = robust.loss(obs, [j for j in active if j != i], x_wo, fit_cfg["huber_k"])
         if not rest_loss:
             break

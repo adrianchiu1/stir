@@ -440,7 +440,7 @@ Anchor 2.375; spread 1.47bp (60 fixings).
 
 #### `effr_fut` (ff_fut; WIRP model: futures)
 
-23 quotes used, 1 dropped, 13 excluded (metadata); replica on 23 quotes reaches 15 meetings; current implied O/N: fit 2.4225, replica 2.4275.
+23 quotes used, 0 dropped, 13 excluded (metadata); replica on 23 quotes reaches 15 meetings; current implied O/N: fit 2.4225, replica 2.4275.
 
 Waiting for the WIRP capture `wirp_us_fut_20190730.txt`. Fit and replica alone:
 
@@ -454,18 +454,17 @@ Waiting for the WIRP capture `wirp_us_fut_20190730.txt`. Fit and replica alone:
 | 2020-03-18 | False | False | 1.606735 | -3.2629 | -25.44 | 1.610385 | -0.365 | False | False |
 | 2020-04-29 | False | False | 1.565021 | -3.4298 | -16.69 | 1.565 | 0.002 | False | False |
 | 2020-06-10 | False | False | 1.512188 | -3.6411 | -21.13 | 1.5125 | -0.031 | False | False |
-| 2020-07-29 | False | False | 1.48011 | -3.7694 | -12.83 | 1.48 | 0.011 | False | False |
-| 2020-09-16 | False | False | 1.435298 | -3.9487 | -17.92 | 1.435 | 0.03 | False | False |
-| 2020-11-05 | False | False | 1.415902 | -4.0263 | -7.76 | 1.417 | -0.11 | False | False |
-| 2020-12-16 | False | False | 1.385126 | -4.1494 | -12.31 | 1.381867 | 0.326 | False | False |
-| 2021-01-27 | False | False | 1.373504 | -4.1959 | -4.65 | 1.375 | -0.15 | False | False |
-| 2021-03-17 | False | False | 1.361431 | -4.2441 | -4.83 | 1.352857 | 0.857 | False | False |
+| 2020-07-29 | False | False | 1.480109 | -3.7694 | -12.83 | 1.48 | 0.011 | False | False |
+| 2020-09-16 | False | False | 1.435301 | -3.9487 | -17.92 | 1.435 | 0.03 | False | False |
+| 2020-11-05 | False | False | 1.41584 | -4.0265 | -7.78 | 1.417 | -0.116 | False | False |
+| 2020-12-16 | False | False | 1.385315 | -4.1486 | -12.21 | 1.381867 | 0.345 | False | False |
+| 2021-01-27 | False | False | 1.371586 | -4.2035 | -5.49 | 1.375 | -0.341 | False | False |
+| 2021-03-17 | False | False | 1.371575 | -4.2036 | -0.0 | 1.352857 | 1.872 | False | False |
 
 Drop list:
 
 | curve | instrument | contract | ticker | status | reason | residual_bp |
 | --- | --- | --- | --- | --- | --- | --- |
-| effr_fut | ff_fut | 2021-05 | FFK21 Comdty | dropped | leave-one-out residual -16.94bp, over 6.0 x its effective noise 2.24bp (alone pinned a parcel) | -16.938 |
 | effr_fut | ff_fut | 2021-06 | FFM21 Comdty | excluded | no open interest and no volume: a derived settlement price, not a quote |  |
 | effr_fut | ff_fut | 2021-07 | FFN21 Comdty | excluded | no open interest and no volume: a derived settlement price, not a quote |  |
 | effr_fut | ff_fut | 2021-08 | FFQ21 Comdty | excluded | no open interest and no volume: a derived settlement price, not a quote |  |
@@ -489,15 +488,13 @@ High-leverage quotes:
 | effr_fut | ff_fut | 2020-04 | FFJ20 Comdty | 1.605 | -0.034 | -0.405 | 0.915 |
 | effr_fut | ff_fut | 2020-05 | FFK20 Comdty | 1.565 | -0.002 | -0.055 | 0.962 |
 | effr_fut | ff_fut | 2020-08 | FFQ20 Comdty | 1.48 | -0.011 | -0.16 | 0.932 |
-| effr_fut | ff_fut | 2021-02 | FFG21 Comdty | 1.375 | 0.15 | 1.542 | 0.903 |
-| effr_fut | ff_fut | 2021-04 | FFJ21 Comdty | 1.375 | 0.137 | 2.227 | 0.938 |
+| effr_fut | ff_fut | 2021-05 | FFK21 Comdty | 1.375 | -0.021 | -16.938 | 0.999 |
 
 Residuals (bp):
 
 | curve | instrument | status | n | mean_bp | rms_bp | max_abs_bp |
 | --- | --- | --- | --- | --- | --- | --- |
-| effr_fut | ff_fut | dropped | 1 | -16.938 | 16.938 | 16.938 |
-| effr_fut | ff_fut | used | 22 | 0.011 | 0.154 | 0.347 |
+| effr_fut | ff_fut | used | 23 | 0.01 | 0.213 | 0.658 |
 
 
 #### `effr_ois` (ois_effr; WIRP model: ois)
@@ -558,21 +555,21 @@ FF / OIS basis (bp, fit and replica):
 | 2020-06-10 | 8 | -1.069 | -0.673 |
 | 2020-07-29 | 9 | 0.273 |  |
 | 2020-09-16 | 10 | -1.534 |  |
-| 2020-11-05 | 11 | -0.802 |  |
-| 2020-12-16 | 12 | -1.208 |  |
-| 2021-01-27 | 13 | 0.299 |  |
-| 2021-03-17 | 14 | -1.793 |  |
-| 2021-04-28 | 15 | 15.616 |  |
-| 2021-06-16 | 16 | 14.731 |  |
-| 2021-07-28 | 17 | 13.845 |  |
-| 2021-09-22 | 18 | 13.312 |  |
-| 2021-11-03 | 19 | 12.779 |  |
-| 2021-12-15 | 20 | 12.246 |  |
-| 2022-01-26 | 21 | 11.713 |  |
-| 2022-03-16 | 22 | 11.181 |  |
-| 2022-05-04 | 23 | 10.649 |  |
-| 2022-06-15 | 24 | 10.118 |  |
-| 2022-07-27 | 25 | 9.587 |  |
+| 2020-11-05 | 11 | -0.808 |  |
+| 2020-12-16 | 12 | -1.189 |  |
+| 2021-01-27 | 13 | 0.107 |  |
+| 2021-03-17 | 14 | -0.779 |  |
+| 2021-04-28 | 15 | -1.301 |  |
+| 2021-06-16 | 16 | -2.186 |  |
+| 2021-07-28 | 17 | -3.071 |  |
+| 2021-09-22 | 18 | -3.605 |  |
+| 2021-11-03 | 19 | -4.138 |  |
+| 2021-12-15 | 20 | -4.671 |  |
+| 2022-01-26 | 21 | -5.204 |  |
+| 2022-03-16 | 22 | -5.736 |  |
+| 2022-05-04 | 23 | -6.268 |  |
+| 2022-06-15 | 24 | -6.799 |  |
+| 2022-07-27 | 25 | -7.33 |  |
 
 
 ### 2020-03-03
@@ -581,32 +578,31 @@ Anchor 1.625; spread -6.30bp (59 fixings).
 
 #### `effr_fut` (ff_fut; WIRP model: futures)
 
-20 quotes used, 1 dropped, 16 excluded (metadata); replica on 20 quotes reaches 14 meetings; current implied O/N: fit 1.4197, replica 1.0227.
+20 quotes used, 0 dropped, 16 excluded (metadata); replica on 20 quotes reaches 14 meetings; current implied O/N: fit 1.4158, replica 1.0227.
 
 Waiting for the WIRP capture `wirp_us_fut_20200303.txt`. Fit and replica alone:
 
 | decision_date | synthetic | unscheduled | implied_rate | n_moves | pct_move | replica_rate | fit_minus_replica_bp | under_identified | beyond_wirp_reach |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 2020-03-03 | False | True | 1.105545 | -1.2564 | -125.64 | 1.130153 | -2.461 | False | False |
-| 2020-03-18 | False | False | 0.792132 | -2.5101 | -125.37 | 0.793849 | -0.172 | False | False |
-| 2020-04-29 | False | False | 0.724676 | -2.7799 | -26.98 | 0.678392 | 4.628 | False | False |
-| 2020-06-10 | False | False | 0.597673 | -3.2879 | -50.8 | 0.605542 | -0.787 | False | False |
-| 2020-07-29 | False | False | 0.556203 | -3.4538 | -16.59 | 0.554532 | 0.167 | False | False |
-| 2020-09-16 | False | False | 0.505934 | -3.6549 | -20.11 | 0.505 | 0.093 | False | False |
-| 2020-11-05 | False | False | 0.493673 | -3.7039 | -4.9 | 0.493 | 0.067 | False | False |
-| 2020-12-16 | False | False | 0.462835 | -3.8273 | -12.33 | 0.466133 | -0.33 | False | False |
-| 2021-01-27 | False | False | 0.445848 | -3.8952 | -6.79 | 0.445 | 0.085 | False | False |
-| 2021-03-17 | False | False | 0.461043 | -3.8344 | 6.08 | 0.467143 | -0.61 | False | False |
-| 2021-04-28 | False | False | 0.464865 | -3.8191 | 1.53 | 0.465 | -0.013 | False | False |
-| 2021-06-16 | False | False | 0.484765 | -3.7395 | 7.96 | 0.486429 | -0.166 | False | False |
-| 2021-07-28 | False | False | 0.491643 | -3.712 | 2.75 | 0.49 | 0.164 | False | False |
-| 2021-09-22 | False | False | 0.495611 | -3.6962 | 1.59 | 0.495 | 0.061 | False | False |
+| 2020-03-03 | False | True | 1.104404 | -1.2454 | -124.54 | 1.130153 | -2.575 | False | False |
+| 2020-03-18 | False | False | 0.793762 | -2.488 | -124.26 | 0.793849 | -0.009 | False | False |
+| 2020-04-29 | False | False | 0.677247 | -2.9541 | -46.61 | 0.678392 | -0.114 | False | False |
+| 2020-06-10 | False | False | 0.602817 | -3.2518 | -29.77 | 0.605542 | -0.273 | False | False |
+| 2020-07-29 | False | False | 0.555952 | -3.4392 | -18.75 | 0.554532 | 0.142 | False | False |
+| 2020-09-16 | False | False | 0.505985 | -3.6391 | -19.99 | 0.505 | 0.099 | False | False |
+| 2020-11-05 | False | False | 0.493665 | -3.6884 | -4.93 | 0.493 | 0.066 | False | False |
+| 2020-12-16 | False | False | 0.462837 | -3.8117 | -12.33 | 0.466133 | -0.33 | False | False |
+| 2021-01-27 | False | False | 0.445848 | -3.8797 | -6.8 | 0.445 | 0.085 | False | False |
+| 2021-03-17 | False | False | 0.461043 | -3.8189 | 6.08 | 0.467143 | -0.61 | False | False |
+| 2021-04-28 | False | False | 0.464865 | -3.8036 | 1.53 | 0.465 | -0.013 | False | False |
+| 2021-06-16 | False | False | 0.484765 | -3.724 | 7.96 | 0.486429 | -0.166 | False | False |
+| 2021-07-28 | False | False | 0.491643 | -3.6965 | 2.75 | 0.49 | 0.164 | False | False |
+| 2021-09-22 | False | False | 0.495611 | -3.6806 | 1.59 | 0.495 | 0.061 | False | False |
 
 Drop list:
 
 | curve | instrument | contract | ticker | status | reason | residual_bp |
 | --- | --- | --- | --- | --- | --- | --- |
-| effr_fut | ff_fut | 2020-05 | FFK20 Comdty | dropped | leave-one-out residual -4.97bp, over 6.0 x its effective noise 0.50bp (alone pinned a parcel) | -4.968 |
 | effr_fut | ff_fut | 2021-11 | FFX21 Comdty | excluded | no open interest and no volume: a derived settlement price, not a quote |  |
 | effr_fut | ff_fut | 2021-12 | FFZ21 Comdty | excluded | no open interest and no volume: a derived settlement price, not a quote |  |
 | effr_fut | ff_fut | 2022-01 | FFF22 Comdty | excluded | no open interest and no volume: a derived settlement price, not a quote |  |
@@ -628,10 +624,9 @@ High-leverage quotes:
 
 | curve | instrument | contract | ticker | quote_rate | residual_bp | loo_residual_bp | leverage |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| effr_fut | ff_fut | 2020-03 | FFH20 Comdty | 1.015 | -0.018 | -3.308 | 0.995 |
-| effr_fut | ff_fut | 2020-04 | FFJ20 Comdty | 0.79 | 0.012 | 4.404 | 0.997 |
-| effr_fut | ff_fut | 2020-06 | FFM20 Comdty | 0.64 | -0.001 | -1.455 | 1.0 |
-| effr_fut | ff_fut | 2020-07 | FFN20 Comdty | 0.595 | 0.0 | 0.668 | 1.0 |
+| effr_fut | ff_fut | 2020-03 | FFH20 Comdty | 1.015 | -0.019 | -3.417 | 0.995 |
+| effr_fut | ff_fut | 2020-04 | FFJ20 Comdty | 0.79 | 0.012 | 4.608 | 0.997 |
+| effr_fut | ff_fut | 2020-05 | FFK20 Comdty | 0.675 | -0.225 | -4.968 | 0.955 |
 | effr_fut | ff_fut | 2021-05 | FFK21 Comdty | 0.465 | 0.013 | 0.282 | 0.952 |
 | effr_fut | ff_fut | 2021-10 | FFV21 Comdty | 0.495 | -0.061 | -1.364 | 0.955 |
 
@@ -639,8 +634,7 @@ Residuals (bp):
 
 | curve | instrument | status | n | mean_bp | rms_bp | max_abs_bp |
 | --- | --- | --- | --- | --- | --- | --- |
-| effr_fut | ff_fut | dropped | 1 | -4.968 | 4.968 | 4.968 |
-| effr_fut | ff_fut | used | 19 | 0.004 | 0.119 | 0.23 |
+| effr_fut | ff_fut | used | 20 | 0.032 | 0.322 | 1.237 |
 
 
 #### `effr_ois` (ois_effr; WIRP model: ois)
@@ -693,14 +687,14 @@ FF / OIS basis (bp, fit and replica):
 
 | decision_date | parcel | basis_fit_bp | basis_replica_bp |
 | --- | --- | --- | --- |
-| None | stub | -11.403 | -56.732 |
-| 2020-03-03 | 1 | 2.544 | 5.024 |
-| 2020-03-18 | 2 | -9.867 | -10.062 |
-| 2020-04-29 | 3 | -3.667 | -7.901 |
-| 2020-06-10 | 4 | -8.669 | -8.266 |
-| 2020-07-29 | 5 | -6.91 | -6.4 |
-| 2020-09-16 | 6 | -7.313 | -7.501 |
-| 2020-11-05 | 7 | -4.481 | -5.269 |
+| None | stub | -11.792 | -56.732 |
+| 2020-03-03 | 1 | 2.429 | 5.024 |
+| 2020-03-18 | 2 | -9.704 | -10.062 |
+| 2020-04-29 | 3 | -8.41 | -7.901 |
+| 2020-06-10 | 4 | -8.154 | -8.266 |
+| 2020-07-29 | 5 | -6.935 | -6.4 |
+| 2020-09-16 | 6 | -7.307 | -7.501 |
+| 2020-11-05 | 7 | -4.482 | -5.269 |
 | 2020-12-16 | 8 | -5.225 | -4.723 |
 | 2021-01-27 | 9 | -4.598 | -4.256 |
 | 2021-03-17 | 10 | -3.52 |  |
@@ -727,32 +721,31 @@ Anchor 0.125; spread -5.73bp (60 fixings).
 
 #### `effr_fut` (ff_fut; WIRP model: futures)
 
-23 quotes used, 1 dropped, 13 excluded (metadata); replica on 23 quotes reaches 15 meetings; current implied O/N: fit 0.1514, replica 0.1516.
+23 quotes used, 0 dropped, 13 excluded (metadata); replica on 23 quotes reaches 15 meetings; current implied O/N: fit 0.1087, replica 0.1516.
 
 Waiting for the WIRP capture `wirp_us_fut_20200316.txt`. Fit and replica alone:
 
 | decision_date | synthetic | unscheduled | implied_rate | n_moves | pct_move | replica_rate | fit_minus_replica_bp | under_identified | beyond_wirp_reach |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 2020-04-29 | False | False | 0.105343 | -0.1844 | -18.44 | 0.105 | 0.034 | False | False |
-| 2020-06-10 | False | False | 0.080786 | -0.2826 | -9.82 | 0.0825 | -0.171 | False | False |
-| 2020-07-29 | False | False | 0.079961 | -0.2859 | -0.33 | 0.08 | -0.004 | False | False |
-| 2020-09-16 | False | False | 0.079997 | -0.2857 | 0.01 | 0.08 | -0.0 | False | False |
-| 2020-11-05 | False | False | 0.09208 | -0.2374 | 4.83 | 0.092 | 0.008 | False | False |
-| 2020-12-16 | False | False | 0.097777 | -0.2146 | 2.28 | 0.0982 | -0.042 | False | False |
-| 2021-01-27 | False | False | 0.115468 | -0.1439 | 7.08 | 0.115 | 0.047 | False | False |
-| 2021-03-17 | False | False | 0.133888 | -0.0702 | 7.37 | 0.137143 | -0.325 | False | False |
-| 2021-04-28 | False | False | 0.160143 | 0.0348 | 10.5 | 0.16 | 0.014 | False | False |
-| 2021-06-16 | False | False | 0.175191 | 0.095 | 6.02 | 0.181429 | -0.624 | False | False |
-| 2021-07-28 | False | False | 0.178092 | 0.1066 | 1.16 | 0.18 | -0.191 | False | False |
-| 2021-09-22 | False | False | 0.19432 | 0.1715 | 6.49 | 0.195 | -0.068 | False | False |
-| 2021-11-03 | False | False | 0.195381 | 0.1758 | 0.42 | 0.195 | 0.038 | False | False |
-| 2021-12-15 | False | False | 0.21306 | 0.2465 | 7.07 | 0.214375 | -0.131 | False | False |
+| 2020-04-29 | False | False | 0.105231 | -0.0138 | -1.38 | 0.105 | 0.023 | False | False |
+| 2020-06-10 | False | False | 0.080805 | -0.1115 | -9.77 | 0.0825 | -0.169 | False | False |
+| 2020-07-29 | False | False | 0.07996 | -0.1149 | -0.34 | 0.08 | -0.004 | False | False |
+| 2020-09-16 | False | False | 0.079997 | -0.1148 | 0.01 | 0.08 | -0.0 | False | False |
+| 2020-11-05 | False | False | 0.09208 | -0.0664 | 4.83 | 0.092 | 0.008 | False | False |
+| 2020-12-16 | False | False | 0.097777 | -0.0436 | 2.28 | 0.0982 | -0.042 | False | False |
+| 2021-01-27 | False | False | 0.115468 | 0.0271 | 7.08 | 0.115 | 0.047 | False | False |
+| 2021-03-17 | False | False | 0.133888 | 0.1008 | 7.37 | 0.137143 | -0.325 | False | False |
+| 2021-04-28 | False | False | 0.160143 | 0.2058 | 10.5 | 0.16 | 0.014 | False | False |
+| 2021-06-16 | False | False | 0.175191 | 0.266 | 6.02 | 0.181429 | -0.624 | False | False |
+| 2021-07-28 | False | False | 0.178092 | 0.2776 | 1.16 | 0.18 | -0.191 | False | False |
+| 2021-09-22 | False | False | 0.19432 | 0.3425 | 6.49 | 0.195 | -0.068 | False | False |
+| 2021-11-03 | False | False | 0.195381 | 0.3468 | 0.42 | 0.195 | 0.038 | False | False |
+| 2021-12-15 | False | False | 0.21306 | 0.4175 | 7.07 | 0.214375 | -0.131 | False | False |
 
 Drop list:
 
 | curve | instrument | contract | ticker | status | reason | residual_bp |
 | --- | --- | --- | --- | --- | --- | --- |
-| effr_fut | ff_fut | 2020-04 | FFJ20 Comdty | dropped | leave-one-out residual -4.49bp, over 6.0 x its effective noise 0.50bp (alone pinned a parcel) | -4.49 |
 | effr_fut | ff_fut | 2022-02 | FFG22 Comdty | excluded | no open interest and no volume: a derived settlement price, not a quote |  |
 | effr_fut | ff_fut | 2022-03 | FFH22 Comdty | excluded | no open interest and no volume: a derived settlement price, not a quote |  |
 | effr_fut | ff_fut | 2022-04 | FFJ22 Comdty | excluded | no open interest and no volume: a derived settlement price, not a quote |  |
@@ -771,8 +764,8 @@ High-leverage quotes:
 
 | curve | instrument | contract | ticker | quote_rate | residual_bp | loo_residual_bp | leverage |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| effr_fut | ff_fut | 2020-03 | FFH20 Comdty | 0.655 | 0.007 | 4.216 | 0.998 |
-| effr_fut | ff_fut | 2020-05 | FFK20 Comdty | 0.105 | -0.034 | -0.5 | 0.931 |
+| effr_fut | ff_fut | 2020-04 | FFJ20 Comdty | 0.105 | -0.357 | -4.49 | 0.92 |
+| effr_fut | ff_fut | 2020-05 | FFK20 Comdty | 0.105 | -0.023 | -0.337 | 0.931 |
 | effr_fut | ff_fut | 2021-05 | FFK21 Comdty | 0.16 | -0.014 | -0.361 | 0.96 |
 | effr_fut | ff_fut | 2021-07 | FFN21 Comdty | 0.175 | -0.047 | -0.615 | 0.923 |
 | effr_fut | ff_fut | 2021-10 | FFV21 Comdty | 0.195 | 0.068 | 1.493 | 0.954 |
@@ -784,8 +777,7 @@ Residuals (bp):
 
 | curve | instrument | status | n | mean_bp | rms_bp | max_abs_bp |
 | --- | --- | --- | --- | --- | --- | --- |
-| effr_fut | ff_fut | dropped | 1 | -4.49 | 4.49 | 4.49 |
-| effr_fut | ff_fut | used | 22 | 0.012 | 0.101 | 0.283 |
+| effr_fut | ff_fut | used | 23 | 0.092 | 0.478 | 2.213 |
 
 
 #### `effr_ois` (ois_effr; WIRP model: ois)
@@ -835,10 +827,10 @@ FF / OIS basis (bp, fit and replica):
 
 | decision_date | parcel | basis_fit_bp | basis_replica_bp |
 | --- | --- | --- | --- |
-| None | stub | 3.282 | 3.657 |
-| 2020-04-29 | 1 | 2.163 | 1.882 |
-| 2020-06-10 | 2 | -0.38 | -0.309 |
-| 2020-07-29 | 3 | 1.608 | 1.499 |
+| None | stub | -0.993 | 3.657 |
+| 2020-04-29 | 1 | 2.152 | 1.882 |
+| 2020-06-10 | 2 | -0.379 | -0.309 |
+| 2020-07-29 | 3 | 1.607 | 1.499 |
 | 2020-09-16 | 4 | 0.488 | 0.728 |
 | 2020-11-05 | 5 | 1.743 | 1.504 |
 | 2020-12-16 | 6 | -1.594 | -1.263 |

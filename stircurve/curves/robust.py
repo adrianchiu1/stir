@@ -121,7 +121,7 @@ def identification(Jw: np.ndarray, n: int, rtol: float = 1e-8) -> np.ndarray:
     return np.clip((V ** 2).sum(axis=0), 0.0, 1.0)
 
 
-def _solve(obs, active, x0, prior: Prior, k, max_iter, tol_bp):
+def _solve(obs, active, x0, prior: Prior, k, max_iter, tol_bp, full: bool = False):
     x = x0.copy()
     sig = np.array([o.sigma_bp for o in obs])
     w = np.array([o.weight for o in obs])
@@ -154,6 +154,8 @@ def _solve(obs, active, x0, prior: Prior, k, max_iter, tol_bp):
     rows = (np.sqrt(w) / sig)[:, None] * J
     lev = np.einsum("ij,ij->i", rows @ info_inv, rows) * np.where(act, hw, 1.0)
     post_sigma = np.sqrt(np.clip(np.diag(info_inv), 0.0, None))      # bp
+    if full:
+        return x, f, r, hw, np.sqrt(W)[:, None] * J, lev, post_sigma, it, converged, info_inv
     return x, f, r, hw, np.sqrt(W)[:, None] * J, lev, post_sigma, it, converged
 
 
@@ -191,11 +193,17 @@ def loss(obs: list[Observation], active: list[int], x: np.ndarray, huber_k: floa
 
 
 def refit_without(obs: list[Observation], prior: Prior, x0: np.ndarray, active: list[int], drop: int,
-                  **kw) -> tuple[np.ndarray, np.ndarray]:
-    """(parcel rates, identification per parcel) refitted with ``drop`` left out (no drop rounds)."""
+                  **kw) -> tuple[np.ndarray, float]:
+    """Refit with ``drop`` left out (no drop rounds): (parcel rates, prediction sigma of the dropped quote in bp).
+    The prediction sigma is what the remaining quotes and the prior know about the dropped quote's model
+    rate; a leave-one-out residual is only evidence against the quote when it is large relative to
+    sqrt(sigma_quote^2 + sigma_prediction^2)."""
     others = [j for j in active if j != drop]
-    r = _solve(obs, others, x0, prior, kw.get("huber_k", 1.345), kw.get("max_iter", 50), kw.get("tol_bp", 1e-5))
-    return r[0], identification(r[4], len(x0))
+    x, f, r, hw, Jw, lev, ps, it, conv, info_inv = _solve(obs, others, x0, prior, kw.get("huber_k", 1.345),
+                                                         kw.get("max_iter", 50), kw.get("tol_bp", 1e-5), full=True)
+    o = obs[drop]
+    row = np.array([(o.value(x + np.eye(len(x))[k] * BUMP) - o.value(x)) / BUMP for k in range(len(x))]) * 100.0
+    return x, float(np.sqrt(max(row @ info_inv @ row, 0.0)))
 
 
 def leave_one_out(obs: list[Observation], prior: Prior, res: FitResult, active: list[int] | None = None,
