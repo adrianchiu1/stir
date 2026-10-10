@@ -4,7 +4,7 @@ Anchor (target_midpoint) in effect: 2.375. Policy spread (winsorised_mean, D7): 
 
 ## Curve `effr_fut` (ff_fut)
 
-Fit: 25 quotes (0 dropped, 11 excluded by metadata), 2 IRLS iterations (converged); 25 parcels to 2022-06-12, 0 synthetic and 0 unscheduled meetings. Current implied O/N rate 2.3950 (replica 2.3950; stub prior 2.4032 from anchor + spread (D7)). WIRP replica reaches 17 meetings on 25 quotes.
+Fit: 24 quotes (0 dropped, 12 excluded by metadata), 2 IRLS iterations (converged); 25 parcels to 2022-06-12, 0 synthetic and 0 unscheduled meetings. Current implied O/N rate 2.3950 (replica 2.3950; stub prior 2.4032 from anchor + spread (D7)). WIRP replica reaches 16 meetings on 24 quotes.
 
 ### Meetings
 
@@ -23,23 +23,23 @@ Fit: 25 quotes (0 dropped, 11 excluded by metadata), 2 IRLS iterations (converge
 | 2020-09-16 | False | False | 1.474545 | -0.920486 | -3.6819 | -16.03 | 1.475 | -0.046 | 1.446378 | -92.862 | False | 0.013 | False |
 | 2020-11-05 | False | False | 1.456018 | -0.939013 | -3.7561 | -7.41 | 1.457 | -0.098 | 1.427851 | -94.715 | False | 0.023 | False |
 | 2020-12-16 | False | False | 1.436347 | -0.958684 | -3.8347 | -7.87 | 1.4322 | 0.415 | 1.40818 | -96.682 | False | 0.023 | False |
-| 2021-01-27 | False | False | 1.419467 | -0.975563 | -3.9023 | -6.75 | 1.42 | -0.053 | 1.3913 | -98.37 | False | 0.02 | False |
-| 2021-03-17 | False | False | 1.434368 | -0.960662 | -3.8426 | 5.96 | 1.431071 | 0.33 | 1.406201 | -96.88 | False | 0.022 | False |
-| 2021-04-28 | False | False | 1.435048 | -0.959982 | -3.8399 | 0.27 | 1.435 | 0.005 | 1.406881 | -96.812 | False | 0.022 | False |
-| 2021-06-16 | False | False | 1.453362 | -0.941668 | -3.7667 | 7.33 |  |  | 1.425196 | -94.98 | True | 0.022 | True |
-| 2021-07-28 | False | False | 1.471677 | -0.923354 | -3.6934 | 7.33 |  |  | 1.44351 | -93.149 | True | 0.022 | True |
-| 2021-09-22 | False | False | 1.489991 | -0.90504 | -3.6202 | 7.33 | 1.49 | -0.001 | 1.461824 | -91.318 | False | 0.022 | False |
-| 2021-11-03 | False | False | 1.489991 | -0.90504 | -3.6202 | 0.0 |  |  | 1.461824 | -91.318 | True | 0.023 | True |
-| 2021-12-15 | False | False | 1.489991 | -0.90504 | -3.6202 | 0.0 |  |  | 1.461824 | -91.318 | True | 0.023 | True |
-| 2022-01-26 | False | False | 1.489991 | -0.90504 | -3.6202 | 0.0 |  |  | 1.461824 | -91.318 | True | 0.024 | True |
-| 2022-03-16 | False | False | 1.489991 | -0.90504 | -3.6202 | 0.0 |  |  | 1.461824 | -91.318 | True | 0.024 | True |
-| 2022-05-04 | False | False | 1.489991 | -0.90504 | -3.6202 | 0.0 |  |  | 1.461824 | -91.318 | True | 0.025 | True |
+| 2021-01-27 | False | False | 1.419467 | -0.975564 | -3.9023 | -6.75 | 1.42 | -0.053 | 1.3913 | -98.37 | False | 0.02 | False |
+| 2021-03-17 | False | False | 1.434369 | -0.960662 | -3.8426 | 5.96 | 1.431071 | 0.33 | 1.406202 | -96.88 | False | 0.022 | False |
+| 2021-04-28 | False | False | 1.435039 | -0.959992 | -3.84 | 0.27 | 1.435 | 0.004 | 1.406872 | -96.813 | False | 0.022 | False |
+| 2021-06-16 | False | False | 1.435039 | -0.959992 | -3.84 | 0.0 |  |  | 1.406872 | -96.813 | True | 0.023 | True |
+| 2021-07-28 | False | False | 1.435039 | -0.959992 | -3.84 | 0.0 |  |  | 1.406872 | -96.813 | True | 0.023 | True |
+| 2021-09-22 | False | False | 1.435039 | -0.959992 | -3.84 | 0.0 |  |  | 1.406872 | -96.813 | True | 0.024 | True |
+| 2021-11-03 | False | False | 1.435039 | -0.959992 | -3.84 | 0.0 |  |  | 1.406872 | -96.813 | True | 0.024 | True |
+| 2021-12-15 | False | False | 1.435039 | -0.959992 | -3.84 | 0.0 |  |  | 1.406872 | -96.813 | True | 0.025 | True |
+| 2022-01-26 | False | False | 1.435039 | -0.959992 | -3.84 | 0.0 |  |  | 1.406872 | -96.813 | True | 0.025 | True |
+| 2022-03-16 | False | False | 1.435039 | -0.959992 | -3.84 | 0.0 |  |  | 1.406872 | -96.813 | True | 0.026 | True |
+| 2022-05-04 | False | False | 1.435039 | -0.959992 | -3.84 | 0.0 |  |  | 1.406872 | -96.813 | True | 0.026 | True |
 
 ### Residuals (bp, quote - model)
 
 | curve | instrument | status | n | mean_bp | rms_bp | max_abs_bp |
 | --- | --- | --- | --- | --- | --- | --- |
-| effr_fut | ff_fut | used | 25 | 0.002 | 0.096 | 0.256 |
+| effr_fut | ff_fut | used | 24 | 0.002 | 0.098 | 0.256 |
 
 ### Drop list (dropped by the robust fit, excluded by metadata, skipped)
 
@@ -56,6 +56,7 @@ Fit: 25 quotes (0 dropped, 11 excluded by metadata), 2 IRLS iterations (converge
 | effr_fut | ff_fut | 2022-03 | FFH22 Comdty | excluded | no open interest and no volume: a derived settlement price, not a quote |  |
 | effr_fut | ff_fut | 2022-04 | FFJ22 Comdty | excluded | no open interest and no volume: a derived settlement price, not a quote |  |
 | effr_fut | ff_fut | 2022-05 | FFK22 Comdty | excluded | no open interest and no volume: a derived settlement price, not a quote |  |
+| effr_fut | ff_fut | 2021-10 | FFV21 Comdty | excluded | beyond the strip's reach (first contract without open interest or volume starts 2021-06-01) |  |
 
 ### High-leverage quotes (each alone pins a parcel; read the leave-one-out residual)
 
@@ -66,8 +67,7 @@ Fit: 25 quotes (0 dropped, 11 excluded by metadata), 2 IRLS iterations (converge
 | effr_fut | ff_fut | 2019-11 | FFX19 Comdty | 1.895 | -0.089 | -1.13 | 0.921 |
 | effr_fut | ff_fut | 2020-04 | FFJ20 Comdty | 1.625 | 0.003 | 0.046 | 0.93 |
 | effr_fut | ff_fut | 2020-05 | FFK20 Comdty | 1.595 | -0.013 | -0.581 | 0.977 |
-| effr_fut | ff_fut | 2021-05 | FFK21 Comdty | 1.435 | -0.005 | -3.404 | 0.999 |
-| effr_fut | ff_fut | 2021-10 | FFV21 Comdty | 1.49 | 0.001 | 5.496 | 1.0 |
+| effr_fut | ff_fut | 2021-05 | FFK21 Comdty | 1.435 | -0.004 | -3.123 | 0.999 |
 
 ### Stale and outside-listing inputs
 
@@ -97,16 +97,16 @@ Fit: 25 quotes (0 dropped, 11 excluded by metadata), 2 IRLS iterations (converge
 | 2020-11-05 | 2020-11-06 | 1.0 | False | 0.023 | 1.456018 | -1.853 | 1.457 | -0.098 |
 | 2020-12-16 | 2020-12-17 | 1.0 | False | 0.023 | 1.436347 | -1.967 | 1.4322 | 0.415 |
 | 2021-01-27 | 2021-01-28 | 1.0 | False | 0.02 | 1.419467 | -1.688 | 1.42 | -0.053 |
-| 2021-03-17 | 2021-03-18 | 1.0 | False | 0.022 | 1.434368 | 1.49 | 1.431071 | 0.33 |
-| 2021-04-28 | 2021-04-29 | 1.0 | False | 0.022 | 1.435048 | 0.068 | 1.435 | 0.005 |
-| 2021-06-16 | 2021-06-17 | 0.0 | True | 0.022 | 1.453362 | 1.831 |  |  |
-| 2021-07-28 | 2021-07-29 | 0.0 | True | 0.022 | 1.471677 | 1.831 |  |  |
-| 2021-09-22 | 2021-09-23 | 1.0 | False | 0.022 | 1.489991 | 1.831 | 1.49 | -0.001 |
-| 2021-11-03 | 2021-11-04 | 0.0 | True | 0.023 | 1.489991 | 0.0 |  |  |
-| 2021-12-15 | 2021-12-16 | 0.0 | True | 0.023 | 1.489991 | 0.0 |  |  |
-| 2022-01-26 | 2022-01-27 | 0.0 | True | 0.024 | 1.489991 | 0.0 |  |  |
-| 2022-03-16 | 2022-03-17 | 0.0 | True | 0.024 | 1.489991 | 0.0 |  |  |
-| 2022-05-04 | 2022-05-05 | 0.0 | True | 0.025 | 1.489991 | 0.0 |  |  |
+| 2021-03-17 | 2021-03-18 | 1.0 | False | 0.022 | 1.434369 | 1.49 | 1.431071 | 0.33 |
+| 2021-04-28 | 2021-04-29 | 1.0 | False | 0.022 | 1.435039 | 0.067 | 1.435 | 0.004 |
+| 2021-06-16 | 2021-06-17 | 0.0 | True | 0.023 | 1.435039 | 0.0 |  |  |
+| 2021-07-28 | 2021-07-29 | 0.0 | True | 0.023 | 1.435039 | 0.0 |  |  |
+| 2021-09-22 | 2021-09-23 | 0.0 | True | 0.024 | 1.435039 | 0.0 |  |  |
+| 2021-11-03 | 2021-11-04 | 0.0 | True | 0.024 | 1.435039 | 0.0 |  |  |
+| 2021-12-15 | 2021-12-16 | 0.0 | True | 0.025 | 1.435039 | 0.0 |  |  |
+| 2022-01-26 | 2022-01-27 | 0.0 | True | 0.025 | 1.435039 | 0.0 |  |  |
+| 2022-03-16 | 2022-03-17 | 0.0 | True | 0.026 | 1.435039 | 0.0 |  |  |
+| 2022-05-04 | 2022-05-05 | 0.0 | True | 0.026 | 1.435039 | 0.0 |  |  |
 
 ### WIRP replica inputs
 
@@ -136,7 +136,6 @@ Fit: 25 quotes (0 dropped, 11 excluded by metadata), 2 IRLS iterations (converge
 | effr_fut | ff_fut 2021-03 | 1.4249999999999972 | used |
 | effr_fut | ff_fut 2021-04 | 1.4350000000000023 | used |
 | effr_fut | ff_fut 2021-05 | 1.4350000000000023 | used |
-| effr_fut | ff_fut 2021-10 | 1.4899999999999949 | used |
 
 Replica notes: ff_fut 2019-11: no new parcel; re-solved parcel 4 (2019-10-30); ff_fut 2020-02: no new parcel; re-solved parcel 6 (2020-01-29); ff_fut 2020-05: no new parcel; re-solved parcel 8 (2020-04-29); ff_fut 2020-08: no new parcel; re-solved parcel 10 (2020-07-29); ff_fut 2020-10: no new parcel; re-solved parcel 11 (2020-09-16); ff_fut 2021-02: no new parcel; re-solved parcel 14 (2021-01-27); ff_fut 2021-05: no new parcel; re-solved parcel 16 (2021-04-28)
 
@@ -268,20 +267,20 @@ Replica notes: ois_effr 3M: no new parcel; re-solved parcel 2 (2019-07-31); ois_
 | 2020-11-05 | 2020-11-06 | 12 | 1.456018 | 1.431646 | 2.437 |  |
 | 2020-12-16 | 2020-12-17 | 13 | 1.436347 | 1.425402 | 1.094 |  |
 | 2021-01-27 | 2021-01-28 | 14 | 1.419467 | 1.419167 | 0.03 |  |
-| 2021-03-17 | 2021-03-18 | 15 | 1.434368 | 1.412944 | 2.142 |  |
-| 2021-04-28 | 2021-04-29 | 16 | 1.435048 | 1.406729 | 2.832 |  |
-| 2021-06-16 | 2021-06-17 | 17 | 1.453362 | 1.423335 | 3.003 |  |
-| 2021-07-28 | 2021-07-29 | 18 | 1.471677 | 1.439934 | 3.174 |  |
-| 2021-09-22 | 2021-09-23 | 19 | 1.489991 | 1.456525 | 3.347 |  |
-| 2021-11-03 | 2021-11-04 | 20 | 1.489991 | 1.473105 | 1.689 |  |
-| 2021-12-15 | 2021-12-16 | 21 | 1.489991 | 1.489673 | 0.032 |  |
-| 2022-01-26 | 2022-01-27 | 22 | 1.489991 | 1.506229 | -1.624 |  |
-| 2022-03-16 | 2022-03-17 | 23 | 1.489991 | 1.522777 | -3.279 |  |
-| 2022-05-04 | 2022-05-05 | 24 | 1.489991 | 1.539319 | -4.933 |  |
+| 2021-03-17 | 2021-03-18 | 15 | 1.434369 | 1.412944 | 2.142 |  |
+| 2021-04-28 | 2021-04-29 | 16 | 1.435039 | 1.406729 | 2.831 |  |
+| 2021-06-16 | 2021-06-17 | 17 | 1.435039 | 1.423335 | 1.17 |  |
+| 2021-07-28 | 2021-07-29 | 18 | 1.435039 | 1.439934 | -0.49 |  |
+| 2021-09-22 | 2021-09-23 | 19 | 1.435039 | 1.456525 | -2.149 |  |
+| 2021-11-03 | 2021-11-04 | 20 | 1.435039 | 1.473105 | -3.807 |  |
+| 2021-12-15 | 2021-12-16 | 21 | 1.435039 | 1.489673 | -5.463 |  |
+| 2022-01-26 | 2022-01-27 | 22 | 1.435039 | 1.506229 | -7.119 |  |
+| 2022-03-16 | 2022-03-17 | 23 | 1.435039 | 1.522777 | -8.774 |  |
+| 2022-05-04 | 2022-05-05 | 24 | 1.435039 | 1.539319 | -10.428 |  |
 
 ## Stub
 
 | curve | as_of | current_implied | replica_current_implied | stub_prior | stub_prior_source | anchor | spread | spread_median | spread_winsorised_mean | spread_obs | spread_estimator | spread_note | wirp_reach_meetings |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| effr_fut | 2019-06-12 | 2.39503 | 2.395 | 2.403167 | anchor + spread (D7) | 2.375 | 0.02816666666666668 | 0.02499999999999991 | 0.02816666666666668 | 60 | winsorised_mean |  | 17 |
+| effr_fut | 2019-06-12 | 2.39503 | 2.395 | 2.403167 | anchor + spread (D7) | 2.375 | 0.02816666666666668 | 0.02499999999999991 | 0.02816666666666668 | 60 | winsorised_mean |  | 16 |
 | effr_ois | 2019-06-12 | 2.368999 | 2.369633 | 2.403167 | anchor + spread (D7) | 2.375 | 0.02816666666666668 | 0.02499999999999991 | 0.02816666666666668 | 60 | winsorised_mean |  | 8 |

@@ -296,6 +296,22 @@ def build_curve(name: str, cfg: dict, m: Manifest, inputs: MarketInputs, spread:
         else:
             used.append(q)
             liq.append(w)
+    # the strip's reach ends at its first contract without open interest or volume: an isolated active
+    # contract beyond a dead stretch is a quote nothing can check (WIRP: "if there is no reliable pricing on
+    # all monthly tenors beyond a certain point on the curve, WIRP does not show meeting dates beyond that point")
+    dead_from = {}
+    for q, why in excluded:
+        if "derived settlement price" in why:
+            dead_from[q.instrument] = min(dead_from.get(q.instrument, q.start), q.start)
+    keep, keep_liq = [], []
+    for q, w in zip(used, liq):
+        if q.instrument in dead_from and q.start > dead_from[q.instrument]:
+            excluded.append((q, f"beyond the strip's reach (first contract without open interest or volume starts "
+                                f"{dead_from[q.instrument]})"))
+        else:
+            keep.append(q)
+            keep_liq.append(w)
+    used, liq = keep, keep_liq
     if not used:
         raise ValueError(f"{as_of}: every {spec['instruments']} quote excluded for curve {name}")
     liq = np.array(liq)

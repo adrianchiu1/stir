@@ -22,8 +22,7 @@ effr_fut,ff_fut,2021-01,FFF21 Comdty,2021-01-01,2021-02-01,98.565,1.435,1.434169
 effr_fut,ff_fut,2021-02,FFG21 Comdty,2021-02-01,2021-03-01,98.58,1.42,1.419467,0.053,0.268,0.5,59.0,,0.05,False,1.0,0.05,1.0,0.801,True,used,,
 effr_fut,ff_fut,2021-03,FFH21 Comdty,2021-03-01,2021-04-01,98.575,1.425,1.426197,-0.12,-0.184,0.5,27.0,,0.05,False,1.0,0.05,1.0,0.348,True,used,,
 effr_fut,ff_fut,2021-04,FFJ21 Comdty,2021-04-01,2021-05-01,98.565,1.435,1.434413,0.059,0.382,0.5,52.0,,0.05,False,1.0,0.05,1.0,0.846,True,used,,
-effr_fut,ff_fut,2021-05,FFK21 Comdty,2021-05-01,2021-06-01,98.565,1.435,1.435048,-0.005,-3.404,0.5,1.0,,0.05,False,1.0,0.05,1.0,0.999,True,used,,
-effr_fut,ff_fut,2021-10,FFV21 Comdty,2021-10-01,2021-11-01,98.51,1.49,1.489991,0.001,5.496,0.5,25.0,,0.05,False,1.0,0.05,1.0,1.0,True,used,,
+effr_fut,ff_fut,2021-05,FFK21 Comdty,2021-05-01,2021-06-01,98.565,1.435,1.435039,-0.004,-3.123,0.5,1.0,,0.05,False,1.0,0.05,1.0,0.999,True,used,,
 effr_fut,ff_fut,2021-06,FFM21 Comdty,2021-06-01,2021-07-01,98.555,1.445,,,,,,,,False,1.0,,,,,excluded,"no open interest and no volume: a derived settlement price, not a quote",
 effr_fut,ff_fut,2021-07,FFN21 Comdty,2021-07-01,2021-08-01,98.535,1.465,,,,,,,,False,1.0,,,,,excluded,"no open interest and no volume: a derived settlement price, not a quote",
 effr_fut,ff_fut,2021-08,FFQ21 Comdty,2021-08-01,2021-09-01,98.535,1.465,,,,,,,,False,1.0,,,,,excluded,"no open interest and no volume: a derived settlement price, not a quote",
@@ -35,6 +34,7 @@ effr_fut,ff_fut,2022-02,FFG22 Comdty,2022-02-01,2022-03-01,98.51,1.49,,,,,,,,Fal
 effr_fut,ff_fut,2022-03,FFH22 Comdty,2022-03-01,2022-04-01,98.51,1.49,,,,,,,,False,1.0,,,,,excluded,"no open interest and no volume: a derived settlement price, not a quote","loader: FFH22 Comdty|PX_LAST quoted from 2019-03-29, modelled first listing 2019-04-01"
 effr_fut,ff_fut,2022-04,FFJ22 Comdty,2022-04-01,2022-05-01,98.51,1.49,,,,,,,,False,1.0,,,,,excluded,"no open interest and no volume: a derived settlement price, not a quote","loader: FFJ22 Comdty|PX_LAST quoted from 2019-04-30, modelled first listing 2019-05-01"
 effr_fut,ff_fut,2022-05,FFK22 Comdty,2022-05-01,2022-06-01,98.51,1.49,,,,,,,,False,1.0,,,,,excluded,"no open interest and no volume: a derived settlement price, not a quote","loader: FFK22 Comdty|PX_LAST quoted from 2019-05-31, modelled first listing 2019-06-03"
+effr_fut,ff_fut,2021-10,FFV21 Comdty,2021-10-01,2021-11-01,98.51,1.49,,,,,25.0,,,False,1.0,,,,,excluded,beyond the strip's reach (first contract without open interest or volume starts 2021-06-01),
 effr_ois,ois_effr,1W,USSO1Z Curncy,2019-06-14,2019-06-21,2.3651,2.3651,2.364635,0.046,0.477,0.5,,,1.0,False,1.0,1.0,1.0,0.903,True,used,,
 effr_ois,ois_effr,2W,USSO2Z Curncy,2019-06-14,2019-06-28,2.3496,2.3496,2.350878,-0.128,-0.167,0.5,,,1.0,False,1.0,1.0,1.0,0.234,False,used,,
 effr_ois,ois_effr,3W,USSO3Z Curncy,2019-06-14,2019-07-05,2.347,2.347,2.346639,0.036,0.051,0.5,,,1.0,False,1.0,1.0,1.0,0.299,False,used,,
