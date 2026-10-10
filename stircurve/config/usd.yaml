@@ -56,7 +56,7 @@ front_end:                          # M2: EFFR-family front end (D2, D4, D7, D11
     tie_sigma_bp: 2.0               # consecutive meetings nothing in the data tells apart move by equal steps (D-C: equal steps in time)
     beyond_data_sigma_bp: 0.5       # steps after the last instrument's window: flat
     stub_prior_sigma_bp: 25.0       # weak level prior on the stub (anchor + spread, else the last fixing)
-    loo_drop_z: 6.0                 # a quote whose leave-one-out residual exceeds this many times its effective noise (sigma / sqrt(weight)) is dropped
+    loo_drop_z: 5.0                 # a quote is dropped when its leave-one-out residual exceeds this many times sqrt(its effective noise^2 + the prediction sigma of the rest^2)
     identified_threshold: 0.99      # share of a parcel's direction the data pin down; below it the parcel is prior-driven
     leverage_threshold: 0.9         # quotes at or above: alone pin a parcel (leave-one-out residual reported)
   wirp:                             # the replica of Bloomberg's two models (docs/research/wirp): gate reference
