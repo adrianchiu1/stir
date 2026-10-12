@@ -39,7 +39,10 @@ def test_fed_file_and_parcels():
     sched = [m for m in ms if m.scheduled]
     from stircurve.refdata.meetings import published_lookup
     us, pub = Calendar.load("us_fed"), published_lookup("fed")
-    assert len(sched) == 33 * 8 + 9 - 1     # 1994-2027, 2003 lists 15 and 16 Sep, 2020 March cancelled
+    assert len(sched) == 33 * 8 + 9         # 1994-2027, 2003 lists 15 and 16 Sep; the cancelled 17-18 Mar 2020 meeting is
+    sup = [m for m in sched if m.superseded_on]  # kept with superseded_on = 15 Mar 2020 (AC, PR #4)
+    assert [(m.decision_date, m.superseded_on) for m in sup] == [(dt.date(2020, 3, 18), dt.date(2020, 3, 15))]
+    assert sup[0].in_force_on(dt.date(2020, 3, 13)) and not sup[0].in_force_on(dt.date(2020, 3, 15))
     assert all(m.effective_date == effective_date("fed", m.decision_date, us, pub) for m in ms)
     # target changes took effect on the decision day until 2008, the next business day since 2015
     assert pub[dt.date(2008, 12, 16)] == dt.date(2008, 12, 16) and pub[dt.date(2015, 12, 16)] == dt.date(2015, 12, 17)

@@ -167,7 +167,7 @@ def _near_duplicates(bank: str, meetings: list[Meeting], days: int = 4) -> list[
             f"({a.source_url} / {b.source_url}): same decision?"
             for a, b in zip(ms, ms[1:])
             if (b.decision_date - a.decision_date).days <= days and a.source_url != b.source_url
-            and a.scheduled == b.scheduled]
+            and a.scheduled == b.scheduled and not (a.superseded_on or b.superseded_on)]
 
 
 def _load_unscheduled(bank: str, refdata_dir: Path) -> list[Meeting]:

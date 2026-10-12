@@ -98,9 +98,13 @@ instruments:
     family: effr
     index: EFFR
     bbg: {root: FF, yellow_key: Comdty, year_digits: {live: 1, expired: 2, live_max_months_ahead: 18}, source: bbg_des}
-    fields: [PX_LAST, OPEN_INT, PX_VOLUME]
-    count_fields_months: 24         # OPEN_INT/PX_VOLUME only for contracts starting within this many months (AC's first dump: far contracts raise field exceptions)
+    fields: [PX_LAST, OPEN_INT, PX_VOLUME]   # PX_LAST is the daily settlement: PX_SETTLE dumped for 2026 (PR #4) equalled PX_LAST in all 5,620 cells, so it is not kept
+    count_fields_months: 24         # fields beyond the first only for contracts starting within this many months (AC's first dump: far contracts raise field exceptions)
     quote: {convention: price, formula: 100 - rate, units: percent, mid: true}
+    prints:                         # Bloomberg prints the loader tolerates as warnings, left out of the frame (AC, PR #4; observed in the 2010-2026 history)
+      settlement: true              # a value after the last trade on or before final settlement: CME's final settlement print
+      pre_listing_bd: 2             # a value up to 2 exchange business days before the modelled first listing (FFF27 on 31 Jan 2022, FFN27 on 28-29 Jul 2022)
+      zero_price: true              # PX_LAST = 0.0 on a newly listed, never-traded contract (FFX18, 16-27 Nov 2015)
     cycle: monthly
     reference_window:
       rule: calendar_month          # [1st of the contract month, 1st of the next month)
@@ -282,6 +286,7 @@ instruments:
     spot_lag: {days: 2, calendar: us_fed}
     payment_lag: {days: 2, calendar: us_fed}
     roll: modified_following
+    schedule: {generation: backward, stub: short_front, eom: false, source: bbg_des}   # period schedule for tenors over a year (18M: short front stub); QUESTION (PR #4): confirm on SWPM
     source: bbg_des
     first_date: "2010-01-01"
     last_date: null

@@ -210,6 +210,30 @@ def test_loader_reports_problems():
         assert any("non-ISO" in x for x in rep.found["malformed"])
 
 
+def test_tolerated_prints_are_warnings_left_out_of_the_frame():
+    """settlement_print, pre_listing_print and zero_price (AC, PR #4) warn without blocking."""
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        _dump(root, D(2026, 9, 1), D(2026, 10, 7), FakeBloomberg())
+        g = root / "usd/2026/ff_fut.csv"
+        ff = dumper.read_wide(g)
+        ff.loc["2026-10-01", "FFU26 Comdty|PX_LAST"] = 96.0     # FFU26 last trade 30 Sep, final settlement 1 Oct
+        ff.loc["2026-09-02", "FFV26 Comdty|PX_LAST"] = 0.0      # never-traded print
+        dumper.write_wide(ff, g)
+        frame, rep = loader.load(M, root=root)
+        s = rep.summary()
+        assert s["settlement_print"] == 1 and s["zero_price"] == 1 and s["outside_listing"] == 0 and s["out_of_range"] == 0
+        assert rep.exit_code == 0
+        ff26 = frame[(frame.instrument == "ff_fut") & (frame.field == "PX_LAST")]
+        assert not ((ff26.contract == "2026-09") & (ff26.date == "2026-10-01")).any()
+        assert not ((ff26.contract == "2026-10") & (ff26.date == "2026-09-02")).any()
+        # a print beyond final settlement still blocks
+        ff.loc["2026-10-02", "FFU26 Comdty|PX_LAST"] = 96.0
+        dumper.write_wide(ff, g)
+        _, rep = loader.load(M, root=root)
+        assert rep.summary()["outside_listing"] == 1 and rep.exit_code == 2
+
+
 def test_dump_requests_generously_and_isolates_unlisted_contracts():
     day = D(2018, 6, 1)
     sr3 = {s.ticker for s in M.series(day, day) if s.instrument == "sofr3m_fut"}
@@ -312,7 +336,7 @@ def test_request_tickers_never_collide_and_far_contracts_skip_count_fields():
     assert by["SFRZ26 Comdty"][0] == "SFRZ6 Comdty"
     assert by["SFRZ26 Comdty"][1] == ("PX_LAST", "OPEN_INT", "PX_VOLUME")
     assert by["SFRU35 Comdty"][1] == ("PX_LAST",)
-    assert by["FFF29 Comdty"][1] == ("PX_LAST",) and by["FFF28 Comdty"][1][1:] == ("OPEN_INT", "PX_VOLUME")
+    assert by["FFF29 Comdty"][1] == ("PX_LAST",) and by["FFF28 Comdty"][1] == ("PX_LAST", "OPEN_INT", "PX_VOLUME")
 
 
 def test_invalid_securities_isolated_by_halving():
@@ -342,7 +366,7 @@ def test_pxts_errors_ignore_means_one_call_per_field():
         fake = FakeBloombergIgnore(dead={"USOSFR12 Curncy"}, one_digit_until=(2028, 6))
         res = _dump(Path(tmp), D(2026, 10, 7), D(2026, 10, 7), fake)
         main = [c for c in fake.calls if c[1] == "2026-10-07"]
-        assert len(main) <= 3 * 2, len(main)      # one per field + one two-digit retry per field
+        assert len(main) <= 3 * 2, len(main)      # one per field (FF: PX_LAST, OPEN_INT, PX_VOLUME) + one two-digit retry each
         assert any(x.startswith("USOSFR12 Curncy|PX_LAST") for x in res.failed)
         df = dumper.read_wide(Path(tmp) / "usd/2026/sofr3m_fut.csv")
         assert df["SFRU30 Comdty|PX_LAST"].notna().all()
@@ -397,7 +421,7 @@ def test_pdblp_backend_one_session_one_request_per_field():
             res = dumper.dump(M, day, day, write_csv=True, root=Path(tmp), as_of=asof, backend="pdblp")
             assert _FakeBCon.starts == 1 and _FakeBCon.stops == 1           # one session for the run
             main = [c for c in fake.calls if c[1] == "20261007"]
-            assert len(main) <= 3 * 2, len(main)        # one request per field (+ one two-digit retry each)
+            assert len(main) <= 4 * 2, len(main)        # one request per field (+ one two-digit retry each)
             assert any(x.startswith("USOSFR12 Curncy|PX_LAST") for x in res.failed)
             assert "security error / field exception (skipped)" in res.reasons
             df = dumper.read_wide(Path(tmp) / "usd/2026/sofr3m_fut.csv")
