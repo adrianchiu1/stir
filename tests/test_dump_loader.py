@@ -336,7 +336,7 @@ def test_request_tickers_never_collide_and_far_contracts_skip_count_fields():
     assert by["SFRZ26 Comdty"][0] == "SFRZ6 Comdty"
     assert by["SFRZ26 Comdty"][1] == ("PX_LAST", "OPEN_INT", "PX_VOLUME")
     assert by["SFRU35 Comdty"][1] == ("PX_LAST",)
-    assert by["FFF29 Comdty"][1] == ("PX_LAST",) and by["FFF28 Comdty"][1] == ("PX_LAST", "PX_SETTLE", "OPEN_INT", "PX_VOLUME")
+    assert by["FFF29 Comdty"][1] == ("PX_LAST",) and by["FFF28 Comdty"][1] == ("PX_LAST", "OPEN_INT", "PX_VOLUME")
 
 
 def test_invalid_securities_isolated_by_halving():
@@ -366,7 +366,7 @@ def test_pxts_errors_ignore_means_one_call_per_field():
         fake = FakeBloombergIgnore(dead={"USOSFR12 Curncy"}, one_digit_until=(2028, 6))
         res = _dump(Path(tmp), D(2026, 10, 7), D(2026, 10, 7), fake)
         main = [c for c in fake.calls if c[1] == "2026-10-07"]
-        assert len(main) <= 4 * 2, len(main)      # one per field (FF: PX_LAST, PX_SETTLE, OPEN_INT, PX_VOLUME) + one two-digit retry each
+        assert len(main) <= 3 * 2, len(main)      # one per field (FF: PX_LAST, OPEN_INT, PX_VOLUME) + one two-digit retry each
         assert any(x.startswith("USOSFR12 Curncy|PX_LAST") for x in res.failed)
         df = dumper.read_wide(Path(tmp) / "usd/2026/sofr3m_fut.csv")
         assert df["SFRU30 Comdty|PX_LAST"].notna().all()

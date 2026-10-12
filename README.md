@@ -186,5 +186,11 @@ WIRP captures: one per gate date and model, `tests/fixtures/live/wirp_us_fut_<YY
 Fed Funds Futures) and `wirp_us_ois_<YYYYMMDD>.txt` (WIRP US OIS): the header lines (Instrument, Target
 Rate, Effective Rate, Pricing Date, Cur. Imp. O/N Rate) and the meeting table. The 7 Oct 2026 captures are
 AC's screenshots (`.png` alongside) transcribed by hand; the parser checks the capture's own identities.
+A capture is comparable with our closes only if WIRP priced it off a close: the 7 Oct 2026 screenshots were
+live, and the futures table sits between our 6 and 7 Oct settlements (PX_LAST is the settlement: a PX_SETTLE
+dump for 2026 equalled it in every cell), the OIS table nearest our 8 Oct row. For the other gate dates, set
+WIRP's Pricing Date to the gate date (historical closes), or better, dump WIRP's own tickers (`US0AFR
+<MMMYYYY> Index` futures, `US0BFR <MMMYYYY> Index` OIS: the Post-Meeting Implied Rate per meeting) as a daily
+history, which gives the comparison on every date at once.
 
 Settings: `stircurve/config/usd.yaml` `front_end` (curves, horizon, spread, month-end adjustment, fit, wirp).

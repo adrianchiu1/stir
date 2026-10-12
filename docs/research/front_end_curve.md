@@ -254,6 +254,13 @@ after M0/M1.
 **WIRP validation.** This is WIRP's own model, so the comparison is clean: per meeting, per instrument, our
 implied rate minus WIRP's. Differences come from (i) quote timestamps, (ii) which contracts each side uses,
 (iii) anything we add (weights, robust loss, prior), (iv) the stub (WIRP reads it from the instrument).
+Finding on (i), 7 Oct 2026 captures: inverting WIRP's futures table into contract rates puts it 2-3.5bp
+below our 6 Oct settlement and 2bp above our 7 Oct settlement on every contract from FFF27 out, i.e. a live
+snapshot during the 7 Oct session, not a close. Settlement marks are not the cause: Bloomberg's PX_LAST on
+FF futures is the daily settlement (a PX_SETTLE dump for 2026 equalled PX_LAST in all 5,620 cells). The OIS
+capture sits nearest our 8 Oct close (within 0.75bp) and 0.1-2.3bp below the 7 Oct close. Comparable
+captures therefore need WIRP's Pricing Date set to the gate date, or the history of WIRP's own tickers
+(`US0AFR`/`US0BFR <MMMYYYY> Index`).
 
 ### 2.2 Exact bootstrap versus global least squares
 

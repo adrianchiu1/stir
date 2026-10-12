@@ -98,7 +98,7 @@ instruments:
     family: effr
     index: EFFR
     bbg: {root: FF, yellow_key: Comdty, year_digits: {live: 1, expired: 2, live_max_months_ahead: 18}, source: bbg_des}
-    fields: [PX_LAST, PX_SETTLE, OPEN_INT, PX_VOLUME]   # PX_SETTLE added in PR #4: WIRP's futures table sits between our PX_LAST closes (settlement marks on untraded months?)
+    fields: [PX_LAST, OPEN_INT, PX_VOLUME]   # PX_LAST is the daily settlement: PX_SETTLE dumped for 2026 (PR #4) equalled PX_LAST in all 5,620 cells, so it is not kept
     count_fields_months: 24         # fields beyond the first only for contracts starting within this many months (AC's first dump: far contracts raise field exceptions)
     quote: {convention: price, formula: 100 - rate, units: percent, mid: true}
     prints:                         # Bloomberg prints the loader tolerates as warnings, left out of the frame (AC, PR #4; observed in the 2010-2026 history)

@@ -188,7 +188,10 @@ def main(argv=None) -> int:
         "compared with WIRP's Post-Meeting Implied Rate. A miss is explained as one of: price snapshot/timing, "
         "convention or calendar, synthetic or unscheduled meeting, a meeting beyond the replica's reach, a "
         "prior-driven parcel, a named quote the fit and the replica treat differently, or a meeting WIRP shows "
-        "that the reference data does not hold.", "",
+        "that the reference data does not hold. A capture taken live (the 7 Oct 2026 screenshots) sits between "
+        "two settlements and is compared with the close of its pricing date only as a bound; captures priced off "
+        "a close (WIRP's Pricing Date set to the gate date, or the `US0AFR`/`US0BFR <MMMYYYY> Index` history) "
+        "are the gate.", "",
         "## Per date", "",
     ] + sections + ["## Other dates on file", ""] + extra + turn_section()
     args.out.write_text("\n".join(lines) + "\n", encoding="utf-8")
