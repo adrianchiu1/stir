@@ -1,6 +1,6 @@
 # USD EFFR front end, 2015-12-15
 
-Anchor (target_midpoint) in effect: 0.125. Policy spread (winsorised_mean, D7): 0.35bp (winsorised mean 0.35bp, median 0.50bp; 60 fixings, 3 turn days dropped, window 2015-09-14..2015-12-14) **Loader reported blocking problems in the window (see check_market_data.py).**
+Anchor (target_midpoint) in effect: 0.125. Policy spread (winsorised_mean, D7): 0.35bp (winsorised mean 0.35bp, median 0.50bp; 60 fixings, 3 turn days dropped, window 2015-09-14..2015-12-14)
 
 ## Curve `effr_fut` (ff_fut)
 
@@ -76,7 +76,7 @@ Fit: 24 quotes (0 dropped, 12 excluded by metadata), 2 IRLS iterations (converge
 | effr_fut | outside_listing | ff_fut | 2018-08 | excluded | loader: FFQ18 Comdty|PX_LAST quoted from 2015-08-31, modelled first listing 2015-09-01 |
 | effr_fut | outside_listing | ff_fut | 2018-09 | excluded | loader: FFU18 Comdty|PX_LAST quoted from 2015-09-30, modelled first listing 2015-10-01 |
 | effr_fut | outside_listing | ff_fut | 2018-10 | excluded | loader: FFV18 Comdty|PX_LAST quoted from 2015-10-30, modelled first listing 2015-11-02 |
-| effr_fut | outside_listing | ff_fut | 2018-11 | excluded | loader: FFX18 Comdty|PX_LAST quoted from 2015-11-16, modelled first listing 2015-12-01 |
+| effr_fut | outside_listing | ff_fut | 2018-11 | excluded | loader: FFX18 Comdty|PX_LAST quoted from 2015-11-30, modelled first listing 2015-12-01 |
 
 ### Parcels: identification, prior vs fitted vs replica
 

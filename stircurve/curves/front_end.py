@@ -132,10 +132,17 @@ def market_inputs(m: Manifest, cfg: dict, as_of: dt.date, root: Path = MARKET_DI
     turns = tuple(sorted(turn_days(fix_cal, as_of, add_months(horizon, 3)))) if mea.get("enabled") else ()
     adj_bp = float(mea.get("dip_bp", 0.0)) if mea.get("enabled") else 0.0
 
+    quote_fields = {i: spec.get("quote_field") for spec in fe["curves"].values() for i in spec["instruments"]}
     for name in curve_instruments(cfg):
         ins = m.instruments[name]
         sub = today[today["instrument"] == name]
         px = sub[sub["field"] == ins["fields"][0]].set_index("contract")["value"]
+        qf = quote_fields.get(name)
+        fallback: set[str] = set()
+        if qf and qf != ins["fields"][0]:              # e.g. PX_SETTLE where dumped; the first field elsewhere
+            alt = sub[sub["field"] == qf].set_index("contract")["value"]
+            fallback = set(px.index) - set(alt.index)
+            px = alt.combine_first(px)
         oi = sub[sub["field"] == "OPEN_INT"].set_index("contract")["value"]
         vol = sub[sub["field"] == "PX_VOLUME"].set_index("contract")["value"]
         h = hist[(hist["instrument"] == name) & (hist["field"] == ins["fields"][0])]
@@ -159,6 +166,8 @@ def market_inputs(m: Manifest, cfg: dict, as_of: dt.date, root: Path = MARKET_DI
                 model = AverageRateFuture(m, name, c, adj_bp, turns)
                 q = InstrumentQuote(name, con, tk, float(px[con]), model.rate_from_quote(float(px[con])), model,
                                     c.ref_start, c.ref_end, float(oi.get(con, np.nan)), float(vol.get(con, np.nan)))
+                if con in fallback:
+                    q.notes.append(f"{qf} not on file: {ins['fields'][0]} used")
                 if con not in listed:
                     q.notes.append("quoted outside the modelled exchange listing (unverified schedule): used")
                 quotes.append(q)

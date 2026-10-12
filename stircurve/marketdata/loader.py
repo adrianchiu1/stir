@@ -15,7 +15,13 @@ Checks (``Report``):
   warnings  missing expected columns, stale values (unchanged ``stale_days`` or
             more), quotes before an unsourced listing date (kept in the frame: the
             data shows the real listing), fixings/swaps outside
-            their first/last dates
+            their first/last dates, and the three tolerated prints an instrument's
+            manifest entry ``prints`` names (AC, PR #4; left out of the frame):
+            ``settlement_print`` (a value after the last trade but on or before
+            final settlement), ``pre_listing_print`` (a value up to
+            ``pre_listing_bd`` exchange business days before a verified first
+            listing), ``zero_price`` (a quote field of exactly 0.0 on a price-quoted
+            future: a never-traded contract, not a price)
 Exit code 2 when anything is blocking (as the updaters), else 0.
 """
 from __future__ import annotations
@@ -35,7 +41,8 @@ from .manifest import Manifest, _date
 QUOTE_FIELDS = ("PX_LAST", "PX_SETTLE", "PX_MID")
 COUNT_FIELDS = ("OPEN_INT", "PX_VOLUME")
 CHECKS = ("no_data", "unknown_columns", "malformed", "out_of_range", "outside_listing", "missing_columns",
-          "stale", "outside_listing_unverified", "outside_dates")
+          "stale", "outside_listing_unverified", "outside_dates", "settlement_print", "pre_listing_print",
+          "zero_price")
 BLOCKING = ("no_data", "unknown_columns", "malformed", "out_of_range", "outside_listing")
 
 
@@ -216,10 +223,19 @@ def load(m: Manifest, start: dt.date | None = None, end: dt.date | None = None,
         for c in sorted(expected - set(wide.columns)):
             report.add("missing_columns", f"{path}: {c}")
 
+        prints = m.entry(group).get("prints", {}) if group in m.futures() else {}
+        excal = m.calendar(m.entry(group)["exchange_calendar"]) if group in m.futures() else None
         for col, info in mapped.items():
             s = wide[col]
             e = m.entry(info.instrument)
             keep = s.notna()
+            # a quote of exactly 0.0 on a price-quoted future is a never-traded contract, not a price
+            if prints.get("zero_price") and info.field in QUOTE_FIELDS and e["quote"]["convention"] == "price":
+                zero = s.notna() & (s == 0.0)
+                for d in s.index[zero]:
+                    report.add("zero_price", f"{path}: {d:%Y-%m-%d} {col} = 0.0 (never traded; left out)")
+                keep &= ~zero
+                s = s.where(~zero)
             report.values += int(keep.sum())
             # range
             lo, hi = (e["valid_range"] if info.field not in COUNT_FIELDS else (0, np.inf))
@@ -234,13 +250,24 @@ def load(m: Manifest, start: dt.date | None = None, end: dt.date | None = None,
                 listed = pd.Timestamp(x.first_listed) if x else pd.Timestamp.max
                 verified = bool(x and x.listing_verified)
                 early = s.notna() & (s.index < listed)
-                for d in s.index[late]:
+                settle = late & (s.index <= pd.Timestamp(c.final_settlement)) if prints.get("settlement") else late & False
+                for d in s.index[settle]:
+                    report.add("settlement_print", f"{path}: {d:%Y-%m-%d} {col} after last trade {c.last_quote}, "
+                                                   f"on or before final settlement {c.final_settlement} (left out)")
+                for d in s.index[late & ~settle]:
                     report.add("outside_listing", f"{path}: {d:%Y-%m-%d} {col} after last quote date {c.last_quote}")
                 if early.any():
                     when = x.first_listed if x else f"after {d1}"
                     if verified:
+                        lead = int(prints.get("pre_listing_bd", 0))
+                        tolerated = (pd.Timestamp(excal.advance_business_days(x.first_listed, -lead)) if x and lead
+                                     else pd.Timestamp.max)
                         for d in s.index[early]:
-                            report.add("outside_listing", f"{path}: {d:%Y-%m-%d} {col} before first listed {when}")
+                            if d >= tolerated:
+                                report.add("pre_listing_print", f"{path}: {d:%Y-%m-%d} {col} within {lead} business "
+                                                                f"days before first listed {when} (left out)")
+                            else:
+                                report.add("outside_listing", f"{path}: {d:%Y-%m-%d} {col} before first listed {when}")
                         keep &= ~early
                     else:   # schedule unsourced: the data shows the real listing; keep the values
                         report.add("outside_listing_unverified",

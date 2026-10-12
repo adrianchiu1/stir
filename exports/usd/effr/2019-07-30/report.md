@@ -1,6 +1,6 @@
 # USD EFFR front end, 2019-07-30
 
-Anchor (target_midpoint) in effect: 2.375. Policy spread (winsorised_mean, D7): 1.47bp (winsorised mean 1.47bp, median 1.50bp; 60 fixings, 3 turn days dropped, window 2019-04-30..2019-07-29) **Loader reported blocking problems in the window (see check_market_data.py).**
+Anchor (target_midpoint) in effect: 2.375. Policy spread (winsorised_mean, D7): 1.47bp (winsorised mean 1.47bp, median 1.50bp; 60 fixings, 3 turn days dropped, window 2019-04-30..2019-07-29)
 
 ## Curve `effr_fut` (ff_fut)
 
